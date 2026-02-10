@@ -1,8 +1,7 @@
 package org.fdu;
 
 /**
- * Hello world!
- *
+ * Contains main() and creates/starts the game components
  */
 public class App 
 {
