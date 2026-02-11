@@ -23,7 +23,7 @@ public class WordRepo {
         this.words = Arrays.asList(
                 "TABLE", "CLASS", "DATA", "INPUT",
                 "BITS", "STORAGE", "WHICH", "FRUIT", "LAPTOP",
-                "DEVILS", "KNIGHTS", "SCHOOL", "WATER", "BAGS");
+                "DEVILS", "KNIGHTS", "SCHOOL", "WATER", "BAGS","APPLE");
         this.random = new Random();
     }
 
