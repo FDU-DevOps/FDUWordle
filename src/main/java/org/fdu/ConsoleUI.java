@@ -20,7 +20,6 @@ public class ConsoleUI {
      * Scope: Used for intro and responses.
      *
      * @param message message text to print
-     * @return void
      */
     public void println(String message) {
         System.out.println(message);
@@ -29,7 +28,7 @@ public class ConsoleUI {
     /**
      * Prompts the user and returns the entered line.
      * Objective: Ask for a guess and capture the user's input.
-     * Scope: Returns the raw string (may be blank).
+     * Scope: Returns the raw string (maybe blank).
      *
      * @param prompt prompt text to display
      * @return the raw user input line
@@ -43,8 +42,6 @@ public class ConsoleUI {
      * Closes console resources.
      * Objective: Cleanly close the scanner at the end of the program.
      * Scope: Call once after the game ends.
-     *
-     * @return void
      */
     public void close() {
         scanner.close();

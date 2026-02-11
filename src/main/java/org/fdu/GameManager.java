@@ -12,7 +12,6 @@ public class GameManager {
      *
      * @param ui ConsoleUI used to prompt and display messages
      * @param repo WordRepository used to pick the target word
-     * @return a constructed GameManager instance
      */
     public GameManager(ConsoleUI ui, WordRepo repo) {
         this.ui = ui;
@@ -30,8 +29,6 @@ public class GameManager {
      *  - Ends when guess is correct OR user types "quit"
      *  - User guesses do not have to be valid words
      *  - Case-insensitive, trims leading/trailing whitespace
-     *
-     * @return void
      */
     public void runGame() {
         showIntro();
@@ -75,7 +72,6 @@ public class GameManager {
      * Objective: Explain what to do and how to quit.
      * Scope: Called once per game at the start.
      *
-     * @return void
      */
     private void showIntro() {
         ui.println("Welcome to Wordle (Lite)! Guess the secret word.");

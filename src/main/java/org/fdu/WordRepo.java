@@ -1,14 +1,14 @@
 package org.fdu;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Random;
 
 /**
  * Maintains a dictionary of allowable words and validates player guesses against the rules <br>
  * <p>
  * Expose method to pick a random word from the game dictionary
- * Expose method to return if a guess is valid, ie meets the rules (e.g. 5 letters, a-z, A-Z)
+ * Expose method to return if a guess is valid, i.e. meets the rules (e.g. 5 letters, a-z, A-Z)
  */
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
 
 public class WordRepo {
     private final List<String> words;
