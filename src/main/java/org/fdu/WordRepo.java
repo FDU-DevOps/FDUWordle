@@ -1,14 +1,14 @@
 package org.fdu;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
 
 /**
  * Maintains a dictionary of allowable words and validates player guesses against the rules <br>
  * <p>
  * Expose method to pick a random word from the game dictionary
- * Expose method to return if a guess is valid, i.e. meets the rules (e.g. 5 letters, a-z, A-Z)
+ * Expose method to return if a guess is valid, ie meets the rules (e.g. 5 letters, a-z, A-Z)
  */
+import java.util.Arrays;
+import java.util.List;
+import java.util.Random;
 
 public class WordRepo {
     private final List<String> words;
@@ -21,9 +21,9 @@ public class WordRepo {
      */
     public WordRepo() {
         this.words = Arrays.asList(
-                "TABLE", "CLASS", "DATA", "INPUT",
-                "BITS", "STORAGE", "WHICH", "FRUIT", "LAPTOP",
-                "DEVILS", "KNIGHTS", "SCHOOL", "WATER", "BAGS","APPLE");
+                "TABLE", "CLASS", "BYTES", "INPUT","APPLE",
+                "BOARD", "STORE", "WHICH", "FRUIT", "PHONE",
+                "DEVIL", "ARRAY", "ASSET", "WATER", "WORDS");
         this.random = new Random();
     }
 
@@ -32,7 +32,7 @@ public class WordRepo {
      * Objective: Provide the word the user is trying to guess.
      * Scope: Called once per game start.
      *
-     * @return the chosen target word (Uppercase)
+     * @return the chosen target word (lowercase)
      */
     public String pickTargetWord() {
         int index = random.nextInt(words.size());
