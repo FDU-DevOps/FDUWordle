@@ -4,22 +4,15 @@ import java.util.Scanner;
 
 /**
  * Console user interface utility class.
- * Responsibilities:
- * - Print messages to the console
- * - Read user input from the console
- *
- * This is a utility class: it must not be instantiated.
+ * Provides static methods for input/output.
+ * This class should not be instantiated.
  */
 public final class ConsoleUI {
 
     private static final Scanner SCANNER = new Scanner(System.in);
 
-    /**
-     * Prevents instantiation of this utility class.
-     */
-    private ConsoleUI() {
-        // no instances allowed
-    }
+    // Prevent instantiation
+    private ConsoleUI() { }
 
     /**
      * Prints a message followed by a newline.
@@ -31,10 +24,10 @@ public final class ConsoleUI {
     }
 
     /**
-     * Prints a prompt and reads one full line of input.
+     * Prints a prompt and reads one line of input.
      *
-     * @param prompt prompt text to display
-     * @return the raw line typed by the user (may be blank)
+     * @param prompt prompt text
+     * @return raw input line
      */
     public static String readLine(String prompt) {
         System.out.print(prompt);
