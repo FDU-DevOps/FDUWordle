@@ -46,9 +46,8 @@ public class GameManager {
                 ui.println("Please enter a guess (not blank).");
                 continue;
             }
-
             // Other: quit command
-            if (guess.equals("quit")) {
+            if (guess.equals("QUIT")) {
                 ui.println("Goodbye!");
                 return;
             }
@@ -83,7 +82,7 @@ public class GameManager {
      * Objective: Make comparisons case-insensitive and whitespace-tolerant.
      * Scope:
      *  - Trims leading/trailing whitespace
-     *  - Converts to lowercase
+     *  - Converts to Uppercase
      *
      * @param input the raw user input (perhaps null/blank)
      * @return normalized string (never null; may be empty)

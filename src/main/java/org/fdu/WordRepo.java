@@ -32,7 +32,7 @@ public class WordRepo {
      * Objective: Provide the word the user is trying to guess.
      * Scope: Called once per game start.
      *
-     * @return the chosen target word (lowercase)
+     * @return the chosen target word (Uppercase)
      */
     public String pickTargetWord() {
         int index = random.nextInt(words.size());
