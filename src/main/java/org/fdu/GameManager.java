@@ -1,92 +1,94 @@
 package org.fdu;
-/**
- * Controls the game flow for Wordle (Lite).
- * Responsibilities:
- * - Display intro messages
- * - Select a target word from WordRepository
- * - Prompt user up to 6 times for guesses
- * - Convert guesses to UPPERCASE automatically
- * - Report CORRECT / NOT CORRECT
- * - If all guesses used, report loss and show the correct answer
- *
- * Console input/output is handled by ConsoleUI (utility class).
- */
+
 public class GameManager {
-
-    private static final int MAX_GUESSES = 1;
-
+    private final ConsoleUI ui;
     private final WordRepo repo;
 
+    private static final int MAX_GUESSES = 6;
     /**
-     * Creates a GameManager that uses the given word repository.
+     * Creates a GameManager with required dependencies.
+     * Objective: Connect UI and word source to control the game flow.
+     * Scope: Called once at startup from App.
      *
-     * @param repo repository used to select the target word
+     * @param ui ConsoleUI used to prompt and display messages
+     * @param repo WordRepository used to pick the target word
+     * @return a constructed GameManager instance
      */
-    public GameManager(WordRepo repo) {
+    public GameManager(ConsoleUI ui, WordRepo repo) {
+        this.ui = ui;
         this.repo = repo;
     }
 
     /**
-     * Runs a single game session (maximum 6 guesses).
-     * End conditions:
-     * - User guesses the word correctly
-     * - User types QUIT
-     * - User uses all 6 guesses (loss message shown)
+     * Runs the full game session.
+     * Objective:
+     *  - Display intro message
+     *  - Pick a target word from the static list
+     *  - Prompt the user for guesses repeatedly
+     *  - Print whether the guess is correct or not
+     * Scope:
+     *  - Ends when guess is correct OR user types "quit"
+     *  - User guesses do not have to be valid words
+     *  - Case-insensitive, trims leading/trailing whitespace
+     *
+     * @return void
      */
     public void runGame() {
         showIntro();
 
-        String targetWord = repo.pickTargetWord(); // already UPPERCASE
-        int guessesUsed = 0;
+        String targetWord = repo.pickTargetWord();// stored lowercase
+        int guessesUsed=0; //initialize
 
         while (guessesUsed < MAX_GUESSES) {
-            String rawGuess = ConsoleUI.readLine("ENTER YOUR GUESS: ");
+            String rawGuess = ui.readLine("Enter your guess: ");
+
             String guess = normalize(rawGuess);
 
-            // OTHER: blank input does not count as an attempt
+            // Other: blank input
             if (guess.isEmpty()) {
-                ConsoleUI.println("PLEASE ENTER A GUESS (NOT BLANK).");
+                ui.println("Please enter a guess (not blank).");
                 continue;
             }
-
-            // OTHER: quit command
+            // Other: quit command
             if (guess.equals("QUIT")) {
-                ConsoleUI.println("GOODBYE!");
+                ui.println("Goodbye!");
                 return;
             }
 
-            // This is a real attempt
             guessesUsed++;
-
+            // Correct / Incorrect
             if (guess.equals(targetWord)) {
-                ConsoleUI.println("CORRECT! YOU GUESSED THE WORD: " + targetWord);
+                ui.println("Correct! You guessed the word: " + targetWord);
                 return;
             } else {
-                int attemptsLeft = MAX_GUESSES - guessesUsed;
-                if (attemptsLeft > 0) {
-                    ConsoleUI.println("NOT CORRECT. ATTEMPTS LEFT: " + attemptsLeft);
-                }
+                ui.println("Not correct. Attempts left:" + (MAX_GUESSES - guessesUsed));
             }
-        }
 
-        // Out of guesses
-        ConsoleUI.println("YOU LOST! THE CORRECT ANSWER WAS: " + targetWord);
+
+        }
+        ui.println("YOU LOST!!, THE CORRECT WORD WAS:" + targetWord);
     }
 
     /**
-     * Displays the introduction messages for the game.
+     * Prints the intro messages.
+     * Objective: Explain what to do and how to quit.
+     * Scope: Called once per game at the start.
+     *
+     * @return void
      */
     private void showIntro() {
-        ConsoleUI.println("WELCOME TO WORDLE (LITE)! GUESS THE SECRET WORD.");
-        ConsoleUI.println("YOU HAVE 6 GUESSES.");
+        ui.println("Welcome to Wordle (Lite)! Guess the secret word.");
+        ui.println("Type 'quit' to exit.");
     }
 
     /**
-     * Normalizes user input according to the game rules:
-     * - Trim leading/trailing whitespace
-     * - Convert to UPPERCASE
+     * Normalizes user input for comparison.
+     * Objective: Make comparisons case-insensitive and whitespace-tolerant.
+     * Scope:
+     *  - Trims leading/trailing whitespace
+     *  - Converts to Uppercase
      *
-     * @param input raw user input (may be null)
+     * @param input the raw user input (perhaps null/blank)
      * @return normalized string (never null; may be empty)
      */
     private String normalize(String input) {

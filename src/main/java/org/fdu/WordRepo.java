@@ -19,7 +19,8 @@ public class WordRepo {
      * Objective: Store a static list of 10-15 valid words.
      * Scope: List is hard-coded and does not change at runtime.
      */
-    public WordRepo() {
+    public WordRepo()
+    {
         this.words = Arrays.asList(
                 "TABLE", "CLASS", "DATA", "INPUT",
                 "BITS", "STORAGE", "WHICH", "FRUIT", "LAPTOP",
@@ -34,7 +35,8 @@ public class WordRepo {
      *
      * @return the chosen target word (Uppercase)
      */
-    public String pickTargetWord() {
+    public String pickTargetWord()
+    {
         int index = random.nextInt(words.size());
         return words.get(index);
     }
