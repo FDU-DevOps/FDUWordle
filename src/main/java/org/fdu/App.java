@@ -12,7 +12,6 @@ public class App {
      * Scope: Run from IDE only by running App.java.
      *
      * @param args command-line arguments (unused)
-     * @return void
      */
     public static void main(String[] args) {
         ConsoleUI ui = new ConsoleUI();
