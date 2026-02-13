@@ -1,6 +1,7 @@
 package org.fdu;
 
 /**
+ * This is a static utility
  * Maintains a dictionary of allowable words and validates player guesses against the rules <br>
  * <p>
  * Expose method to pick a random word from the game dictionary
@@ -13,22 +14,18 @@ import java.util.List;
 import java.util.Random;
 
 public class WordRepo {
-    private final List<String> words;
-    private final Random random;
+    private static final List<String> words = Arrays.asList(
+            "TABLE", "CLASS", "BYTES", "INPUT","APPLE",
+            "BOARD", "STORE", "WHICH", "FRUIT",
+            "PHONE","DEVIL", "ARRAY", "ASSET", "WATER", "WORDS");
+    private static final Random random =  new  Random();
 
     /**
      * Constructs the word repository.
      * Objective: Store a static list of 10-15 valid words.
      * Scope: List is hard-coded and does not change at runtime.
      */
-    public WordRepo()
-    {
-        this.words = Arrays.asList(
-                "TABLE", "CLASS", "BYTES", "INPUT","APPLE",
-                "BOARD", "STORE", "WHICH", "FRUIT",
-                "PHONE","DEVIL", "ARRAY", "ASSET", "WATER", "WORDS");
-        this.random = new Random();
-    }
+    private WordRepo(){}
 
     /**
      * Picks a random target word from the static list.
@@ -37,7 +34,7 @@ public class WordRepo {
      *
      * @return the chosen target word (Uppercase)
      */
-    public String pickTargetWord()
+    public static String pickTargetWord()
     {
         int index = random.nextInt(words.size());
         return words.get(index);
@@ -50,7 +47,7 @@ public class WordRepo {
      *
      * @return immutable list of candidate words
      */
-    public List<String> getWords() {
+    public static List<String> getWords() {
         return words;
     }
 }

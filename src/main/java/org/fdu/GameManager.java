@@ -5,7 +5,7 @@ package org.fdu;
  *   tracks game state and returns (or has queries) for game status, guess evaluations, etc.Controls the game flow: <br>
  * <p>
  * start game (constructor - selects secret word, initializes guesses, etc.)<br>
- * accept guesses (up to 6) to determine WIN / LOSS <br>
+ * accept guesses (up to 1) to determine WIN / LOSS <br>
  * Uses WordRepo class for dictionary validation/answer selection <br>
  * Produces feedback results for ConsoleUI to display <br>
  * Tracks and makes visible game state (e.g. is game over, did the player win)
@@ -29,16 +29,15 @@ public class GameManager {
     }
 
     /**
-     * Runs a single game session (maximum 6 guesses).
+     * Runs a single game session (maximum 1 guess).
      * End conditions:
      * - User guesses the word correctly
-     * - User types QUIT
-     * - User uses all 6 guesses (loss message shown)
+     * - User uses 1 guess (loss message shown)
      */
     public void runGame() {
         showIntro();
 
-        String targetWord = repo.pickTargetWord(); // already UPPERCASE
+        String targetWord = WordRepo.pickTargetWord(); // already UPPERCASE
         int guessesUsed = 0;
 
         while (guessesUsed < MAX_GUESSES) {
@@ -50,9 +49,6 @@ public class GameManager {
                 ConsoleUI.println("PLEASE ENTER A GUESS (NOT BLANK).");
                 continue;
             }
-
-            // OTHER: quit command
-
 
             // This is a real attempt
             guessesUsed++;
