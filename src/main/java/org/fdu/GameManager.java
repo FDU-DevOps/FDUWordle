@@ -16,16 +16,16 @@ package org.fdu;
 public class GameManager {
 
     private static final int MAX_GUESSES = 1;
+    private final String targetWord;
+    int guessesUsed = 0;
 
-    private final WordRepo repo;
 
     /**
-     * Creates a GameManager that uses the given word repository.
-     *
-     * @param repo repository used to select the target word
+     * Creates a GameManager object
+     * Maybe initialize guesses, etc.
      */
-    public GameManager(WordRepo repo) {
-        this.repo = repo;
+    public GameManager() {
+        targetWord = WordRepo.pickTargetWord();
     }
 
     /**
@@ -36,9 +36,6 @@ public class GameManager {
      */
     public void runGame() {
         showIntro();
-
-        String targetWord = WordRepo.pickTargetWord(); // already UPPERCASE
-        int guessesUsed = 0;
 
         while (guessesUsed < MAX_GUESSES) {
             String rawGuess = ConsoleUI.readLine("ENTER YOUR GUESS: ");

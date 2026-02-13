@@ -1,5 +1,9 @@
 package org.fdu;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.Random;
+
 /**
  * This is a static utility
  * Maintains a dictionary of allowable words and validates player guesses against the rules <br>
@@ -9,11 +13,9 @@ package org.fdu;
  *
  * @author tbd
  */
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
 
 public class WordRepo {
+    /* initial small wordle dictionary */
     private static final List<String> words = Arrays.asList(
             "TABLE", "CLASS", "BYTES", "INPUT","APPLE",
             "BOARD", "STORE", "WHICH", "FRUIT",
@@ -21,9 +23,7 @@ public class WordRepo {
     private static final Random random =  new  Random();
 
     /**
-     * Constructs the word repository.
-     * Objective: Store a static list of 10-15 valid words.
-     * Scope: List is hard-coded and does not change at runtime.
+     * Utility class - mark constructor as private
      */
     private WordRepo(){}
 
