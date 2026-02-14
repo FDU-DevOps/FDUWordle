@@ -26,7 +26,7 @@ public class GameManager {
      */
     public static boolean isWinningGuess(String playerGuess, String targetWord)
     {
-        return playerGuess.equalsIgnoreCase(targetWord);
+        return playerGuess.equals(targetWord);
     }
 
 }
