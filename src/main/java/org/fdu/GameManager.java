@@ -18,7 +18,8 @@ public class GameManager {
     /**
      * Checks whether the user guess is correct or not <br>
      <p>
-     Scope: Determining if winning condition is met (word match). Assume word is valid </p>
+     Scope: Determining if winning condition is met (word match)
+     Assumes word is valid and input has been normalized </p>
      @param playerGuess - user guess for the word
      @param targetWord - chosen answer for this wordle game
      @return - boolean flag to show if guess was correct or not

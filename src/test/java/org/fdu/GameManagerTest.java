@@ -14,6 +14,7 @@ class GameManagerTest {
         String playerGuessTest = "OCEAN";
         String targetWordMatches = "OCEAN";
         String targetWordDoesNotMatch = "BLOOM";
+        String targetWordIsAnagram = "CANOE";
 
         // Words match -- Happy Path Case (returns true)
         assertTrue(isWinningGuess(playerGuessTest,targetWordMatches), "Word match not handled correctly");
@@ -22,5 +23,7 @@ class GameManagerTest {
         assertFalse(isWinningGuess(playerGuessTest,targetWordDoesNotMatch), "Word mismatch not handled correctly");
 
         // Edges and Corner Cases
+        // Anagrams should return false
+        assertFalse(isWinningGuess(playerGuessTest,targetWordIsAnagram), "Anagrams not handled correctly");
     }
 }
