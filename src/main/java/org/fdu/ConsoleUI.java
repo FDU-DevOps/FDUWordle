@@ -12,4 +12,31 @@ package org.fdu;
  * @author tbd
  */
 public class ConsoleUI {
+
+    /**
+     * Enum to store ANSI Escape Codes for Color Coded Word Feedback <br>
+     <p>
+     Scope: 3 enums: GREEN, YELLOW, RESET
+     </p>
+     @author (developer name)
+     */
+    public enum FeedbackType {
+        // Reset Escape Code
+        RESET("\033[0m"),
+
+        // Color Escape Code
+        GREEN("\u001B[32m"),
+        YELLOW("\u001B[33m");
+
+        private final String code;
+        // Private Constructor
+        FeedbackType(String code) {
+            this.code = code;
+        }
+
+        @Override
+        public String toString() {
+            return code;
+        }
+    }
 }
