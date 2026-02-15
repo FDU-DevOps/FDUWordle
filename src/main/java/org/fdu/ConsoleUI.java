@@ -68,20 +68,10 @@ public class ConsoleUI {
         System.out.println();
 
         // Check if user has won
-        if(isWin)
-        {
-            System.out.println("Congratulations! You guessed the word correctly!");
-        }
+        if(isWin) { System.out.println("Congratulations! You guessed the word correctly!"); }
         // Check if user is out of guesses
-        else if(guessCount == 0)
-        {
-            System.out.println("Game Over! You have run out of guesses.");
-        }
+        else if(guessCount == 0) { System.out.println("Game Over! You have run out of guesses."); }
         // Game is still ongoing
-        else
-        {
-            System.out.println("Guesses remaining: " + guessCount);
-        }
-
+        else { System.out.println("Guesses remaining: " + guessCount); }
     }
 }
