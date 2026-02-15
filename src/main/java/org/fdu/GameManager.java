@@ -15,9 +15,9 @@ package org.fdu;
 
 public class GameManager {
 
-    private static final int MAX_GUESSES = 1;
+    public static final int MAX_GUESSES = 3;
     private final String targetWord;
-    int guessesUsed = 0;
+    private int guessesUsed = 0;
 
 
     /**
@@ -28,49 +28,29 @@ public class GameManager {
         targetWord = WordRepo.pickTargetWord();
     }
 
-    /**
-     * Runs a single game session (maximum 1 guess).
-     * End conditions:
-     * - User guesses the word correctly
-     * - User uses 1 guess (loss message shown)
-     */
-    public void runGame() {
-        showIntro();
+    public String getTargetWord(){
+        return targetWord;
+    }
 
-        while (guessesUsed < MAX_GUESSES) {
-            String rawGuess = ConsoleUI.readLine("ENTER YOUR GUESS: ");
-            String guess = normalize(rawGuess);
+    public int getGuessesUsed(){
+        return guessesUsed;
+    }
 
-            // OTHER: blank input does not count as an attempt
-            if (guess.isEmpty()) {
-                ConsoleUI.println("PLEASE ENTER A GUESS (NOT BLANK).");
-                continue;
-            }
-
-            // This is a real attempt
-            guessesUsed++;
-
-            if (guess.equals(targetWord)) {
-                ConsoleUI.println("CORRECT! YOU GUESSED THE WORD: " + targetWord);
-                return;
-            } else {
-                int attemptsLeft = MAX_GUESSES - guessesUsed;
-                if (attemptsLeft > 0) {
-                    ConsoleUI.println("NOT CORRECT. ATTEMPTS LEFT: " + attemptsLeft);
-                }
-            }
-        }
-
-        // Out of guesses
-        ConsoleUI.println("YOU LOST! THE CORRECT ANSWER WAS: " + targetWord);
+    public int getMaxGuesses(){
+        return MAX_GUESSES;
     }
 
     /**
-     * Displays the introduction messages for the game.
+     * doesGuessMatch(String norm_guess) - compares the normalized guess to the target word <br>
+     * <p>
+     * increments guesses the user has used
+     * @param normGuess is normalized to uppercase without white space
+     * @return  True if guess matches target word, false otherwise
      */
-    private void showIntro() {
-        ConsoleUI.println("WELCOME TO WORDLE! GUESS THE SECRET WORD.");
-        ConsoleUI.println("YOU HAVE 1 GUESS.");
+
+    public boolean doesGuessMatch(String normGuess){
+        guessesUsed++;
+        return normGuess.equals(targetWord);
     }
 
     /**
@@ -81,7 +61,7 @@ public class GameManager {
      * @param input raw user input (perhaps be null)
      * @return normalized string (never null; may be empty)
      */
-    private String normalize(String input) {
+    public String normalize(String input) {
         if (input == null) {
             return "";
         }
