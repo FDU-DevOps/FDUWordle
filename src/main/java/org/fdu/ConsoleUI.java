@@ -14,15 +14,13 @@ import java.util.Scanner;
  * @author tbd
  */
 public final class ConsoleUI {
-
     private static final Scanner SCANNER = new Scanner(System.in);
 
     // Prevent instantiation
     private ConsoleUI() { }
 
     /**
-     * Prints a message followed by a newline.
-     *
+     * Prints a message followed by a newline. <br>
      * @param message message to print
      */
     public static void println(String message) {
@@ -30,8 +28,7 @@ public final class ConsoleUI {
     }
 
     /**
-     * Prints a prompt and reads one line of input.
-     *
+     * Prints a prompt and reads one line of input.<br>
      * @param prompt prompt text
      * @return raw input line
      */

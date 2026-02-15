@@ -1,11 +1,11 @@
 package org.fdu;
 
 /**
- * Contains main() and creates/starts the game components
+ * Contains main() and creates/starts the game
  */
 public class App 
 {
-    public static void main( String[] args) {
+    public static void main(String[] args) {
         runGame();
     }
 
@@ -18,9 +18,8 @@ public class App
     public static void runGame() {
         GameManager manager = new GameManager();
         showIntro(manager);
-        ConsoleUI.println(manager.getTargetWord());
 
-        while (manager.getGuessesUsed() < manager.getMaxGuesses()) {
+        while (manager.isGameNotOver()) {
             String rawGuess = ConsoleUI.readLine("ENTER YOUR GUESS: ");
             String guess = manager.normalize(rawGuess);
 

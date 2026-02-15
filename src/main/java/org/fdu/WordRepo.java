@@ -15,11 +15,12 @@ import java.util.Random;
  */
 
 public class WordRepo {
-    /* initial small wordle dictionary */
+    /* initial small Wordle dictionary */
     private static final List<String> words = Arrays.asList(
             "TABLE", "CLASS", "BYTES", "INPUT","APPLE",
             "BOARD", "STORE", "WHICH", "FRUIT",
             "PHONE","DEVIL", "ARRAY", "ASSET", "WATER", "WORDS");
+
     private static final Random random =  new  Random();
 
     /**
