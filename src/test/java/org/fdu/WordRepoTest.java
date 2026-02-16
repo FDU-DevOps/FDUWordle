@@ -37,6 +37,15 @@ class WordRepoTest {
         String playerTwoGreens = "SPOON";
         String targetTwoGreens = "BLOOM";
 
+        String playerOneGreenOneYellow = "PHOTO";
+        String targetOneGreenOneYellow = "SPOOL";
+
+        String playerOneGreen = "CHOKE";
+        String targetOneGreen = "SPOOL";
+
+        String playerOneYellow = "BRICK";
+        String targetOneYellow = "ABBEY";
+
         ConsoleUI.FeedbackType[] expectedAllColorsGuess = {
                 ConsoleUI.FeedbackType.GREEN,
                 ConsoleUI.FeedbackType.RESET,
@@ -73,6 +82,18 @@ class WordRepoTest {
                 ConsoleUI.FeedbackType.RESET, ConsoleUI.FeedbackType.RESET, ConsoleUI.FeedbackType.GREEN, ConsoleUI.FeedbackType.GREEN, ConsoleUI.FeedbackType.RESET
         };
 
+        ConsoleUI.FeedbackType[] expectedOneGreenOneYellow = {
+                ConsoleUI.FeedbackType.YELLOW, ConsoleUI.FeedbackType.RESET, ConsoleUI.FeedbackType.GREEN, ConsoleUI.FeedbackType.RESET, ConsoleUI.FeedbackType.YELLOW
+        };
+
+        ConsoleUI.FeedbackType[] expectedOneGreen = {
+                ConsoleUI.FeedbackType.RESET, ConsoleUI.FeedbackType.RESET, ConsoleUI.FeedbackType.GREEN, ConsoleUI.FeedbackType.RESET, ConsoleUI.FeedbackType.RESET
+        };
+
+        ConsoleUI.FeedbackType[] expectedOneYellow = {
+                ConsoleUI.FeedbackType.YELLOW, ConsoleUI.FeedbackType.RESET, ConsoleUI.FeedbackType.RESET, ConsoleUI.FeedbackType.RESET, ConsoleUI.FeedbackType.RESET
+        };
+
         // Test: HAPPY PATH
         assertArrayEquals(expectedHappyPath,WordRepo.GenerateColoredFeedback(playerGuessHappyPath, targetWord),"Happy Path not working correctly.");
 
@@ -99,16 +120,19 @@ class WordRepoTest {
         assertArrayEquals(expectedTwoYellows, WordRepo.GenerateColoredFeedback(playerTwoYellows,targetTwoYellows), "Double letter guessed, 2 in target, but BOTH in incorrect location feedback not working properly");
 
         // User Guess: 2 letters, Target Word: 2 letters, 2 correct locations = 2 GREEN
+        // Target: GLOOM, Guess: SPOON
         assertArrayEquals(expectedTwoGreens, WordRepo.GenerateColoredFeedback(playerTwoGreens,targetTwoGreens), "Double letter guessed, 2 in target and BOTH in correct location feedback not working properly");
 
-        /*
-            Double Letter Cases
+        // User Guess: 2 letters, Taget Word: 2 letters: 1 correct location, 1 incorrect location = GREEN and YELLOW
+        // Target: SPOOL, Guess: PHOTO
+        assertArrayEquals(expectedOneGreenOneYellow, WordRepo.GenerateColoredFeedback(playerOneGreenOneYellow,targetOneGreenOneYellow), "Double letter guessed, 2 in target, 1 in correct location, 1 in incorrect location feedback not working properly");
 
+        // User Guess: 1 letter, Target Word: 2 letters, Correct Location for letter guessed = GREEN for correct letter
+        // Target: SPOOL, Guess: CHOKE
+        assertArrayEquals(expectedOneGreen, WordRepo.GenerateColoredFeedback(playerOneGreen,targetOneGreen), "Double letters 1 guessed, 2 in target, and correct location feedback not working properly");
 
-            User Guess: 2 letters, Taget Word: 2 letters: 1 correct location, 1 incorrect location = GREEN and YELLOW
-            User Guess: 1 letter, Target Word: 2 letters, Correct Location for letter guessed = GREEN for correct letter
-            User Guess: 1 letter, Target Word: 2 letters, user letter guessed is in incorrect Location = YELLOW
-            Prioritization rule( Green, then yellow, then gray)
-         */
+        // User Guess: 1 letter, Target Word: 2 letters, user letter guessed is in incorrect Location = YELLOW
+        // Target: ABBEY, Guess: BRICK
+        assertArrayEquals(expectedOneYellow, WordRepo.GenerateColoredFeedback(playerOneYellow,targetOneYellow), "Double letters, 1 guessed, 2 in target and incorrect location for letter guessed, feedback not working properly");
     }
 }
