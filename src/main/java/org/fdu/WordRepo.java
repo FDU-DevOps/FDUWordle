@@ -53,6 +53,7 @@ public class WordRepo {
     public static List<String> getWords() {
         return words;
     }
+
     /**
      * Generates enum array with color-coded feedback <br>
      <p> Scope: Logic only, does not track number of user guesses

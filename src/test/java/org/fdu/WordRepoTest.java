@@ -42,6 +42,7 @@ class WordRepoTest {
         assertTrue(words.contains("APPLE"), "Should contain APPLE");
         assertTrue(words.contains("WATER"), "Should contain WATER");
     }
+
     @Test
     @DisplayName("Test method for color coded feedback method")
     void generateColoredFeedbackTest() {

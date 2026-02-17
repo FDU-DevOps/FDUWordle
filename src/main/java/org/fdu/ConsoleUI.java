@@ -13,8 +13,8 @@ import java.util.Scanner;
  *
  * @author tbd
  */
-
 public final class ConsoleUI {
+
     private static final Scanner SCANNER = new Scanner(System.in);
 
     // Prevent instantiation
@@ -37,7 +37,6 @@ public final class ConsoleUI {
         System.out.print(prompt);
         return SCANNER.nextLine();
     }
-
     /**
      * Enum to store ANSI Escape Codes for Color Coded Word Feedback <br>
      <p>

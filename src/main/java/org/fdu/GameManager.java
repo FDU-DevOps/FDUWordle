@@ -89,6 +89,7 @@ public class GameManager {
         }
         return rawGuess.trim().toUpperCase();
     }
+
     /**
      * Checks whether the user guess is correct or not <br>
      <p>

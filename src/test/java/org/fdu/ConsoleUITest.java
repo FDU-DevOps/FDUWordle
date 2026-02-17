@@ -55,6 +55,7 @@ class ConsoleUITest {
         String output = bucket.toString();  // Convert bucket contents to String
         assertTrue(output.contains("Congratulations"), "Winning message is not displayed");
     }
+
     @Test
     @DisplayName("Display game over message when out of guesses")
     void displayGuessResultOutOfGuesses() {
