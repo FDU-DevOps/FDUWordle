@@ -71,14 +71,11 @@ public final class ConsoleUI {
      Handles the game state message (Is game over, is it still going, is user out of guesses)
      </p>
      @param feedback - enum array that holds the user guess, each letter is broken down as an enum
-     @param isWin - boolean to track if user guess is correct
-     @param guessCount - int to track number of user guesses left
      @param playerGuess - the word the player guessed (to display the actual letters)
-     @return - nothing returned, just displaying results to console
      @author Emirlan Asanakunov
      */
 
-    public static void DisplayGuessResult(FeedbackType[] feedback, boolean isWin, int guessCount, String playerGuess) {
+    public static void DisplayGuessResult(FeedbackType[] feedback,String playerGuess) {
         // Convert playerGuess to uppercase for display
         char[] playerGuessLetters = playerGuess.toUpperCase().toCharArray();
 
@@ -90,12 +87,5 @@ public final class ConsoleUI {
             System.out.print(feedback[i].toString() + playerGuessLetters[i] + FeedbackType.RESET + " ");
         }
         System.out.println();
-
-        // Check if user has won
-        if(isWin) { System.out.println("Congratulations! You guessed the word correctly!"); }
-        // Check if user is out of guesses
-        else if(guessCount == 0) { System.out.println("Game Over! You have run out of guesses."); }
-        // Game is still ongoing
-        else { System.out.println("Guesses remaining: " + guessCount); }
     }
 }

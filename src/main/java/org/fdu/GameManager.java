@@ -15,7 +15,7 @@ package org.fdu;
 
 public class GameManager {
 
-    public static final int MAX_GUESSES = 1;
+    public static final int MAX_GUESSES = 6;
     private final String targetWord;
     private int guessesUsed = 0;
 
