@@ -2,6 +2,7 @@ package org.fdu;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.DisplayName;
+
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.AfterEach;
@@ -54,7 +55,6 @@ class ConsoleUITest {
         String output = bucket.toString();  // Convert bucket contents to String
         assertTrue(output.contains("Congratulations"), "Winning message is not displayed");
     }
-
     @Test
     @DisplayName("Display game over message when out of guesses")
     void displayGuessResultOutOfGuesses() {
@@ -93,5 +93,13 @@ class ConsoleUITest {
         // Check that remaining guesses count appears
         String output = bucket.toString();
         assertTrue(output.contains("Guesses remaining: 4"), "Remaining guesses are not displayed correctly");
+    }
+
+    @Test
+    void println() {
+    }
+
+    @Test
+    void readLine() {
     }
 }
