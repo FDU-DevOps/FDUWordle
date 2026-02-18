@@ -37,6 +37,7 @@ public final class ConsoleUI {
         System.out.print(prompt);
         return SCANNER.nextLine();
     }
+
     /**
      * Enum to store ANSI Escape Codes for Color Coded Word Feedback <br>
      <p>

@@ -55,18 +55,47 @@ public class WordRepo {
     public static List<String> getWords() {
         return words;
     }
-
+    /**
+     * Validates whether a player's guess meets the rules.
+     *      * Rules:
+     *      * - Exactly WORD_LENGTH characters
+     *      * - Letters A-Z only (case-insensitive; assumes normalized input)
+     *      *
+     *      * @param playerGuess normalized player guess (trimmed, uppercase)
+     *      * @return true if guess is valid; false otherwise
+     *
+     */
+    public static boolean isValidGuess(String playerGuess) {
+        if (playerGuess == null || playerGuess.length() != WORD_LENGTH) {
+            return false;
+        }
+        for (char c : playerGuess.toCharArray()) {
+            if (c < 'A' || c > 'Z') {
+                return false;
+            }
+        }
+        return true;
+    }
     /**
      * Generates enum array with color-coded feedback <br>
+     *
      <p> Scope: Logic only, does not track number of user guesses
      </p>
+     * Validation is performed before feedback generation. If the guess is invalid,
+     * an exception is thrown and no feedback is generated.
+     *
      @param playerGuess - user guess for the word
      @param targetWord - chosen answer for this wordle game
      @return - enum array with color-coded feedback
+     @throws IllegalArgumentException if {playerGuess} is not a valid guess
      @author Xavier Orrala
      */
     public static ConsoleUI.FeedbackType[] GenerateColoredFeedback(String playerGuess, String targetWord)
     {
+
+        if (!isValidGuess(playerGuess)) {
+            throw new IllegalArgumentException("Invalid guess format");
+        }
         // Array to store color coded feedback results -- CAN BE REFACTORED TO INCLUDE MAX_GUESS CONSTANT?
         ConsoleUI.FeedbackType[] results = new ConsoleUI.FeedbackType[WORD_LENGTH];
 

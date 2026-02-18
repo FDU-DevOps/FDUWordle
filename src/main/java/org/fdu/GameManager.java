@@ -50,6 +50,7 @@ public class GameManager {
         return MAX_GUESSES;
     }
 
+
     /**
      * doesGuessMatch(String norm_guess) - compares the normalized guess to the target word <br>
      * <p>

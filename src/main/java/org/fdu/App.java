@@ -13,7 +13,9 @@ public class App
      * Runs a single game session (maximum 1 guess).
      * End conditions:
      * - User guesses the word correctly
-     * - User uses 1 guess (loss message shown)
+     * - User uses 6 guesses (loss message shown)
+     * Blank input does NOT count as an attempt
+     * EvaluateInvalid guesses (non-5-letter or non-alphabetic)
      */
     public static void runGame() {
         GameManager manager = new GameManager();
@@ -29,29 +31,38 @@ public class App
                 continue;
             }
 
-            if (manager.doesGuessMatch(guess)) {
-                ConsoleUI.DisplayGuessResult(GameManager.evaluateGuessAndGiveColoredFeedback(guess, manager.getTargetWord()), guess);
-                ConsoleUI.println("CORRECT! YOU GUESSED THE WORD: " + manager.getTargetWord());
-                return;
-            } else {
-                int attemptsLeft = manager.getMaxGuesses() - manager.getGuessesUsed();
-                if (attemptsLeft > 0) {
-                    ConsoleUI.DisplayGuessResult(GameManager.evaluateGuessAndGiveColoredFeedback(guess, manager.getTargetWord()), guess);
-                    ConsoleUI.println("NOT CORRECT. ATTEMPTS LEFT: " + attemptsLeft);
+
+            try {
+                if (manager.doesGuessMatch(guess)) {
+                    ConsoleUI.DisplayGuessResult(
+                            GameManager.evaluateGuessAndGiveColoredFeedback(guess, manager.getTargetWord()),
+                            guess
+                    );
+                    ConsoleUI.println("CORRECT! YOU GUESSED THE WORD: " + manager.getTargetWord());
+                    return;
+                } else {
+                    int attemptsLeft = manager.getMaxGuesses() - manager.getGuessesUsed();
+                    if (attemptsLeft > 0) {
+                        ConsoleUI.DisplayGuessResult(
+                                GameManager.evaluateGuessAndGiveColoredFeedback(guess, manager.getTargetWord()),
+                                guess
+                        );
+                        ConsoleUI.println("NOT CORRECT. ATTEMPTS LEFT: " + attemptsLeft);
+                    }
                 }
+            } catch (IllegalArgumentException e) {
+                ConsoleUI.println("INVALID GUESS. PLEASE ENTER A 5-LETTER WORD (A–Z ONLY).");
             }
         }
-
-        // Out of guesses
-        ConsoleUI.println("YOU LOST! THE CORRECT ANSWER WAS: " + manager.getTargetWord());
+        ConsoleUI.println("YOU LOST! THE CORRECT ANSWER WAS:"+manager.getTargetWord());
     }
 
-    /**
-     * Displays the introduction messages for the game.
-     */
-    private static void showIntro(GameManager manager) {
-        ConsoleUI.println("WELCOME TO WORDLE! GUESS THE SECRET WORD.");
-        ConsoleUI.println("YOU HAVE " + manager.getMaxGuesses()+ " GUESSES.");
-    }
-}
+            /**
+             * Displays the introduction messages for the game.
+             */
+            private static void showIntro (GameManager manager){
+                ConsoleUI.println("WELCOME TO WORDLE! GUESS THE SECRET WORD.");
+                ConsoleUI.println("YOU HAVE " + manager.getMaxGuesses() + " GUESSES.");
+            }
+        }
 
