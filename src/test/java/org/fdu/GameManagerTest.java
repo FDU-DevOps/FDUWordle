@@ -1,7 +1,10 @@
 package org.fdu;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.DisplayName;
+
 import static org.junit.jupiter.api.Assertions.*;
+import static org.fdu.GameManager.*;
 
 class GameManagerTest {
 
@@ -23,8 +26,8 @@ class GameManagerTest {
     @Test
     void getMaxGuesses() {
         GameManager manager = new GameManager();
-        assertEquals(1, manager.getMaxGuesses(), "Max guesses should be 1");
-        assertEquals(1, GameManager.MAX_GUESSES, "MAX_GUESSES constant should be 1");
+        assertEquals(6, manager.getMaxGuesses(), "Max guesses should be 6");
+        assertEquals(6, GameManager.MAX_GUESSES, "MAX_GUESSES constant should be 6");
     }
 
     @Test
@@ -38,8 +41,11 @@ class GameManagerTest {
     void isGameNotOver() {
         GameManager manager = new GameManager();
         assertTrue(manager.isGameNotOver(),"Game should not be over at the start of the game loop");
-        manager.doesGuessMatch("WRONG");
-        assertFalse(manager.isGameNotOver(),"Game should be over after 1 guess");
+        for(int i = 0; i < 6; i ++)
+        {
+            manager.doesGuessMatch("WRONG");
+        }
+        assertFalse(manager.isGameNotOver(),"Game should be over after 6 guesses");
     }
 
     @Test
