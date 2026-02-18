@@ -30,11 +30,13 @@ public class App
             }
 
             if (manager.doesGuessMatch(guess)) {
+                ConsoleUI.DisplayGuessResult(GameManager.evaluateGuessAndGiveColoredFeedback(guess, manager.getTargetWord()), guess);
                 ConsoleUI.println("CORRECT! YOU GUESSED THE WORD: " + manager.getTargetWord());
                 return;
             } else {
                 int attemptsLeft = manager.getMaxGuesses() - manager.getGuessesUsed();
                 if (attemptsLeft > 0) {
+                    ConsoleUI.DisplayGuessResult(GameManager.evaluateGuessAndGiveColoredFeedback(guess, manager.getTargetWord()), guess);
                     ConsoleUI.println("NOT CORRECT. ATTEMPTS LEFT: " + attemptsLeft);
                 }
             }
@@ -49,7 +51,7 @@ public class App
      */
     private static void showIntro(GameManager manager) {
         ConsoleUI.println("WELCOME TO WORDLE! GUESS THE SECRET WORD.");
-        ConsoleUI.println("YOU HAVE " + manager.getMaxGuesses()+ " GUESS.");
+        ConsoleUI.println("YOU HAVE " + manager.getMaxGuesses()+ " GUESSES.");
     }
 }
 

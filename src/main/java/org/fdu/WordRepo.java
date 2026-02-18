@@ -16,6 +16,7 @@ import java.util.Random;
  * @author tbd
  */
 
+
 public class WordRepo {
     /* initial small Wordle dictionary */
     private static final List<String> words = Arrays.asList(
@@ -24,6 +25,7 @@ public class WordRepo {
             "PHONE","DEVIL", "ARRAY", "ASSET", "WATER", "WORDS");
 
     private static final Random random =  new  Random();
+    public static final int WORD_LENGTH = 5;
 
     /**
      * Utility class - mark constructor as private
@@ -66,7 +68,7 @@ public class WordRepo {
     public static ConsoleUI.FeedbackType[] GenerateColoredFeedback(String playerGuess, String targetWord)
     {
         // Array to store color coded feedback results -- CAN BE REFACTORED TO INCLUDE MAX_GUESS CONSTANT?
-        ConsoleUI.FeedbackType[] results = new ConsoleUI.FeedbackType[5];
+        ConsoleUI.FeedbackType[] results = new ConsoleUI.FeedbackType[WORD_LENGTH];
 
         // Separate playerGuess and targetWord into character arrays
         char[] playerGuessToCharArray = playerGuess.toCharArray();
