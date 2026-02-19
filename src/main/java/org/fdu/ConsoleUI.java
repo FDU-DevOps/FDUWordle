@@ -88,4 +88,19 @@ public final class ConsoleUI {
         }
         System.out.println();
     }
+
+    /**
+     Displays a prompt message indicating that the tester can enter a custom target word. <br>
+     <p>
+     Scope: <br>
+     Used only in debug mode when SECRET_WORD command is entered. <br>
+     Responsible only for displaying tester instructions, not reading input. <br>
+     </p>
+     @return void
+     @author Emirlan Asanakunov
+     */
+    public static void showTesterTargetPrompt() {
+        println("DEBUG MODE ACTIVATED.");
+        println("ENTER TESTER TARGET WORD: ");
+    }
 }
