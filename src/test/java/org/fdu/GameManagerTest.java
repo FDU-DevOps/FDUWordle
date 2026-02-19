@@ -58,4 +58,44 @@ class GameManagerTest {
         assertEquals("WORLD", manager.normalize("   WoRlD   "), "Should trim and convert to uppercase");
         assertEquals("", manager.normalize(null), "Should return empty string for null input");
     }
+
+    @Test
+    public void testIsDebugCommand_validCommand_noGuesses() {
+        GameManager manager = new GameManager();
+        assertTrue(manager.isDebugCommand("SECRET_WORD"));
+    }
+
+    @Test
+    public void testIsDebugCommand_validCommand_withGuesses() {
+        GameManager manager = new GameManager();
+        manager.doesGuessMatch("HELLO"); // increments guessesUsed to 1
+        assertFalse(manager.isDebugCommand("SECRET_WORD"));
+    }
+
+    @Test
+    public void testIsDebugCommand_wrongWord() {
+        GameManager manager = new GameManager();
+        assertFalse(manager.isDebugCommand("HELLO"));
+    }
+
+    @Test
+    public void testIsDebugCommand_emptyString() {
+        GameManager manager = new GameManager();
+        assertFalse(manager.isDebugCommand(""));
+    }
+
+    @Test
+    public void testSetDebugTargetWord() {
+        GameManager manager = new GameManager();
+        manager.setDebugTargetWord("CRANE");
+        assertEquals("CRANE", manager.getTargetWord());
+    }
+
+    @Test
+    public void testSetDebugTargetWord_overridesOriginal() {
+        GameManager manager = new GameManager();
+        String original = manager.getTargetWord();
+        manager.setDebugTargetWord("CRANE");
+        assertNotEquals(original, manager.getTargetWord());
+    }
 }
