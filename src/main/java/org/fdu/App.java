@@ -29,6 +29,16 @@ public class App
                 continue;
             }
 
+            // DEBUG COMMAND CHECK
+            if (manager.isDebugCommand(guess)) {
+                ConsoleUI.showTesterTargetPrompt();
+                String debugWordRaw = ConsoleUI.readLine("");
+                String debugWord = manager.normalize(debugWordRaw);
+                manager.setDebugTargetWord(debugWord);
+                ConsoleUI.println("DEBUG TARGET WORD SET TO: " + debugWord);
+                continue;
+            }
+
             if (manager.doesGuessMatch(guess)) {
                 ConsoleUI.DisplayGuessResult(GameManager.evaluateGuessAndGiveColoredFeedback(guess, manager.getTargetWord()), guess);
                 ConsoleUI.println("CORRECT! YOU GUESSED THE WORD: " + manager.getTargetWord());
