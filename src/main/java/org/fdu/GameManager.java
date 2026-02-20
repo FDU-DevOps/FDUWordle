@@ -16,8 +16,9 @@ package org.fdu;
 public class GameManager {
 
     public static final int MAX_GUESSES = 6;
-    private final String targetWord;
+    private String targetWord;
     private int guessesUsed = 0;
+
 
     /**
      * GameManager() - Initializes the targetWord from the WordRepo Class method pickTargetWord() <br>
@@ -96,5 +97,36 @@ public class GameManager {
     public static void showIntro (GameManager manager){
         ConsoleUI.println("WELCOME TO WORDLE! GUESS THE SECRET WORD.");
         ConsoleUI.println("YOU HAVE " + manager.getMaxGuesses() + " GUESSES.");
+    }
+    /**
+     Overrides the randomly selected target word with a tester-defined word in debug mode. <br>
+     <p>
+     Scope: <br>
+     Used only when the SECRET_WORD debug command is activated. <br>
+     Allows testers to manually set the target word for testing edge cases. <br>
+     Does not affect normal gameplay when debug mode is not used. <br>
+     </p>
+     @param debugWord the custom target word entered by the tester
+     @return void
+     @author Emirlan Asanakunov
+     */
+    public void setDebugTargetWord(String debugWord){
+        this.targetWord = debugWord;
+    }
+
+    /**
+     Determines whether the player input activates debug mode. <br>
+     <p>
+     Scope: <br>
+     Checks if the normalized user input matches the special debug command (SECRET_WORD). <br>
+     Ensures debug mode can only be activated before any guesses have been used. <br>
+     Prevents testers from changing the target word after gameplay has started. <br>
+     </p>
+     @param guess normalized player input
+     @return true if the debug command is detected and no guesses have been used; false otherwise
+     @author Emirlan Asanakunov
+     */
+    public boolean isDebugCommand(String guess){
+        return guess.equals("SECRET_WORD") && guessesUsed == 0;
     }
 }
