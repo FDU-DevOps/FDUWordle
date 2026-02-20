@@ -29,18 +29,19 @@ public class App
                 ConsoleUI.println("PLEASE ENTER A GUESS (NOT BLANK).");
                 continue;
             }
-            if (WordRepo.isInvalidGuess(guess)) {
-                ConsoleUI.println("INVALID GUESS. PLEASE ENTER A 5-LETTER WORD (A–Z ONLY).");
-                continue;
-            }
 
             // DEBUG COMMAND CHECK
             if (manager.isDebugCommand(guess)) {
                 ConsoleUI.showTesterTargetPrompt();
                 String debugWordRaw = ConsoleUI.readLine("");
-                String debugWord = manager.normalize(debugWordRaw);
+                String debugWord = manager.getNormalizedGuess(debugWordRaw);
                 manager.setDebugTargetWord(debugWord);
                 ConsoleUI.println("DEBUG TARGET WORD SET TO: " + debugWord);
+                continue;
+            }
+
+            if (WordRepo.isInvalidGuess(guess)) {
+                ConsoleUI.println("INVALID GUESS. PLEASE ENTER A 5-LETTER WORD (A–Z ONLY).");
                 continue;
             }
 
