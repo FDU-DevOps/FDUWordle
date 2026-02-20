@@ -1,10 +1,10 @@
 package org.fdu;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.DisplayName;
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.fdu.GameManager.*;
 
 class GameManagerTest {
 
@@ -47,16 +47,29 @@ class GameManagerTest {
         }
         assertFalse(manager.isGameNotOver(),"Game should be over after 6 guesses");
     }
+    @Test
+    public void showIntro() {
+        final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
+        System.setOut(new PrintStream(outContent));
+
+        GameManager manager = new GameManager();
+        GameManager.showIntro(manager);
+
+        System.setOut(System.out);
+
+        assertFalse(outContent.toString().isEmpty());
+    }
 
     @Test
-    void normalize() {
+    void getNormalizedGuess() {
         GameManager manager = new GameManager();
-        assertEquals("HELLO", manager.normalize("hello"),"Should convert string from lowercase to uppercase");
-        assertEquals("HELLO",manager.normalize("    hello    "), "Should trim leading and trailing whitespace");
-        assertEquals("HELLO", manager.normalize("HeLLo"), "Should convert mixed case to uppercase");
-        assertEquals("DEVIL", manager.normalize("DEVIL"),"Should handle already normalized input");
-        assertEquals("WORLD", manager.normalize("   WoRlD   "), "Should trim and convert to uppercase");
-        assertEquals("", manager.normalize(null), "Should return empty string for null input");
+
+        assertEquals("", manager.getNormalizedGuess(null));
+        assertEquals("", manager.getNormalizedGuess(""));
+        assertEquals("HAIRY", manager.getNormalizedGuess("hairy"));
+        assertEquals("HAIRY", manager.getNormalizedGuess("  HAIRY  "));
+        assertEquals("HAIRY", manager.getNormalizedGuess("  hAiRy  "));
+        assertEquals("TABLE", manager.getNormalizedGuess("TABLE"));
     }
 
     @Test

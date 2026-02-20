@@ -1,0 +1,29 @@
+name: Wordle Pipeline - Build, Test, Upload JAR
+
+on:
+  pull_request:
+    branches: [ 'master' ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code from branch
+        uses: actions/checkout@v6
+
+      - name: Set up JDK 21 (Temurin)
+        uses: actions/setup-java@v5
+        with:
+          java-version: "21"
+          distribution: "temurin"
+          cache: maven
+
+      - name: Build and Test with Maven
+        run: mvn -B clean test package
+
+      - name: Upload JAR file
+        uses: actions/upload-artifact@v6
+        with:
+          name: wordle-jar
+          path: target/*.jar

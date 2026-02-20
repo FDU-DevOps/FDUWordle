@@ -44,8 +44,61 @@ class WordRepoTest {
     }
 
     @Test
+    public void isInvalidGuess(){
+        // Invalid cases (should return true)
+        assertTrue(WordRepo.isInvalidGuess(null));
+        assertTrue(WordRepo.isInvalidGuess(""));
+        assertTrue(WordRepo.isInvalidGuess("CAT"));
+        assertTrue(WordRepo.isInvalidGuess("TIREDNESS"));
+        assertTrue(WordRepo.isInvalidGuess("WH90A"));
+        assertTrue(WordRepo.isInvalidGuess("HE LO"));
+        assertTrue(WordRepo.isInvalidGuess("HE@LO"));
+
+        // Lowercase letters (below 'A' in ASCII won't apply, but lowercase is outside A-Z range)
+        assertTrue(WordRepo.isInvalidGuess("hairy"));
+
+        // Valid cases (should return false)
+        assertFalse(WordRepo.isInvalidGuess("HAIRY"));
+        assertFalse(WordRepo.isInvalidGuess("TABLE"));
+        assertFalse(WordRepo.isInvalidGuess("ABCDE"));
+    }
+
+    @Test
+    void normalize() {
+
+        assertEquals("HELLO", WordRepo.normalize("hello"),"Should convert string from lowercase to uppercase");
+        assertEquals("HELLO", WordRepo.normalize("    hello    "), "Should trim leading and trailing whitespace");
+        assertEquals("HELLO", WordRepo.normalize("HeLLo"), "Should convert mixed case to uppercase");
+        assertEquals("DEVIL", WordRepo.normalize("DEVIL"),"Should handle already normalized input");
+        assertEquals("WORLD", WordRepo.normalize("   WoRlD   "), "Should trim and convert to uppercase");
+        assertEquals("", WordRepo.normalize(null), "Should return empty string for null input");
+    }
+
+    @Test
     @DisplayName("Test method for color coded feedback method")
     void generateColoredFeedbackTest() {
+
+        //These test cases examine the IllegalArgumentException to be thrown within the generateColoredFeedback method
+        assertThrows(IllegalArgumentException.class, () ->
+                WordRepo.GenerateColoredFeedback("CAT", "TABLE"));
+
+        assertThrows(IllegalArgumentException.class, () ->
+                WordRepo.GenerateColoredFeedback("TIREDNESS", "TABLE"));
+
+        assertThrows(IllegalArgumentException.class, () ->
+                WordRepo.GenerateColoredFeedback("WH90A", "TABLE"));
+
+        assertThrows(IllegalArgumentException.class, () ->
+                WordRepo.GenerateColoredFeedback("HE@LO", "TABLE"));
+
+        assertThrows(IllegalArgumentException.class, () ->
+                WordRepo.GenerateColoredFeedback("hairy", "TABLE"));
+
+        assertThrows(IllegalArgumentException.class, () ->
+                WordRepo.GenerateColoredFeedback(null, "TABLE"));
+
+        assertThrows(IllegalArgumentException.class, () ->
+                WordRepo.GenerateColoredFeedback("", "TABLE"));
 
          /*
             Cases:
