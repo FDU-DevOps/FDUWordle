@@ -30,7 +30,7 @@ public class App
                 continue;
             }
 
-            // DEBUG COMMAND CHECK
+            // CHECK DEBUG COMMAND
             if (manager.isDebugCommand(guess)) {
                 ConsoleUI.showTesterTargetPrompt();
                 String debugWordRaw = ConsoleUI.readLine("");
