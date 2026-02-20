@@ -1,5 +1,4 @@
 package org.fdu;
-
 /**
  * Contains main() and creates/starts the game
  */
@@ -13,45 +12,46 @@ public class App
      * Runs a single game session (maximum 1 guess).
      * End conditions:
      * - User guesses the word correctly
-     * - User uses 1 guess (loss message shown)
+     * - User uses 6 guesses (loss message shown)
+     * Blank input does NOT count as an attempt
+     * EvaluateInvalid guesses (non-5-letter or non-alphabetic)
      */
     public static void runGame() {
         GameManager manager = new GameManager();
-        showIntro(manager);
+        GameManager.showIntro(manager);
 
         while (manager.isGameNotOver()) {
             String rawGuess = ConsoleUI.readLine("ENTER YOUR GUESS: ");
-            String guess = manager.normalize(rawGuess);
+            String guess = manager.getNormalizedGuess(rawGuess);
 
             // OTHER: blank input does not count as an attempt
             if (guess.isEmpty()) {
                 ConsoleUI.println("PLEASE ENTER A GUESS (NOT BLANK).");
                 continue;
             }
+            if (WordRepo.isInvalidGuess(guess)) {
+                ConsoleUI.println("INVALID GUESS. PLEASE ENTER A 5-LETTER WORD (A–Z ONLY).");
+                continue;
+            }
 
             if (manager.doesGuessMatch(guess)) {
-                ConsoleUI.DisplayGuessResult(GameManager.evaluateGuessAndGiveColoredFeedback(guess, manager.getTargetWord()), guess);
+                ConsoleUI.DisplayGuessResult(
+                            GameManager.evaluateGuessAndGiveColoredFeedback(guess, manager.getTargetWord()),
+                            guess);
                 ConsoleUI.println("CORRECT! YOU GUESSED THE WORD: " + manager.getTargetWord());
                 return;
-            } else {
+            }
+            else {
                 int attemptsLeft = manager.getMaxGuesses() - manager.getGuessesUsed();
                 if (attemptsLeft > 0) {
-                    ConsoleUI.DisplayGuessResult(GameManager.evaluateGuessAndGiveColoredFeedback(guess, manager.getTargetWord()), guess);
+                    ConsoleUI.DisplayGuessResult(
+                            GameManager.evaluateGuessAndGiveColoredFeedback(guess, manager.getTargetWord()),
+                            guess);
                     ConsoleUI.println("NOT CORRECT. ATTEMPTS LEFT: " + attemptsLeft);
                 }
             }
         }
-
-        // Out of guesses
-        ConsoleUI.println("YOU LOST! THE CORRECT ANSWER WAS: " + manager.getTargetWord());
-    }
-
-    /**
-     * Displays the introduction messages for the game.
-     */
-    private static void showIntro(GameManager manager) {
-        ConsoleUI.println("WELCOME TO WORDLE! GUESS THE SECRET WORD.");
-        ConsoleUI.println("YOU HAVE " + manager.getMaxGuesses()+ " GUESSES.");
+        ConsoleUI.println("YOU LOST! THE CORRECT ANSWER WAS:"+manager.getTargetWord());
     }
 }
 

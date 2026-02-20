@@ -19,7 +19,6 @@ public class GameManager {
     private final String targetWord;
     private int guessesUsed = 0;
 
-
     /**
      * GameManager() - Initializes the targetWord from the WordRepo Class method pickTargetWord() <br>
      * </p>
@@ -76,22 +75,26 @@ public class GameManager {
     }
 
     /**
-     * Normalizes user input according to the game rules:
-     * - Trim leading/trailing whitespace
-     * - Convert to UPPERCASE
-     *
-     * @param rawGuess, user's guess(perhaps be null)
-     * @return normalized string (never null; may be empty)
+     * getNormalizedGuess(String rawGuess) - Retrieves the normalized guess from the WordRepo Class
+     * @param rawGuess, player's guess(perhaps be null)
+     * @return normalized string from WordRepo Class
      */
-    public String normalize(String rawGuess) {
-        if (rawGuess == null) {
-            return "";
-        }
-        return rawGuess.trim().toUpperCase();
+
+    public String getNormalizedGuess(String rawGuess){
+        return WordRepo.normalize(rawGuess);
     }
+
 
     public static ConsoleUI.FeedbackType[] evaluateGuessAndGiveColoredFeedback(String playerGuess, String targetWord)
     {
         return WordRepo.GenerateColoredFeedback(playerGuess, targetWord);
+    }
+
+    /**
+     * Displays the introduction messages for the game.
+     */
+    public static void showIntro (GameManager manager){
+        ConsoleUI.println("WELCOME TO WORDLE! GUESS THE SECRET WORD.");
+        ConsoleUI.println("YOU HAVE " + manager.getMaxGuesses() + " GUESSES.");
     }
 }
