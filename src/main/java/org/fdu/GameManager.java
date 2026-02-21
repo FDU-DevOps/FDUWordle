@@ -86,7 +86,7 @@ public class GameManager {
     }
 
 
-    public static ConsoleUI.FeedbackType[] evaluateGuessAndGiveColoredFeedback(String playerGuess, String targetWord)
+    public static WordRepo.FeedbackType[] evaluateGuessAndGiveColoredFeedback(String playerGuess, String targetWord)
     {
         return WordRepo.GenerateColoredFeedback(playerGuess, targetWord);
     }

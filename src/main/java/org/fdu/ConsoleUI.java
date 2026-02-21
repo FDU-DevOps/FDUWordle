@@ -38,32 +38,6 @@ public final class ConsoleUI {
         return SCANNER.nextLine();
     }
 
-    /**
-     * Enum to store ANSI Escape Codes for Color Coded Word Feedback <br>
-     <p>
-     Scope: 3 enums: GREEN, YELLOW, RESET
-     </p>
-     @author Xavier Orrala
-     */
-    public enum FeedbackType {
-        // Reset Escape Code
-        RESET("\033[0m"),
-
-        // Color Escape Code
-        GREEN("\u001B[32m"),
-        YELLOW("\u001B[33m");
-
-        private final String code;
-        // Private Constructor
-        FeedbackType(String code) {
-            this.code = code;
-        }
-
-        @Override
-        public String toString() {
-            return code;
-        }
-    }
 
     /**
      * Display feedback to the user, including: color-coded word feedback, if user has won, or if user is out of guesses<br>
@@ -76,7 +50,7 @@ public final class ConsoleUI {
      @author Emirlan Asanakunov
      */
 
-    public static void DisplayGuessResult(FeedbackType[] feedback,String playerGuess) {
+    public static void DisplayGuessResult(WordRepo.FeedbackType[] feedback,String playerGuess) {
         // Convert playerGuess to uppercase for display
         char[] playerGuessLetters = playerGuess.toUpperCase().toCharArray();
 
@@ -85,8 +59,9 @@ public final class ConsoleUI {
         {
             // Display: [color code] + [letter] + [reset code] + [space]
             // Example: "green" + "O" + "gray" + " " -> displays green "O "
-            System.out.print(feedback[i].toString() + playerGuessLetters[i] + FeedbackType.RESET + " ");
+            System.out.print(feedback[i].getAnsiCode() + playerGuessLetters[i] + " ");
         }
+        System.out.print(WordRepo.FeedbackType.RESET.getAnsiCode());
         System.out.println();
     }
 

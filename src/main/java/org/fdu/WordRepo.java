@@ -28,6 +28,41 @@ public class WordRepo {
     public static final int WORD_LENGTH = 5;
 
     /**
+     * Enum to store ANSI Escape Codes for Color Coded Word Feedback <br>
+     <p>
+     Scope: 4 enums: GREEN, YELLOW, GRAY, RESET
+     </p>
+     @author Xavier Orrala
+     */
+    public enum FeedbackType {
+        GREEN, YELLOW, GRAY, RESET;
+
+        public String getAnsiCode() {
+            switch(this)
+            {
+                case GREEN:
+                    return "\u001B[32m";
+                case YELLOW:
+                    return "\u001B[33m";
+                case GRAY:
+                    return "\u001B[90m";
+                case RESET:
+                    return "\033[0m";
+                default:
+                    return "\033[0m"; // default returning RESET code to not break code if default case is hit
+            }
+        }
+
+
+        public String format(String message) {
+            if (this == RESET) {
+                return getAnsiCode() + message;
+            }
+            return getAnsiCode() + message + RESET.getAnsiCode();
+        }
+    }
+
+    /**
      * Utility class - mark constructor as private
      */
     private WordRepo(){}
@@ -104,7 +139,7 @@ public class WordRepo {
      @throws IllegalArgumentException if {playerGuess} is not a valid guess
      @author Xavier Orrala
      */
-    public static ConsoleUI.FeedbackType[] GenerateColoredFeedback(String playerGuess, String targetWord)
+    public static FeedbackType[] GenerateColoredFeedback(String playerGuess, String targetWord)
     {
         // Checking if the playerGuess is valid and if not, an exception is thrown
         if (isInvalidGuess(playerGuess)) {
@@ -112,7 +147,7 @@ public class WordRepo {
         }
 
         // Array to store color coded feedback results -- CAN BE REFACTORED TO INCLUDE MAX_GUESS CONSTANT?
-        ConsoleUI.FeedbackType[] results = new ConsoleUI.FeedbackType[WORD_LENGTH];
+        FeedbackType[] results = new FeedbackType[WORD_LENGTH];
 
         // Separate playerGuess and targetWord into character arrays
         char[] playerGuessToCharArray = playerGuess.toCharArray();
@@ -134,7 +169,7 @@ public class WordRepo {
             if(playerGuessToCharArray[i] == targetWordToCharArray[i])
             {
                 // Set correct letter location to GREEN enum + decrease count for letter
-                results[i] = ConsoleUI.FeedbackType.GREEN;
+                results[i] = FeedbackType.GREEN;
                 targetWordLetterCount.put(playerGuessToCharArray[i], targetWordLetterCount.get(playerGuessToCharArray[i]) - 1);
             }
         }
@@ -152,11 +187,11 @@ public class WordRepo {
                 if(remainingTargetWordLetterCount > 0)
                 {
                     // Set correct letter, but incorrect location to YELLOW enum + decrease count for letter
-                    results[i] = ConsoleUI.FeedbackType.YELLOW;
+                    results[i] = FeedbackType.YELLOW;
                     targetWordLetterCount.put(currentGuessCharacter, remainingTargetWordLetterCount - 1);
                 }
                 else { // Letter not found (no count for specified letter)
-                    results[i] = ConsoleUI.FeedbackType.RESET;
+                    results[i] = FeedbackType.GRAY;
                 }
             }
         }
