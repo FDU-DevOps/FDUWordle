@@ -24,7 +24,7 @@ import java.io.Reader;
 
 public class WordRepo {
     /* initial small Wordle dictionary */
-    private static List<String> words = new ArrayList<>();
+    private static final List<String> words = new ArrayList<>();
 
     private static final Random random =  new  Random();
     public static final int WORD_LENGTH = 5;
@@ -45,7 +45,6 @@ public class WordRepo {
      </p>
 
      @param filePath path to the dictionary file
-     @return void
      @author Emirlan Asanakunov
      */
 
@@ -68,8 +67,6 @@ public class WordRepo {
 
         // If the file was empty, no point continuing
         if (words.isEmpty()) throw new RuntimeException("Dictionary is empty!");
-
-        System.out.println("Dictionary loaded: " + words.size() + " words");
     }
 
     /**
