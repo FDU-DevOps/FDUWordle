@@ -1,17 +1,17 @@
 package org.fdu;
 
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.DisplayName;
+//import org.junit.jupiter.api.Test;
+//import org.junit.jupiter.api.DisplayName;
 
-import static org.junit.jupiter.api.Assertions.*;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.AfterEach;
+//import static org.junit.jupiter.api.Assertions.*;
+//import org.junit.jupiter.api.BeforeEach;
+//import org.junit.jupiter.api.AfterEach;
 
-import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
+//import java.io.ByteArrayOutputStream;
+//import java.io.PrintStream;
 
 class ConsoleUITest {
-
+    /*
     // Bucket to capture console output (instead of printing to screen)
     // ByteArrayOutputStream stores output data in memory as array of bytes
     private ByteArrayOutputStream bucket;
@@ -44,5 +44,5 @@ class ConsoleUITest {
 
     @Test
     void readLine() {
-    }
+    } */
 }

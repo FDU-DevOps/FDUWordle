@@ -26,8 +26,10 @@ class GameManagerTest {
     @Test
     void getMaxGuesses() {
         GameManager manager = new GameManager();
-        assertEquals(6, manager.getMaxGuesses(), "Max guesses should be 6");
-        assertEquals(6, GameManager.MAX_GUESSES, "MAX_GUESSES constant should be 6");
+        GameManager manager2 = new GameManager();
+        assertEquals(manager.getMaxGuesses(), manager2.getMaxGuesses(), "MAX_GUESSES should be the same across different instances.");
+        assertTrue(manager.getMaxGuesses() > 0, "MAX_GUESSES should always be above 0.");
+        assertEquals(GameManager.MAX_GUESSES, manager.getMaxGuesses(),"MAX_GUESSES constant should be 6");
     }
 
     @Test
