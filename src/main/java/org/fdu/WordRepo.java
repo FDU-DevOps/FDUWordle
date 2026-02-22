@@ -30,7 +30,7 @@ public class WordRepo {
     /**
      * Enum to store ANSI Escape Codes for Color Coded Word Feedback <br>
      <p>
-     Scope: 4 enums: GREEN, YELLOW, GRAY, RESET
+     Scope: 4 enums: GREEN, YELLOW, GRAY, RESET, returns enums with ANSI Escape Code
      </p>
      @author Xavier Orrala
      */
@@ -53,7 +53,12 @@ public class WordRepo {
             }
         }
 
-
+        /**
+         * Takes message, return as color coded feedback using ANSI Escape Codes
+         * @param message is the word input into the game
+         * @return color coded feedback + resets the console color
+         * @author Xavier Orrala
+         */
         public String format(String message) {
             if (this == RESET) {
                 return getAnsiCode() + message;
