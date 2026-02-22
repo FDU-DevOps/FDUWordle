@@ -130,6 +130,11 @@ public class WordRepo {
         }
         return false;
     }
+
+    public static int getWordLength()
+    {
+        return WORD_LENGTH;
+    }
     /**
      * Generates enum array with color-coded feedback <br>
      *
@@ -152,7 +157,7 @@ public class WordRepo {
         }
 
         // Array to store color coded feedback results -- CAN BE REFACTORED TO INCLUDE MAX_GUESS CONSTANT?
-        FeedbackType[] results = new FeedbackType[WORD_LENGTH];
+        FeedbackType[] results = new FeedbackType[getWordLength()];
 
         // Separate playerGuess and targetWord into character arrays
         char[] playerGuessToCharArray = playerGuess.toCharArray();
@@ -169,7 +174,7 @@ public class WordRepo {
 
         // Run through playerGuessToCharArray and compare to targetWordToCharArray - color code as appropriate - prioritize green, then yellow, then gray
         // First run to check for letters in the correct location (GREEN)
-        for(int i = 0; i < results.length; i++)
+        for(int i = 0; i < getWordLength(); i++)
         {
             if(playerGuessToCharArray[i] == targetWordToCharArray[i])
             {
@@ -180,10 +185,10 @@ public class WordRepo {
         }
 
         // Run to check for correct letters in the incorrect location (YELLOW), then the rest are (GRAY/RESET)
-        for(int i = 0; i < results.length; i++)
+        for(int i = 0; i < getWordLength(); i++)
         {
             // Skip index if letter was correct (GREEN)
-            if(results[i] == null)
+            if(results[i] != FeedbackType.GREEN)
             {
                 char currentGuessCharacter = playerGuessToCharArray[i];
 
