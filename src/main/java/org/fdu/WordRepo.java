@@ -2,9 +2,14 @@ package org.fdu;
 
 import java.util.HashMap;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
+import java.util.ArrayList;
+
+import com.opencsv.CSVReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 
 /**
  * This is a static utility
@@ -19,10 +24,7 @@ import java.util.Random;
 
 public class WordRepo {
     /* initial small Wordle dictionary */
-    private static final List<String> words = Arrays.asList(
-            "TABLE", "CLASS", "BYTES", "INPUT","APPLE",
-            "BOARD", "STORE", "WHICH", "FRUIT",
-            "PHONE","DEVIL", "ARRAY", "ASSET", "WATER", "WORDS");
+    private static List<String> words = new ArrayList<>();
 
     private static final Random random =  new  Random();
     public static final int WORD_LENGTH = 5;
@@ -31,6 +33,44 @@ public class WordRepo {
      * Utility class - mark constructor as private
      */
     private WordRepo(){}
+
+    /**
+     Loads an external dictionary containing valid Wordle words. <br>
+     <p>
+     Scope: <br>
+     Reads a dictionary CSV file. <br>
+     Stores all words in memory for target word selection. <br>
+     If the file is missing, unreadable, or results in an empty word list,
+     throws an exception to prevent the game from starting in a broken state.<br>
+     </p>
+
+     @param filePath path to the dictionary file
+     @return void
+     @author Emirlan Asanakunov
+     */
+
+    public static void loadDictionary(String filePath) throws Exception {
+        words.clear();
+
+        // Load the file from the classpath
+        InputStream dictionary = WordRepo.class.getClassLoader().getResourceAsStream(filePath);
+
+        // If file doesn't exist, stop immediately
+        if (dictionary == null) throw new RuntimeException("File not found: " + filePath);
+
+        try (Reader reader = new InputStreamReader(dictionary); CSVReader csvReader = new CSVReader(reader)) {
+
+            // Read all rows and grab only the first column of each row (there is only one column)
+            for (String[] row : csvReader.readAll()) {
+                words.add(row[0].trim().toUpperCase());
+            }
+        }
+
+        // If the file was empty, no point continuing
+        if (words.isEmpty()) throw new RuntimeException("Dictionary is empty!");
+
+        System.out.println("Dictionary loaded: " + words.size() + " words");
+    }
 
     /**
      * Picks a random target word from the static list.
