@@ -4,9 +4,16 @@ import org.junit.jupiter.api.Test;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 
+import org.junit.jupiter.api.BeforeEach;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class GameManagerTest {
+
+    @BeforeEach
+    void setUp() throws Exception {
+        WordRepo.loadDictionary("valid_dictionary.csv");
+    }
 
     @Test
     void getTargetWord() {

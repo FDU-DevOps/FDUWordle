@@ -23,7 +23,8 @@ class WordRepoTest {
     }
 
     @Test
-    public void getWords(){
+    public void getWords() throws Exception{
+        WordRepo.loadDictionary("valid_dictionary.csv");
         List<String> words = WordRepo.getWords();
         assertNotNull(words, "Word list should not be null");
         assertFalse(words.isEmpty(), "Word list should not be empty");
@@ -38,9 +39,9 @@ class WordRepoTest {
             assertEquals(word, word.toUpperCase(), "Word should be uppercase: " + word);
         }
         // Verify contains expected words
-        assertTrue(words.contains("TABLE"), "Should contain TABLE");
+        assertTrue(words.contains("STOVE"), "Should contain STOVE");
         assertTrue(words.contains("APPLE"), "Should contain APPLE");
-        assertTrue(words.contains("WATER"), "Should contain WATER");
+        assertTrue(words.contains("BLAZE"), "Should contain BLAZE");
     }
 
     @Test
