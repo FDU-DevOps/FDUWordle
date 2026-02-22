@@ -131,6 +131,11 @@ public class WordRepo {
         return false;
     }
 
+    /**
+     * Getter method for Word Length
+     * @return word length public final integer
+     * @author Xavier Orrala
+     */
     public static int getWordLength()
     {
         return WORD_LENGTH;
