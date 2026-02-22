@@ -61,6 +61,7 @@ public class WordRepo {
 
             // Read all rows and grab only the first column of each row (there is only one column)
             for (String[] row : csvReader.readAll()) {
+                if (row[0] == null || row[0].trim().isEmpty()) continue;
                 words.add(row[0].trim().toUpperCase());
             }
         }

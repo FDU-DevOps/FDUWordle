@@ -224,4 +224,71 @@ class WordRepoTest {
         // Target: ABBEY, Guess: BRICK
         assertArrayEquals(expectedOneYellow, WordRepo.GenerateColoredFeedback(playerOneYellow,targetOneYellow), "Double letters, 1 guessed, 2 in target and incorrect location for letter guessed, feedback not working properly");
     }
+
+    @Test
+    @DisplayName("Happy path: valid csv loads words correctly")
+    void testLoadDictionaryValidFileWordsLoaded() throws Exception {
+        WordRepo.loadDictionary("valid_dictionary.csv");
+
+        List<String> words = WordRepo.getWords();
+
+        assertFalse(words.isEmpty(), "Words not loaded correctly.");
+        assertTrue(words.contains("APPLE"), "Should Contain APPLE");
+        assertTrue(words.contains("PLANT"), "Should Contain PLANT");
+        assertTrue(words.contains("TIGER"), "Should Contain TIGER");
+    }
+
+    @Test
+    @DisplayName("Words are uppercased")
+    void testLoadDictionaryWordsAreUppercased() throws Exception {
+        // Load test dictionary
+        WordRepo.loadDictionary("valid_dictionary.csv");
+
+        for (String word : WordRepo.getWords()) {
+            assertEquals(word.trim().toUpperCase(), word,"Every word should be uppercase");
+        }
+    }
+
+    @Test
+    @DisplayName("Sad Path ;( File not found throws RuntimeException")
+    void testLoadDictionaryFileNotFound(){
+        // Store exception in ex
+        RuntimeException ex = assertThrows(RuntimeException.class, () ->
+                WordRepo.loadDictionary("random_dictionary.csv"));
+        // Check exception message
+        assertTrue(ex.getMessage().contains("File not found"), "Exception message not found");
+    }
+
+    @Test
+    @DisplayName("Sad Path ;( Empty file throws an exception")
+    void testLoadDictionaryEmptyFile(){
+        // Store exception in ex
+        RuntimeException ex =  assertThrows(RuntimeException.class, () ->
+                WordRepo.loadDictionary("empty_dictionary.csv"));
+        // Check exception message
+        assertTrue(ex.getMessage().contains("Dictionary is empty!"), "Exception message not found");
+    }
+
+    @Test
+    @DisplayName("Calling loadDictionary twice clears the old words (words.clear() works)")
+    void testLoadDictionaryTwiceClearsTheOldWords() throws Exception {
+        WordRepo.loadDictionary("valid_dictionary.csv");
+        int firstLoadCount = WordRepo.getWords().size();
+
+        // Load again, should not double up
+        WordRepo.loadDictionary("valid_dictionary.csv");
+        int secondLoadCount = WordRepo.getWords().size();
+
+        assertEquals(firstLoadCount, secondLoadCount,
+                "Loading the same file twice should not duplicate words");
+    }
+
+    @Test
+    @DisplayName("Empty rows in file are skipped")
+    void testLoadDictionaryEmptyRowsAreSkipped() throws Exception {
+        WordRepo.loadDictionary("valid_dictionary.csv");
+        List<String> words = WordRepo.getWords();
+
+        assertEquals(15, words.size(), "Should only contain 15 words, empty rows skipped");
+    }
 }
