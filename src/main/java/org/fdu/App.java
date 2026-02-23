@@ -4,7 +4,8 @@ package org.fdu;
  */
 public class App 
 {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception{
+        WordRepo.loadDictionary("dictionary.csv");
         runGame();
     }
 
@@ -32,9 +33,18 @@ public class App
 
             // CHECK DEBUG COMMAND
             if (manager.isDebugCommand(guess)) {
+                String debugWord;
                 ConsoleUI.showTesterTargetPrompt();
-                String debugWordRaw = ConsoleUI.readLine("");
-                String debugWord = manager.getNormalizedGuess(debugWordRaw);
+                do {
+                    String debugWordRaw = ConsoleUI.readLine("");
+                    debugWord = manager.getNormalizedGuess(debugWordRaw);
+
+                    if(WordRepo.isInvalidGuess(debugWord)){
+                        ConsoleUI.println("INVALID DEBUG WORD. MUST BE A 5-LETTER WORD (A-Z ONLY).");
+                    }
+
+                }while(WordRepo.isInvalidGuess(debugWord));
+
                 manager.setDebugTargetWord(debugWord);
                 ConsoleUI.println("DEBUG TARGET WORD SET TO: " + debugWord);
                 continue;
