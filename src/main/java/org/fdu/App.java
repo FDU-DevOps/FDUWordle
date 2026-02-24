@@ -4,6 +4,11 @@ package org.fdu;
  */
 public class App 
 {
+    /**
+     * Main Class that loads the dictionary and runs the game
+     * @param args any argument that may be used when running the executable - no used for now
+     * @throws Exception when dictionary is not loaded properly
+     */
     public static void main(String[] args) throws Exception{
         WordRepo.loadDictionary("dictionary.csv");
         runGame();

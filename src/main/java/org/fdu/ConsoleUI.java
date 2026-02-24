@@ -72,7 +72,6 @@ public final class ConsoleUI {
      Used only in debug mode when SECRET_WORD command is entered. <br>
      Responsible only for displaying tester instructions, not reading input. <br>
      </p>
-     @return void
      @author Emirlan Asanakunov
      */
     public static void showTesterTargetPrompt() {

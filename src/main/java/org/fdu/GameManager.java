@@ -15,6 +15,7 @@ package org.fdu;
 
 public class GameManager {
 
+    /** Max number of guesses allowed in a Wordle game */
     public static final int MAX_GUESSES = 6;
     private String targetWord;
     private int guessesUsed = 0;
@@ -22,7 +23,6 @@ public class GameManager {
 
     /**
      * GameManager() - Initializes the targetWord from the WordRepo Class method pickTargetWord() <br>
-     * </p>
      * targetWord - (String) the correct answer to the game is picked and assigned to targetWord
      */
     public GameManager() {
@@ -85,7 +85,12 @@ public class GameManager {
         return WordRepo.normalize(rawGuess);
     }
 
-
+    /**
+     * Takes in playerGuess and targetWord and generates colored feedback based on the two
+     * @param playerGuess the player's guess for what the target word is
+     * @param targetWord the generated target word for this instance of Wordle
+     * @return player guess with color coded feedback based on the target word
+     */
     public static WordRepo.FeedbackType[] evaluateGuessAndGiveColoredFeedback(String playerGuess, String targetWord)
     {
         return WordRepo.GenerateColoredFeedback(playerGuess, targetWord);
@@ -93,6 +98,7 @@ public class GameManager {
 
     /**
      * Displays the introduction messages for the game.
+     * @param manager instance of the GameManager class, used to display max guesses
      */
     public static void showIntro (GameManager manager){
         ConsoleUI.println("WELCOME TO WORDLE! GUESS THE SECRET WORD.");
@@ -107,7 +113,6 @@ public class GameManager {
      Does not affect normal gameplay when debug mode is not used. <br>
      </p>
      @param debugWord the custom target word entered by the tester
-     @return void
      @author Emirlan Asanakunov
      */
     public void setDebugTargetWord(String debugWord){
