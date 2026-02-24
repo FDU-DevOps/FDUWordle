@@ -27,6 +27,8 @@ public class WordRepo {
     private static final List<String> words = new ArrayList<>();
 
     private static final Random random =  new  Random();
+
+    /** Max amount of characters allowed in a single word */
     public static final int WORD_LENGTH = 5;
 
     /**
@@ -37,8 +39,19 @@ public class WordRepo {
      @author Xavier Orrala
      */
     public enum FeedbackType {
-        GREEN, YELLOW, GRAY, RESET;
+        /** GREEN enum for correct letter guess and correct letter location */
+        GREEN,
+        /** YELLOW enum for correct letter guess, but incorrect letter location */
+        YELLOW,
+        /** GRAY enum for incorrect letter guess */
+        GRAY,
+        /** RESET enum to rest console color */
+        RESET;
 
+        /**
+         * Returns the ANSI escape code associated with the enums for Colored Feedback
+         * @return ANSI Escape code for colored feedback enums
+         */
         public String getAnsiCode() {
             switch(this)
             {
@@ -85,6 +98,7 @@ public class WordRepo {
      </p>
 
      @param filePath path to the dictionary file
+     @throws Exception when dictionary does not properly load
      @author Emirlan Asanakunov
      */
 
