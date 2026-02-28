@@ -26,4 +26,24 @@ public class GameManagerController
         // Send target word to client
         return currentTargetWord;
     }
+
+    // Player Submitting Guess
+    @PostMapping("/submit-guess")
+    // Receive user guess (POST)
+    // Check word and tell user if they won or not
+    public GameResponse checkUserGuess(@RequestBody MessageData playerGuess)
+    {
+        // Check if word matches
+        String message = "";
+        boolean won = playerGuess.playerGuess().equalsIgnoreCase(currentTargetWord);
+        if(won)
+        {
+            message = "User wins!";
+        }
+        else {
+            message = "User loses!";
+        }
+        // Return Result
+        return new GameResponse(currentTargetWord, message, won);
+    }
 }
