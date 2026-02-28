@@ -22,7 +22,6 @@
     window.onload = async function()
     {
         const response = await fetch("api/FDUWordle/start-game");
-        const targetWord = await response.text();
     };
     async function sendUserGuess() {
         const value = document.getElementById("submit-guess").value;
@@ -32,8 +31,8 @@
             body: JSON.stringify({ "playerGuess": value })
         });
         const data = await response.json();
-        document.getElementById("output").innerText = "TEST OUTPUT";
-        // Output to user if they won or not and what the target word was;
+        document.getElementById("output").innerText =
+            data.messageToPlayer + " " + data.targetWord;
     }
 </script>
 

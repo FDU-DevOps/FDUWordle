@@ -12,7 +12,10 @@ import org.springframework.web.bind.annotation.*;
 public class GameManagerController
 {
     // Stores target word for this session of Wordle
-    private String currentTargetWord;
+    private final GameManager gameManager;
+    public GameManagerController(GameManager gameManager) {
+        this.gameManager = gameManager;
+    }
 
     // Opening page initializes a new game
     @GetMapping("/start-game")
@@ -21,10 +24,10 @@ public class GameManagerController
     public String getTargetWord()
     {
         // Use WordRepo to pick a random target word and store it in the session
-        currentTargetWord = WordRepo.pickTargetWord();
-
+        String currentTargetWord = WordRepo.pickTargetWord();
+        gameManager.setDebugTargetWord(currentTargetWord); // using this as it completes the same function needed in this case
         // Send target word to client
-        return currentTargetWord;
+        return gameManager.getTargetWord();
     }
 
     // Player Submitting Guess
@@ -34,16 +37,10 @@ public class GameManagerController
     public GameResponse checkUserGuess(@RequestBody MessageData playerGuess)
     {
         // Check if word matches
-        String message = "";
-        boolean won = playerGuess.playerGuess().equalsIgnoreCase(currentTargetWord);
-        if(won)
-        {
-            message = "User wins!";
-        }
-        else {
-            message = "User loses!";
-        }
+        boolean won = gameManager.doesGuessMatch(playerGuess.playerGuess());
+        String message = GameManager.gameStateMessage(won);
+
         // Return Result
-        return new GameResponse(currentTargetWord, message, won);
+        return new GameResponse(gameManager.getTargetWord(), message, won);
     }
 }
