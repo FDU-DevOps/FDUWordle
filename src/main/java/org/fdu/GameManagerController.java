@@ -13,14 +13,19 @@ public class GameManagerController
 {
     // Stores target word for this session of Wordle
     private final GameManager gameManager;
+    /**
+     * Constructs the controller to be used within this session
+     * @param gameManager used to track the current session's gameManager constructor
+     */
     public GameManagerController(GameManager gameManager) {
         this.gameManager = gameManager;
     }
 
     // Opening page initializes a new game
+    /** Generates a target word and sends it to the client
+     * @return the selected target word for the current session
+     */
     @GetMapping("/start-game")
-    // Generate Target word (GET)
-    // Send Target Word to Client
     public String getTargetWord()
     {
         // Use WordRepo to pick a random target word and store it in the session
@@ -31,9 +36,13 @@ public class GameManagerController
     }
 
     // Player Submitting Guess
+
+    /**
+     * Checks whether the player's guess compared to the target word and responds accordingly
+     * @param playerGuess the passed player guess from the client
+     * @return GameResponse DTO that stores the target word, message to the user, and whether the user won or not
+     */
     @PostMapping("/submit-guess")
-    // Receive user guess (POST)
-    // Check word and tell user if they won or not
     public GameResponse checkUserGuess(@RequestBody MessageData playerGuess)
     {
         // Check if word matches
