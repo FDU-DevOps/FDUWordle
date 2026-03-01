@@ -12,8 +12,8 @@ test{
    java
 }
 
-tasks.register<Wrapper>("wrapper") {
-    gradleVersion = "4.1"
+tasks.register('wrapper', Wrapper) {
+    gradleVersion = '2.0' //version required
 }
 group = "org.example"
 version = "1.0-SNAPSHOT"
