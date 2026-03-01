@@ -12,9 +12,7 @@ test{
    java
 }
 
-tasks.register('wrapper', Wrapper) {
-    gradleVersion = '2.0' //version required
-}
+
 group = "org.example"
 version = "1.0-SNAPSHOT"
 
