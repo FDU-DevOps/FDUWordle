@@ -53,6 +53,15 @@ public class GameManager {
     public int getGuessesUsed(){
         return guessesUsed;
     }
+
+    /**
+     * resetGuessesUsed() - Resets the number of guesses used back to 0 <br>
+     * Called when a new game session is started
+     */
+    public void resetGuessesUsed(){
+        guessesUsed = 0;
+    }
+
     /**
      * getMaxGuesses() - Allows Game Manager object to access number of max guesses a user has to guess the word <br>
      * @return MAX_GUESSES - (int) number of guesses the player is allowed
@@ -60,6 +69,7 @@ public class GameManager {
     public int getMaxGuesses(){
         return MAX_GUESSES;
     }
+
 
     /**
      * doesGuessMatch(String norm_guess) - compares the normalized guess to the target word <br>
