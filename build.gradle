@@ -1,0 +1,29 @@
+//apply plugin: 'idea'
+//and standard one
+//apply plugin: 'java'
+
+plugins {
+    id("java")
+    id 'application'
+    //id 'org.unbroken-dome.test.sets' version '4.0.0'
+}
+
+test{
+   java
+}
+group = "org.example"
+version = "1.0-SNAPSHOT"
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+
+    testImplementation(platform("org.junit:junit-bom:5.10.3"))
+    testImplementation("org.junit.jupiter:junit-jupiter")
+}
+
+tasks.test {
+    useJUnitPlatform()
+}
