@@ -1,5 +1,6 @@
 package org.fdu;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
@@ -119,5 +120,15 @@ class GameManagerTest {
         String original = manager.getTargetWord();
         manager.setDebugTargetWord("CRANE");
         assertNotEquals(original, manager.getTargetWord());
+    }
+
+    @Test
+    public void testResetGuessesUsed(){
+        GameManager manager = new GameManager();
+        manager.setDebugTargetWord("CRANE");
+        manager.doesGuessMatch("HELLO");
+        assertTrue(manager.getGuessesUsed() > 0, "GuessesUsed should increase after a guess");
+        manager.resetGuessesUsed();
+        assertEquals(0, manager.getGuessesUsed(), "GuessesUsed should be 0 after reset");
     }
 }
