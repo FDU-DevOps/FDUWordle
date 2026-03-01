@@ -31,6 +31,7 @@ public class GameManagerController
         // Use WordRepo to pick a random target word and store it in the session
         String currentTargetWord = WordRepo.pickTargetWord();
         gameManager.setDebugTargetWord(currentTargetWord); // using this as it completes the same function needed in this case
+        gameManager.resetGuessesUsed(); // reset used guesses at the start of the game
         // Send target word to client
         return gameManager.getTargetWord();
     }
@@ -50,6 +51,6 @@ public class GameManagerController
         String message = GameManager.gameStateMessage(won);
 
         // Return Result
-        return new GameResponse(gameManager.getTargetWord(), message, won);
+        return new GameResponse(gameManager.getTargetWord(), message, won, gameManager.getGuessesUsed());
     }
 }
