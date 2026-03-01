@@ -11,6 +11,10 @@ plugins {
 test{
    java
 }
+
+tasks.register<Wrapper>("wrapper") {
+    gradleVersion = "4.1"
+}
 group = "org.example"
 version = "1.0-SNAPSHOT"
 
