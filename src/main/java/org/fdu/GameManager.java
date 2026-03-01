@@ -1,5 +1,6 @@
 package org.fdu;
 
+import org.springframework.stereotype.Service;
 /**
  * Entry point into the game flow from main, processes player guesses,
  *   tracks game state and returns (or has queries) for game status, guess evaluations, etc.Controls the game flow: <br>
@@ -12,7 +13,7 @@ package org.fdu;
  *
  * @author tbd
  */
-
+@Service
 public class GameManager {
 
     /** Max number of guesses allowed in a Wordle game */
@@ -24,9 +25,19 @@ public class GameManager {
     /**
      * GameManager() - Initializes the targetWord from the WordRepo Class method pickTargetWord() <br>
      * targetWord - (String) the correct answer to the game is picked and assigned to targetWord
+     * Initializes and loads the dictionary as well before picking a target word
      */
     public GameManager() {
-        targetWord = WordRepo.pickTargetWord();
+        try {
+            // Load Dictionary before picking a word
+            if (WordRepo.getWords().isEmpty()) {
+                WordRepo.loadDictionary("dictionary.csv");
+            }
+            this.targetWord = WordRepo.pickTargetWord();
+        } catch (Exception e) {
+            // Fallback default word so the app doesn't crash if the file is missing
+            this.targetWord = "DEVIL";
+        }
     }
     /**
      * getTargetWord() - Allows Game Manager object to access the target word <br>
@@ -94,6 +105,18 @@ public class GameManager {
     public static WordRepo.FeedbackType[] evaluateGuessAndGiveColoredFeedback(String playerGuess, String targetWord)
     {
         return WordRepo.GenerateColoredFeedback(playerGuess, targetWord);
+    }
+
+    /**
+     * Checks if the user has won or lost and outputs text correlating to the game state <br>
+     * Scope: Currently programmed to handle 1 case (player has won or player has lost - REFACTOR for future uses)
+     * @param hasWon - indicates if the player has won or lost the game
+     * @return message indicating whether the player has won or lost the game
+     */
+
+    public static String gameStateMessage(boolean hasWon)
+    {
+        return hasWon ? "CORRECT! YOU GUESSED THE WORD: " : "YOU LOST! THE CORRECT ANSWER WAS:";
     }
 
     /**
