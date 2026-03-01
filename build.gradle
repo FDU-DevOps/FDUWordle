@@ -12,7 +12,6 @@ test{
    java
 }
 
-
 tasks.register<Wrapper>("wrapper") {
     gradleVersion = "4.1"
 }
