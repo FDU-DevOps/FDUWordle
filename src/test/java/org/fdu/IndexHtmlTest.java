@@ -1,5 +1,6 @@
 package org.fdu;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.resttestclient.autoconfigure.AutoConfigureRestTestClient;
@@ -20,6 +21,7 @@ public class IndexHtmlTest
     }
 
     @Test
+    @DisplayName("Testing index (main) page loads properly.")
     void testIndexPageLoads(@Autowired RestTestClient restClient)
     {
         RestTestClient.ResponseSpec spec = restClient.get().uri("/").exchange();
@@ -28,6 +30,7 @@ public class IndexHtmlTest
     }
 
     @Test
+    @DisplayName("Testing that the index (main) page loads with the title FDUWordle")
     void testIndexPageContainsTitle(@Autowired RestTestClient restClient)
     {
         RestTestClient.ResponseSpec spec = restClient.get().uri("/").exchange();
@@ -36,6 +39,7 @@ public class IndexHtmlTest
     }
 
     @Test
+    @DisplayName("Testing that the index (main) page contains guess input for the user.")
     void testIndexPageContainsGuessInput(@Autowired RestTestClient restClient)
     {
         RestTestClient.ResponseSpec spec = restClient.get().uri("/").exchange();
@@ -44,6 +48,7 @@ public class IndexHtmlTest
     }
 
     @Test
+    @DisplayName("Testing that the index (main) page has the submit button for the user to submit a guess.")
     void testIndexPageContainsSubmitButton(@Autowired RestTestClient restClient)
     {
         RestTestClient.ResponseSpec spec = restClient.get().uri("/").exchange();

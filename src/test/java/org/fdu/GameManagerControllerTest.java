@@ -1,6 +1,7 @@
 package org.fdu;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -18,6 +19,7 @@ class GameManagerControllerTest {
     }
 
     @Test
+    @DisplayName("Testing getTargetWord loads a proper and valid target word for Wordle.")
     void getTargetWord() {
         String result = controller.getTargetWord();
 
@@ -28,6 +30,7 @@ class GameManagerControllerTest {
     }
 
     @Test
+    @DisplayName("Testing checkUserGuess correctly checks the user guess vs the target word.")
     void checkUserGuess() {
         gameManager.setDebugTargetWord("APPLE");
 
