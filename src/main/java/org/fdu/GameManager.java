@@ -20,6 +20,7 @@ public class GameManager {
     public static final int MAX_GUESSES = 6;
     private String targetWord;
     private int guessesUsed = 0;
+    private boolean hasWon = false;
 
 
     /**
@@ -39,6 +40,23 @@ public class GameManager {
             this.targetWord = "DEVIL";
         }
     }
+
+    /**
+     * getWon() - Returns whether the player has won the game <br>
+     * @return won - (boolean) true if the player has won, false otherwise
+     */
+    public boolean getWon(){
+        return hasWon;
+    }
+
+    /**
+     * setWon() - Sets the won status of the game <br>
+     * @param won - (boolean) true if the player has won, false otherwise
+     */
+    public void setWon(boolean won){
+        hasWon = won;
+    }
+
     /**
      * getTargetWord() - Allows Game Manager object to access the target word <br>
      * @return targetWord - (String) randomly chosen word
@@ -81,7 +99,8 @@ public class GameManager {
 
     public boolean doesGuessMatch(String normalizedGuess){
         guessesUsed++;
-        return normalizedGuess.equals(targetWord);
+        hasWon = normalizedGuess.equals(targetWord);
+        return hasWon;
     }
 
     /**

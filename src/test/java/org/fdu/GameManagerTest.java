@@ -131,4 +131,16 @@ class GameManagerTest {
         manager.resetGuessesUsed();
         assertEquals(0, manager.getGuessesUsed(), "GuessesUsed should be 0 after reset");
     }
+
+    @Test
+    @DisplayName("Check setter and getter for hasWon state")
+    void testGetAndSetWon() {
+        GameManager manager = new GameManager();
+
+        manager.setWon(true);
+        assertTrue(manager.getWon(), "hasWon should be true after setWon(true)");
+
+        manager.setWon(false);
+        assertFalse(manager.getWon(), "hasWon should be false after setWon(false)");
+    }
 }
