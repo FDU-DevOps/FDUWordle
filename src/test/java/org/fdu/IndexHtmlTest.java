@@ -1,43 +1,53 @@
 package org.fdu;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import static org.junit.jupiter.api.Assertions.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.resttestclient.autoconfigure.AutoConfigureRestTestClient;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
+import org.springframework.test.web.servlet.client.RestTestClient;
+import org.springframework.test.web.servlet.client.assertj.RestTestClientResponse;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@AutoConfigureMockMvc
+@AutoConfigureRestTestClient
 public class IndexHtmlTest
 {
-    private String htmlContent;
-
-    @BeforeEach
-    void setUp() throws Exception
-    {
-        htmlContent = Files.readString(
-                Path.of("src/main/resources/static/index.html"));
+    @Test
+    void contextLoads() {
     }
 
     @Test
-    void testIndexPageContainsTitle()
+    void testIndexPageLoads(@Autowired RestTestClient restClient)
     {
-        assertTrue(htmlContent.contains("FDUWordle"));
+        RestTestClient.ResponseSpec spec = restClient.get().uri("/").exchange();
+        RestTestClientResponse response = RestTestClientResponse.from(spec);
+        assertThat(response).hasStatusOk();
     }
 
     @Test
-    void testIndexPageContainsGuessInput()
+    void testIndexPageContainsTitle(@Autowired RestTestClient restClient)
     {
-        assertTrue(htmlContent.contains("submit-guess"));
+        RestTestClient.ResponseSpec spec = restClient.get().uri("/").exchange();
+        RestTestClientResponse response = RestTestClientResponse.from(spec);
+        assertThat(response).hasStatusOk().bodyText().contains("FDUWordle");
     }
 
     @Test
-    void testIndexPageContainsSubmitButton()
+    void testIndexPageContainsGuessInput(@Autowired RestTestClient restClient)
     {
-        assertTrue(htmlContent.contains("sendUserGuess"));
+        RestTestClient.ResponseSpec spec = restClient.get().uri("/").exchange();
+        RestTestClientResponse response = RestTestClientResponse.from(spec);
+        assertThat(response).hasStatusOk().bodyText().contains("submit-guess");
     }
 
     @Test
-    void testIndexPageContainsResponseOutput()
+    void testIndexPageContainsSubmitButton(@Autowired RestTestClient restClient)
     {
-        assertTrue(htmlContent.contains("output"));
+        RestTestClient.ResponseSpec spec = restClient.get().uri("/").exchange();
+        RestTestClientResponse response = RestTestClientResponse.from(spec);
+        assertThat(response).hasStatusOk().bodyText().contains("sendUserGuess");
     }
 }
