@@ -67,13 +67,9 @@ public class GameManager {
      * isGameNotOver() - keeps game loop going if player has yet to reach number of max guesses or got the right answer <br>
      * @return True if player used the maximum number of guess or if player guessed the correct word. False otherwise
      */
-    public boolean isGameNotOver(){
-
-        if(getGuessesUsed()<getMaxGuesses()){
-            return true;
+    public boolean isGameNotOver() {
+            return getGuessesUsed()< MAX_GUESSES;
         }
-        else return getGuessesUsed() != getMaxGuesses();
-    }
 
     /**
      * getNormalizedGuess(String rawGuess) - Retrieves the normalized guess from the WordRepo Class
