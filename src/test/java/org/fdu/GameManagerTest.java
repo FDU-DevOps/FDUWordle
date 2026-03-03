@@ -1,5 +1,6 @@
 package org.fdu;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
@@ -119,5 +120,27 @@ class GameManagerTest {
         String original = manager.getTargetWord();
         manager.setDebugTargetWord("CRANE");
         assertNotEquals(original, manager.getTargetWord());
+    }
+
+    @Test
+    public void testResetGuessesUsed(){
+        GameManager manager = new GameManager();
+        manager.setDebugTargetWord("CRANE");
+        manager.doesGuessMatch("HELLO");
+        assertTrue(manager.getGuessesUsed() > 0, "GuessesUsed should increase after a guess");
+        manager.resetGuessesUsed();
+        assertEquals(0, manager.getGuessesUsed(), "GuessesUsed should be 0 after reset");
+    }
+
+    @Test
+    @DisplayName("Check setter and getter for hasWon state")
+    void testGetAndSetWon() {
+        GameManager manager = new GameManager();
+
+        manager.setWon(true);
+        assertTrue(manager.getWon(), "hasWon should be true after setWon(true)");
+
+        manager.setWon(false);
+        assertFalse(manager.getWon(), "hasWon should be false after setWon(false)");
     }
 }
