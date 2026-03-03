@@ -57,7 +57,7 @@ public class App {
             }
 
             if (WordRepo.isInvalidGuess(guess)) {
-                ConsoleUI.println("INVALID GUESS. PLEASE ENTER A 5-LETTER WORD (A–Z ONLY).");
+                ConsoleUI.println("INVALID GUESS. PLEASE ENTER A 5-LETTER WORD (A-Z ONLY).");
                 continue;
             }
 
