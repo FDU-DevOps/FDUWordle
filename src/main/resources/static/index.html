@@ -16,7 +16,7 @@
 <!-- The guess board -->
 <div id="guess-row"></div>
 
-<button onclick="sendUserGuess()">Submit</button>
+<button id="submitButton" onclick="sendUserGuess()">Submit</button>
 
 <h3>Response:</h3>
 <p id="output"></p>
@@ -43,7 +43,13 @@
         }
 
         addRowWithColoredFeedback(value.toUpperCase().trim(), data.feedbackColors);
+
+
         document.getElementById("output").innerText = data.messageToPlayer + " " + data.targetWord;
+
+        //Disable Input and Button
+        document.getElementById("submit-guess").disabled = true;
+        document.getElementById("submitButton").disabled = true;
     }
 
     function addRowWithColoredFeedback(guess, feedback) {
@@ -64,9 +70,9 @@
 
             styleTile(tile)    //Use the style for each tile
 
-            if (feedback[i] == "GREEN") {     //Set specific color for each tile depending on the feedback
+            if (feedback[i] === "GREEN") {     //Set specific color for each tile depending on the feedback
                 tile.style.backgroundColor = "green";
-            } else if (feedback[i] == "YELLOW") {
+            } else if (feedback[i] === "YELLOW") {
                 tile.style.backgroundColor = "goldenrod";
             } else {
                 tile.style.backgroundColor = "gray";
