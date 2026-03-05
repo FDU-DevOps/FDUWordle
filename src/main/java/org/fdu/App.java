@@ -2,14 +2,14 @@ package org.fdu;
 /**
  * Contains main() and creates/starts the game
  */
-public class App 
-{
+public class App {
     /**
      * Main Class that loads the dictionary and runs the game
+     *
      * @param args any argument that may be used when running the executable - no used for now
      * @throws Exception when dictionary is not loaded properly
      */
-    public static void main(String[] args) throws Exception{
+    public static void main(String[] args) throws Exception {
         WordRepo.loadDictionary("dictionary.csv");
         runGame();
     }
@@ -25,6 +25,7 @@ public class App
     public static void runGame() {
         GameManager manager = new GameManager();
         GameManager.showIntro(manager);
+
 
         while (manager.isGameNotOver()) {
             String rawGuess = ConsoleUI.readLine("ENTER YOUR GUESS: ");
@@ -44,11 +45,11 @@ public class App
                     String debugWordRaw = ConsoleUI.readLine("");
                     debugWord = manager.getNormalizedGuess(debugWordRaw);
 
-                    if(WordRepo.isInvalidGuess(debugWord)){
+                    if (WordRepo.isInvalidGuess(debugWord)) {
                         ConsoleUI.println("INVALID DEBUG WORD. MUST BE A 5-LETTER WORD (A-Z ONLY).");
                     }
 
-                }while(WordRepo.isInvalidGuess(debugWord));
+                } while (WordRepo.isInvalidGuess(debugWord));
 
                 manager.setDebugTargetWord(debugWord);
                 ConsoleUI.println("DEBUG TARGET WORD SET TO: " + debugWord);
@@ -56,28 +57,28 @@ public class App
             }
 
             if (WordRepo.isInvalidGuess(guess)) {
-                ConsoleUI.println("INVALID GUESS. PLEASE ENTER A 5-LETTER WORD (A–Z ONLY).");
+                ConsoleUI.println("INVALID GUESS. PLEASE ENTER A 5-LETTER WORD (A-Z ONLY).");
                 continue;
             }
 
-            if (manager.doesGuessMatch(guess)) {
-                ConsoleUI.DisplayGuessResult(
-                            GameManager.evaluateGuessAndGiveColoredFeedback(guess, manager.getTargetWord()),
-                            guess);
+            boolean isCorrect = manager.doesGuessMatch(guess);
+
+            ConsoleUI.DisplayGuessResult(
+                    GameManager.evaluateGuessAndGiveColoredFeedback(guess, manager.getTargetWord()),
+                    guess);
+            if (isCorrect) {
                 ConsoleUI.println("CORRECT! YOU GUESSED THE WORD: " + manager.getTargetWord());
                 return;
             }
-            else {
-                int attemptsLeft = manager.getMaxGuesses() - manager.getGuessesUsed();
-                if (attemptsLeft > 0) {
-                    ConsoleUI.DisplayGuessResult(
-                            GameManager.evaluateGuessAndGiveColoredFeedback(guess, manager.getTargetWord()),
-                            guess);
-                    ConsoleUI.println("NOT CORRECT. ATTEMPTS LEFT: " + attemptsLeft);
-                }
+
+            int attemptsLeft = manager.getMaxGuesses() - manager.getGuessesUsed();
+
+            if (attemptsLeft == 0) {
+                ConsoleUI.println("YOU LOST! THE CORRECT ANSWER WAS:" + manager.getTargetWord());
+                return;
             }
+            ConsoleUI.println("NOT CORRECT. ATTEMPTS LEFT: " + attemptsLeft);
         }
-        ConsoleUI.println("YOU LOST! THE CORRECT ANSWER WAS:"+manager.getTargetWord());
     }
 }
 
