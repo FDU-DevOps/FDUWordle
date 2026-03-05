@@ -182,4 +182,53 @@ public class GameManager {
     public boolean isDebugCommand(String guess){
         return guess.equals("SECRET_WORD") && guessesUsed == 0;
     }
+
+    /**
+     submitGuess(String rawGuess) - Processes a player's raw guess through the full game flow. <br>
+     <p>
+     Flow: <br>
+     1. Normalizes the raw guess via getNormalizedGuess() <br>
+     2. Validates the normalized guess with WordRepo.isInvalidGuess() <br>
+     3. If valid: processes the guess, generates colored feedback, and builds a game response <br>
+     4. If invalid: returns early with an invalid guess message and no feedback <br>
+     </p>
+     @param rawGuess (String) the player's raw guess
+     @return GameResponse containing: <br>
+     targetWord: the current secret word <br>
+     message: game state message (win/loss/invalid) <br>
+     hasWon: whether the player has won or no <br>
+     guessesUsed: number of guesses made <br>
+     isValidGuess: false if guess was invalid, true otherwise <br>
+     feedbackColors: String[] of color feedback (e.g. "GREEN", "YELLOW", "GRAY")
+     */
+    public GameResponse submitGuess(MessageData rawGuess){
+        String normalized = getNormalizedGuess(rawGuess.playerGuess());
+        if (WordRepo.isInvalidGuess(normalized)) {
+            return new GameResponse(
+                    getTargetWord(),
+                    "Invalid guess. Must be exactly 5 letters (A–Z).",
+                    false,
+                    getGuessesUsed(),
+                    false,
+                    null
+            );
+        }
+        doesGuessMatch(normalized);
+        WordRepo.FeedbackType[] feedbackColors =
+                evaluateGuessAndGiveColoredFeedback(normalized, getTargetWord());
+
+        String[] stringFeedbackColors = new String[feedbackColors.length];
+        for (int i = 0; i < feedbackColors.length; i++) {
+            stringFeedbackColors[i] = feedbackColors[i].name();
+        }
+
+        return new GameResponse(
+                getTargetWord(),
+                gameStateMessage(hasWon),
+                hasWon,
+                getGuessesUsed(),
+                true,
+                stringFeedbackColors
+        );
+    }
 }
