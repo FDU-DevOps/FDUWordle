@@ -47,11 +47,6 @@ public class GameManagerController
     @PostMapping("/submit-guess")
     public GameResponse checkUserGuess(@RequestBody MessageData playerGuess)
     {
-        // Check if word matches
-        gameManager.doesGuessMatch(playerGuess.playerGuess());
-        String message = GameManager.gameStateMessage(gameManager.getWon());
-
-        // Return Result
-        return new GameResponse(gameManager.getTargetWord(), message, gameManager.getWon(), gameManager.getGuessesUsed());
+        return gameManager.submitGuess(playerGuess);
     }
 }
