@@ -143,4 +143,80 @@ class GameManagerTest {
         manager.setWon(false);
         assertFalse(manager.getWon(), "hasWon should be false after setWon(false)");
     }
+
+    @Test
+    @DisplayName("Invalid guess check too short")
+    void testSubmitGuessInvalidGuessTooShort() {
+        GameManager manager = new GameManager();
+        manager.setDebugTargetWord("CRANE");
+
+        //Too short
+        GameResponse response = manager.submitGuess(new MessageData("CAT"));
+
+        assertTrue(response.messageToPlayer().contains("Invalid guess."));
+        assertFalse(response.hasWon());
+        assertEquals(0, response.guessesUsed());
+        assertFalse(response.isValidGuess());
+        assertNull(response.feedbackColors());
+    }
+
+    @Test
+    @DisplayName("Invalid guess check too long")
+    void testSubmitGuessValidGuessTooLong(){
+        GameManager manager = new GameManager();
+        manager.setDebugTargetWord("CRANE");
+
+        GameResponse response = manager.submitGuess(new MessageData("Enormous"));
+
+        assertTrue(response.messageToPlayer().contains("Invalid guess."));
+        assertFalse(response.hasWon());
+        assertEquals(0, response.guessesUsed());
+        assertFalse(response.isValidGuess());
+        assertNull(response.feedbackColors());
+    }
+
+    @Test
+    @DisplayName("Valid guess with valid response")
+    void testSubmitGuessValidResponse() {
+        GameManager manager = new GameManager();
+        manager.setDebugTargetWord("CRANE");
+
+        GameResponse response = manager.submitGuess(new MessageData("CLOSE"));
+
+        assertTrue(response.isValidGuess());
+        assertNotNull(response.feedbackColors());
+        assertEquals(5, response.feedbackColors().length);
+        assertEquals(1, response.guessesUsed());
+    }
+
+    @Test
+    @DisplayName("Valid guess, correct guess")
+    void testSubmitGuessValidResponseCorrectGuess() {
+        GameManager manager = new GameManager();
+        manager.setDebugTargetWord("GREEN");
+
+        GameResponse response = manager.submitGuess(new MessageData("GREEN"));
+        assertTrue(response.isValidGuess());
+        assertNotNull(response.feedbackColors());
+        assertEquals(1, response.guessesUsed());
+
+        for (String color : response.feedbackColors()) {
+            assertEquals("GREEN", color);
+        }
+    }
+
+    @Test
+    @DisplayName("Valid guess, wrong guess")
+    void testSubmitGuessValidResponseWrongGuess() {
+        GameManager manager = new GameManager();
+        manager.setDebugTargetWord("GRAAY");
+        GameResponse response = manager.submitGuess(new MessageData("BLOCK"));
+
+        assertFalse(response.hasWon());
+        assertTrue(response.isValidGuess());
+        assertFalse(response.hasWon());
+        for (String color : response.feedbackColors()) {
+            assertEquals("GRAY", color);
+        }
+    }
 }

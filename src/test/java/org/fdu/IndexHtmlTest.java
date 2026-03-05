@@ -55,4 +55,22 @@ public class IndexHtmlTest
         RestTestClientResponse response = RestTestClientResponse.from(spec);
         assertThat(response).hasStatusOk().bodyText().contains("sendUserGuess");
     }
+
+    @Test
+    @DisplayName("Testing that the index page contains the guess row div.")
+    void testIndexPageContainsGuessRow(@Autowired RestTestClient restClient)
+    {
+        RestTestClient.ResponseSpec spec = restClient.get().uri("/").exchange();
+        RestTestClientResponse response = RestTestClientResponse.from(spec);
+        assertThat(response).hasStatusOk().bodyText().contains("guess-row");
+    }
+
+    @Test
+    @DisplayName("Testing that the index page contains the colored feedback function.")
+    void testIndexPageContainsColoredFeedbackFunction(@Autowired RestTestClient restClient)
+    {
+        RestTestClient.ResponseSpec spec = restClient.get().uri("/").exchange();
+        RestTestClientResponse response = RestTestClientResponse.from(spec);
+        assertThat(response).hasStatusOk().bodyText().contains("addRowWithColoredFeedback");
+    }
 }
