@@ -13,12 +13,25 @@
 <input id="submit-guess">
 <br><br>
 
-<button onclick="sendUserGuess()">Submit</button>
+<!-- The guess board -->
+<div id="guess-row"></div>
+
+<button id="submitButton" onclick="sendUserGuess()">Submit</button>
 
 <h3>Response:</h3>
 <p id="output"></p>
 
 <script>
+
+    /**
+     * @typedef {Object} GameResponse
+     * @property {boolean} isValidGuess
+     * @property {boolean} hasWon
+     * @property {string} messageToPlayer
+     * @property {string[]} feedbackColors
+     * @property {string} targetWord
+     */
+
     window.onload = async function()
     {
         const response = await fetch("api/FDUWordle/start-game");
@@ -33,8 +46,60 @@
             body: JSON.stringify({ "playerGuess": value })
         });
         const data = await response.json();
-        document.getElementById("output").innerText =
-            data.messageToPlayer + " " + data.targetWord;
+
+        if (!data.isValidGuess) {
+            document.getElementById("output").innerText = data.messageToPlayer;
+            return;  // stop here, no row added
+        }
+
+        addRowWithColoredFeedback(value.toUpperCase().trim(), data.feedbackColors);
+
+
+        document.getElementById("output").innerText = data.messageToPlayer + " " + data.targetWord;
+
+        //Disable Input and Button
+        document.getElementById("submit-guess").disabled = true;
+        document.getElementById("submitButton").disabled = true;
+    }
+
+    function addRowWithColoredFeedback(guess, feedback) {
+        const board = document.getElementById("guess-row");
+        const row = document.createElement("div"); //Create a row
+
+        // Set the row to use flexbox layout so that tiles inside are aligned horizontally
+        row.style.display = "flex";
+        row.style.flexDirection = "row";
+
+        row.style.gap = "6px";            // Set spacing between each tile
+        row.style.marginBottom = "6px";   //Add space below the row so next rows in the future will not be stick to the row
+        board.appendChild(row);           //Add row to the guess-board space
+
+        for (let i = 0; i < guess.length; i++) {
+            const tile = document.createElement("div");  //Create tile for each letter
+            tile.innerText = guess[i];    //Add a letter to each tile
+
+            styleTile(tile)    //Use the style for each tile
+
+            if (feedback[i] === "GREEN") {     //Set specific color for each tile depending on the feedback
+                tile.style.backgroundColor = "green";
+            } else if (feedback[i] === "YELLOW") {
+                tile.style.backgroundColor = "goldenrod";
+            } else {
+                tile.style.backgroundColor = "gray";
+            }
+
+            row.appendChild(tile);  //Add tile to the row object
+        }
+    }
+    function styleTile(tile) {
+        tile.style.width = "40px";             //Width of the tile
+        tile.style.height = "40px";            //Heigh of the tile
+        tile.style.display = "flex";           // Use flexbox layout so we can center the letter inside the tile
+        tile.style.alignItems = "center";      //vertically center the letter
+        tile.style.justifyContent = "center";  //horizontally center the letter
+        tile.style.fontWeight = "bold";        //Make the letter bold
+        tile.style.color = "white";            //Set color of the word
+        tile.style.fontSize = "30px";          //Set size of the letter
     }
 </script>
 
