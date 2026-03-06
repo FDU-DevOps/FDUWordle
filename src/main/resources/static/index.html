@@ -6,7 +6,7 @@
 </head>
 <body>
 
-<h1>FDUWordle</h1>
+<h1>Welcome to FDU Wordle!</h1>
 <p id="version"></p>
 <script>
     async function loadVersion() {
@@ -17,28 +17,33 @@
     loadVersion();
 </script>
 
+<p>Type your guess:</p>
 
-<p>Type something:</p>
-
-<input id="input">
+<input id="submit-guess">
 <br><br>
 
-<button onclick="sendInput()">Submit</button>
+<button onclick="sendUserGuess()">Submit</button>
 
 <h3>Response:</h3>
 <p id="output"></p>
 
 <script>
-    async function sendInput() {
-        const value = document.getElementById("input").value;
-        const response = await fetch("/input", {
+    window.onload = async function()
+    {
+        const response = await fetch("api/FDUWordle/start-game");
+        document.getElementById("submit-guess").value = "";
+        document.getElementById("output").innerText = "";
+    };
+    async function sendUserGuess() {
+        const value = document.getElementById("submit-guess").value;
+        const response = await fetch("api/FDUWordle/submit-guess", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ userInput: value })
+            body: JSON.stringify({ "playerGuess": value })
         });
         const data = await response.json();
-        document.getElementById("output").innerText = data.userInput;
-
+        document.getElementById("output").innerText =
+            data.messageToPlayer + " " + data.targetWord;
     }
 </script>
 

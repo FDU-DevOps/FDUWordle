@@ -1,5 +1,6 @@
 package org.fdu;
 
+import org.springframework.stereotype.Service;
 /**
  * Entry point into the game flow from main, processes player guesses,
  *   tracks game state and returns (or has queries) for game status, guess evaluations, etc.Controls the game flow: <br>
@@ -12,22 +13,50 @@ package org.fdu;
  *
  * @author tbd
  */
-
+@Service
 public class GameManager {
 
     /** Max number of guesses allowed in a Wordle game */
     public static final int MAX_GUESSES = 6;
     private String targetWord;
     private int guessesUsed = 0;
+    private boolean hasWon = false;
 
 
     /**
      * GameManager() - Initializes the targetWord from the WordRepo Class method pickTargetWord() <br>
      * targetWord - (String) the correct answer to the game is picked and assigned to targetWord
+     * Initializes and loads the dictionary as well before picking a target word
      */
     public GameManager() {
-        targetWord = WordRepo.pickTargetWord();
+        try {
+            // Load Dictionary before picking a word
+            if (WordRepo.getWords().isEmpty()) {
+                WordRepo.loadDictionary("dictionary.csv");
+            }
+            this.targetWord = WordRepo.pickTargetWord();
+        } catch (Exception e) {
+            // Fallback default word so the app doesn't crash if the file is missing
+            this.targetWord = "DEVIL";
+        }
     }
+
+    /**
+     * getWon() - Returns whether the player has won the game <br>
+     * @return won - (boolean) true if the player has won, false otherwise
+     */
+    public boolean getWon(){
+        return hasWon;
+    }
+
+    /**
+     * setWon() - Sets the won status of the game <br>
+     * @param won - (boolean) true if the player has won, false otherwise
+     */
+    public void setWon(boolean won){
+        hasWon = won;
+    }
+
     /**
      * getTargetWord() - Allows Game Manager object to access the target word <br>
      * @return targetWord - (String) randomly chosen word
@@ -42,6 +71,15 @@ public class GameManager {
     public int getGuessesUsed(){
         return guessesUsed;
     }
+
+    /**
+     * resetGuessesUsed() - Resets the number of guesses used back to 0 <br>
+     * Called when a new game session is started
+     */
+    public void resetGuessesUsed(){
+        guessesUsed = 0;
+    }
+
     /**
      * getMaxGuesses() - Allows Game Manager object to access number of max guesses a user has to guess the word <br>
      * @return MAX_GUESSES - (int) number of guesses the player is allowed
@@ -49,6 +87,7 @@ public class GameManager {
     public int getMaxGuesses(){
         return MAX_GUESSES;
     }
+
 
     /**
      * doesGuessMatch(String norm_guess) - compares the normalized guess to the target word <br>
@@ -60,20 +99,17 @@ public class GameManager {
 
     public boolean doesGuessMatch(String normalizedGuess){
         guessesUsed++;
-        return normalizedGuess.equals(targetWord);
+        hasWon = normalizedGuess.equals(targetWord);
+        return hasWon;
     }
 
     /**
      * isGameNotOver() - keeps game loop going if player has yet to reach number of max guesses or got the right answer <br>
      * @return True if player used the maximum number of guess or if player guessed the correct word. False otherwise
      */
-    public boolean isGameNotOver(){
-
-        if(getGuessesUsed()<getMaxGuesses()){
-            return true;
+    public boolean isGameNotOver() {
+            return getGuessesUsed()< MAX_GUESSES;
         }
-        else return getGuessesUsed() != getMaxGuesses();
-    }
 
     /**
      * getNormalizedGuess(String rawGuess) - Retrieves the normalized guess from the WordRepo Class
@@ -94,6 +130,18 @@ public class GameManager {
     public static WordRepo.FeedbackType[] evaluateGuessAndGiveColoredFeedback(String playerGuess, String targetWord)
     {
         return WordRepo.GenerateColoredFeedback(playerGuess, targetWord);
+    }
+
+    /**
+     * Checks if the user has won or lost and outputs text correlating to the game state <br>
+     * Scope: Currently programmed to handle 1 case (player has won or player has lost - REFACTOR for future uses)
+     * @param hasWon - indicates if the player has won or lost the game
+     * @return message indicating whether the player has won or lost the game
+     */
+
+    public static String gameStateMessage(boolean hasWon)
+    {
+        return hasWon ? "CORRECT! YOU GUESSED THE WORD: " : "YOU LOST! THE CORRECT ANSWER WAS:";
     }
 
     /**
