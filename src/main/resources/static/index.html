@@ -22,6 +22,16 @@
 <p id="output"></p>
 
 <script>
+
+    /**
+     * @typedef {Object} GameResponse
+     * @property {boolean} isValidGuess
+     * @property {boolean} hasWon
+     * @property {string} messageToPlayer
+     * @property {string[]} feedbackColors
+     * @property {string} targetWord
+     */
+
     window.onload = async function()
     {
         const response = await fetch("api/FDUWordle/start-game");
@@ -61,7 +71,7 @@
         row.style.flexDirection = "row";
 
         row.style.gap = "6px";            // Set spacing between each tile
-        row.style.marginBottom = "6px";   //Add space below the row so next rows in the future will not be sticked to the row
+        row.style.marginBottom = "6px";   //Add space below the row so next rows in the future will not be stick to the row
         board.appendChild(row);           //Add row to the guess-board space
 
         for (let i = 0; i < guess.length; i++) {

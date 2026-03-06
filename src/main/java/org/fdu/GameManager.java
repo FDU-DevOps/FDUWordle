@@ -202,8 +202,9 @@ public class GameManager {
      feedbackColors: String[] of color feedback (e.g. "GREEN", "YELLOW", "GRAY")
      */
     public GameResponse submitGuess(MessageData rawGuess){
-        String normalized = getNormalizedGuess(rawGuess.playerGuess());
-        if (WordRepo.isInvalidGuess(normalized)) {
+        String normalized = getNormalizedGuess(rawGuess.playerGuess()); //Normalize guess
+
+        if (WordRepo.isInvalidGuess(normalized)) { //if guess is invalid
             return new GameResponse(
                     getTargetWord(),
                     "Invalid guess. Must be exactly 5 letters (A–Z).",
@@ -214,10 +215,11 @@ public class GameManager {
             );
         }
         doesGuessMatch(normalized);
-        WordRepo.FeedbackType[] feedbackColors =
-                evaluateGuessAndGiveColoredFeedback(normalized, getTargetWord());
 
-        String[] stringFeedbackColors = new String[feedbackColors.length];
+        WordRepo.FeedbackType[] feedbackColors =
+                evaluateGuessAndGiveColoredFeedback(normalized, getTargetWord()); //Get the colored feedback as Enum
+
+        String[] stringFeedbackColors = new String[feedbackColors.length];  //Convert Enum to the string
         for (int i = 0; i < feedbackColors.length; i++) {
             stringFeedbackColors[i] = feedbackColors[i].name();
         }
