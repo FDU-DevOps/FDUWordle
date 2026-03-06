@@ -21,7 +21,9 @@
 <script>
     window.onload = async function()
     {
-        const response = await fetch("api/FDUWordle/start-game");
+        const response = await fetch("api/FDUWordle/start-game", {
+            method: "POST"
+        })
         document.getElementById("submit-guess").value = "";
         document.getElementById("output").innerText = "";
     };

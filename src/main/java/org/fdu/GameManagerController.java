@@ -13,6 +13,7 @@ public class GameManagerController
 {
     // Stores target word for this session of Wordle
     private final GameManager gameManager;
+    private GameResponse gameState;
     /**
      * Constructs the controller to be used within this session
      * @param gameManager used to track the current session's gameManager constructor
@@ -35,6 +36,16 @@ public class GameManagerController
         gameManager.resetGuessesUsed(); // reset used guesses at the start of the game
         // Send target word to client
         return gameManager.getTargetWord();
+    }
+
+    /**
+     * Start game by asking gameManager to pick a new word and return a game state DTO
+     */
+    @PostMapping("/start-game")
+    public String startGame()
+    {
+        gameState = gameManager.initializeGame();  // picks a new secret word, creates & returns a fresh GameResponse DTO
+        return gameState.targetWord();  // why return the target word, what might be more useful here?
     }
 
     // Player Submitting Guess

@@ -41,10 +41,11 @@ class GameManagerTest {
     }
 
     @Test
+    // this will fail in the DTO architecture - why?
     void doesGuessMatch() {
         GameManager manager = new GameManager();
         String targetWord = manager.getTargetWord();
-        assertTrue(manager.doesGuessMatch(targetWord), "Should return true for correct guess");
+        assertTrue(manager.doesGuessMatch(targetWord), "Failure expected in new architecture - why?");
         assertFalse(manager.doesGuessMatch("ZZZZZ"), "Should return false for incorrect guess");
     }
     @Test

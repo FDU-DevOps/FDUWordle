@@ -1,6 +1,9 @@
 package org.fdu;
 
 import org.springframework.stereotype.Service;
+import org.fdu.GameResponse.*;
+
+
 /**
  * Entry point into the game flow from main, processes player guesses,
  *   tracks game state and returns (or has queries) for game status, guess evaluations, etc.Controls the game flow: <br>
@@ -17,7 +20,7 @@ import org.springframework.stereotype.Service;
 public class GameManager {
 
     /** Max number of guesses allowed in a Wordle game */
-    public static final int MAX_GUESSES = 6;
+    public static final int MAX_GUESSES = 6;   // keep this - part of the scope of GameManager to define max guesses
     private String targetWord;
     private int guessesUsed = 0;
     private boolean hasWon = false;
@@ -28,6 +31,7 @@ public class GameManager {
      * targetWord - (String) the correct answer to the game is picked and assigned to targetWord
      * Initializes and loads the dictionary as well before picking a target word
      */
+    /*  Redefined -
     public GameManager() {
         try {
             // Load Dictionary before picking a word
@@ -40,6 +44,53 @@ public class GameManager {
             this.targetWord = "DEVIL";
         }
     }
+     */
+
+    public GameManager() {
+        // must be public for Spring Boot to instantiate the object
+        // load the dictionary - could also be done statically above
+        // ToDo: is GameManager the place to handle a problem with loading the dictionary?
+        try {
+            WordRepo.loadDictionary("dictionary.csv");
+        } catch (Exception e) {
+
+        }
+    }
+
+
+    /**
+     * selects a new random word and returns it in a fresh DTO <br>
+     * Approach - get a new random word and call overloaded initializeGame() to configure the DTO
+     * @return new game state DTO with initial game ettings
+     */
+    public GameResponse initializeGame() {
+        return initializeGame(WordRepo.pickTargetWord());
+    }
+
+    /**
+     * selects a new random word and returns it in a fresh DTO
+     * @param secretWord target word the user is trying to guess
+     * @return new game state DTO with initial game ettings
+     */
+    public GameResponse initializeGame(String secretWord) {
+        if (WordRepo.isInvalidGuess(secretWord)) {
+            secretWord = "DUMMY";   // should throw an exception, could pick a new word, but maybe the framework is broken
+        }
+        this.targetWord = secretWord;
+        return new GameResponse(
+                secretWord,  //
+                "",    // empty message - are user messages scope of the gameManager?  alternatives?
+                false,               // player has not won, yet
+                0                    // zero guesses used to start
+            );
+    }
+
+    /**
+     * evaluate a user's guess
+     * @param current game state
+     * @param user's raw guess, could have white space, mixed case, invalid characters, invalid length ...
+     * @return analysis of user's guess and a new updated game state
+     */
 
     /**
      * getWon() - Returns whether the player has won the game <br>
@@ -151,6 +202,7 @@ public class GameManager {
     /**
      * Displays the introduction messages for the game.
      * @param manager instance of the GameManager class, used to display max guesses
+     * ToDo: TechDebt ...
      */
     public static void showIntro (GameManager manager){
         ConsoleUI.println("WELCOME TO WORDLE! GUESS THE SECRET WORD.");
