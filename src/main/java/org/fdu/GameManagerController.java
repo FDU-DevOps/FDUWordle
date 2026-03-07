@@ -11,23 +11,32 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/FDUWordle")
 public class GameManagerController
 {
-
     // Stores target word for this session of Wordle
-    private GameManager gameManager;
-    private GameResponse gameState;
+    private final GameManager gameManager;
+    /**
+     * Constructs the controller to be used within this session
+     * @param gameManager used to track the current session's gameManager constructor
+     */
     public GameManagerController(GameManager gameManager) {
         this.gameManager = gameManager;
     }
+
     // Opening page initializes a new game
     /** Generates a target word and sends it to the client
      * @return the selected target word for the current session
      */
-    @PostMapping("/start-game")
-    public GameResponse getTargetWord()
+    @GetMapping("/start-game")
+    public String getTargetWord()
     {
-        gameState = gameManager.startGame();
-        return gameState;
+        // Use WordRepo to pick a random target word and store it in the session
+        String currentTargetWord = WordRepo.pickTargetWord();
+        gameManager.setDebugTargetWord(currentTargetWord); // using this as it completes the same function needed in this case
+        gameManager.setWon(false);      // make sure player did not win
+        gameManager.resetGuessesUsed(); // reset used guesses at the start of the game
+        // Send target word to client
+        return gameManager.getTargetWord();
     }
+
     // Player Submitting Guess
 
     /**

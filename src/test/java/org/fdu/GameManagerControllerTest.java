@@ -9,7 +9,6 @@ import static org.junit.jupiter.api.Assertions.*;
 class GameManagerControllerTest {
 
     private GameManagerController controller;
-    private GameResponse gameResponse;
     private GameManager gameManager;
 
     @BeforeEach
@@ -20,16 +19,14 @@ class GameManagerControllerTest {
     }
 
     @Test
-    @DisplayName("Testing getTargetWord sends back a properly instantiated DTO.")
+    @DisplayName("Testing getTargetWord loads a proper and valid target word for Wordle.")
     void getTargetWord() {
-        String[] feedback = new String[0];
-        gameResponse = new GameResponse("DUMMY","", false,0,true, feedback);
-        assertNotNull(gameResponse.targetWord());
-        assertEquals("", gameResponse.messageToPlayer());
-        assertFalse(gameResponse.hasWon());
-        assertEquals(0, gameResponse.guessesUsed());
-        assertTrue(gameResponse.isValidGuess());
-        assertEquals(feedback, gameResponse.feedbackColors());
+        String result = controller.getTargetWord();
+
+        assertNotNull(result);
+        assertEquals(5, result.length());
+        assertEquals(result, result.toUpperCase());
+        assertTrue(WordRepo.getWords().contains(result));
     }
 
     @Test
