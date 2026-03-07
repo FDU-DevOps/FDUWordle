@@ -98,30 +98,33 @@ public class WordRepo {
      </p>
 
      @param filePath path to the dictionary file
-     @throws Exception when dictionary does not properly load
      @author Emirlan Asanakunov
      */
-
-    public static void loadDictionary(String filePath) throws Exception {
+    public static void loadDictionary(String filePath){
         words.clear();
+        try
+        {
+            //Load the file from the classpath
+            InputStream dictionary = WordRepo.class.getClassLoader().getResourceAsStream(filePath);
 
-        // Load the file from the classpath
-        InputStream dictionary = WordRepo.class.getClassLoader().getResourceAsStream(filePath);
+            // If dictionary is null, exception is thrown, and default word DEVIL is utilized for the game
+            if (dictionary != null) {
+                try (Reader reader = new InputStreamReader(dictionary); CSVReader csvReader = new CSVReader(reader)) {
 
-        // If file doesn't exist, stop immediately
-        if (dictionary == null) throw new RuntimeException("File not found: " + filePath);
-
-        try (Reader reader = new InputStreamReader(dictionary); CSVReader csvReader = new CSVReader(reader)) {
-
-            // Read all rows and grab only the first column of each row (there is only one column)
-            for (String[] row : csvReader.readAll()) {
-                if (row[0] == null || row[0].trim().isEmpty()) continue;
-                words.add(row[0].trim().toUpperCase());
+                    // Read all rows and grab only the first column of each row (there is only one column)
+                    for (String[] row : csvReader.readAll()) {
+                        if (row[0] == null || row[0].trim().isEmpty()) continue;
+                        words.add(row[0].trim().toUpperCase());
+                    }
+                }
             }
+            // If file loads successfully, but is empty, give a dummy word
+            if(words.isEmpty()) words.add("DEVIL");
         }
-
-        // If the file was empty, no point continuing
-        if (words.isEmpty()) throw new RuntimeException("Dictionary is empty!");
+        catch(Exception e) // If file does not load, give a dummy word
+        {
+            words.add("DEVIL");
+        }
     }
 
     /**

@@ -22,24 +22,10 @@ public class GameManager {
     private int guessesUsed = 0;
     private boolean hasWon = false;
 
-
     /**
-     * GameManager() - Initializes the targetWord from the WordRepo Class method pickTargetWord() <br>
-     * targetWord - (String) the correct answer to the game is picked and assigned to targetWord
-     * Initializes and loads the dictionary as well before picking a target word
+     * Public for Springboot to instantiate object and load dictionary <br>
      */
-    public GameManager() {
-        try {
-            // Load Dictionary before picking a word
-            if (WordRepo.getWords().isEmpty()) {
-                WordRepo.loadDictionary("dictionary.csv");
-            }
-            this.targetWord = WordRepo.pickTargetWord();
-        } catch (Exception e) {
-            // Fallback default word so the app doesn't crash if the file is missing
-            this.targetWord = "DEVIL";
-        }
-    }
+    public GameManager() { WordRepo.loadDictionary("dictionary.csv"); }
 
     /**
      * getWon() - Returns whether the player has won the game <br>
@@ -198,7 +184,7 @@ public class GameManager {
      message: game state message (win/loss/invalid) <br>
      hasWon: whether the player has won or no <br>
      guessesUsed: number of guesses made <br>
-     isValidGuess: false if guess was invalid, true otherwise <br>
+     isValidGuess: returns validity of guess <br>
      feedbackColors: String[] of color feedback (e.g. "GREEN", "YELLOW", "GRAY")
      */
     public GameResponse submitGuess(MessageData rawGuess){
