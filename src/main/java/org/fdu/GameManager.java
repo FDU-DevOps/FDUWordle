@@ -28,33 +28,6 @@ public class GameManager {
     public GameManager() { WordRepo.loadDictionary("dictionary.csv"); }
 
     /**
-     * Selects a random word and returns an initialized DTO <br>
-     * Scope: Gets random word, calls overloaded startGame() to configure DTO
-     * @return new game state DTO with initial game settings
-     */
-    public GameResponse startGame()
-    {
-        return startGame(WordRepo.pickTargetWord());
-    }
-
-    /**
-     * Selects a random word and returns an initialized  <br>
-     * @param secretWord targetWord that the user will try to guess
-     * @return new game state DTO with initial game settings
-     */
-    public GameResponse startGame(String secretWord)
-    {
-        //ToDo: make isInvalidGuess throw an exception or pick new word
-        if(WordRepo.isInvalidGuess(secretWord)) { secretWord = "DEVIL";}
-        this.targetWord = secretWord;
-        guessesUsed =0;
-        hasWon = false;
-        String[] initialFeedback = new String[0];
-        // secretWord, message to player is empty, player has yet to win, zero guesses used to begin game
-        return new GameResponse(secretWord, "", false, 0, true, initialFeedback);
-    }
-
-    /**
      * getWon() - Returns whether the player has won the game <br>
      * @return won - (boolean) true if the player has won, false otherwise
      */
@@ -81,7 +54,6 @@ public class GameManager {
      * getGuessedUsed() - Allows Game Manager object to access number of guesses user has made <br>
      * @return guessesUsed - (int) number of valid guesses the player has made
      */
-    //TODO: Currently if the game page is refreshed, this variable is not reset - check submit-guess request
     public int getGuessesUsed(){
         return guessesUsed;
     }
@@ -110,6 +82,7 @@ public class GameManager {
      * @param normalizedGuess is normalized to uppercase without white space
      * @return  True if guess matches target word, false otherwise
      */
+
     public boolean doesGuessMatch(String normalizedGuess){
         guessesUsed++;
         hasWon = normalizedGuess.equals(targetWord);
@@ -135,7 +108,7 @@ public class GameManager {
     }
 
     /**
-     * Takes in playerGuess and targetWord and generates colored feedback based on the two <br>
+     * Takes in playerGuess and targetWord and generates colored feedback based on the two
      * @param playerGuess the player's guess for what the target word is
      * @param targetWord the generated target word for this instance of Wordle
      * @return player guess with color coded feedback based on the target word
@@ -152,18 +125,16 @@ public class GameManager {
      * @return message indicating whether the player has won or lost the game
      */
 
-    public static String gameStateMessage(boolean hasWon, String targetWord)
+    public static String gameStateMessage(boolean hasWon)
     {
-        return hasWon ? "YOU WON! YOU GUESSED THE WORD: " + targetWord :
-                "YOU LOST! THE CORRECT ANSWER WAS: " + targetWord;
+        return hasWon ? "CORRECT! YOU GUESSED THE WORD: " : "YOU LOST! THE CORRECT ANSWER WAS:";
     }
 
     /**
-     * Displays the introduction messages for the game. <br>
+     * Displays the introduction messages for the game.
      * @param manager instance of the GameManager class, used to display max guesses
      */
     public static void showIntro (GameManager manager){
-        //TODO: Refactor to be in index.html
         ConsoleUI.println("WELCOME TO WORDLE! GUESS THE SECRET WORD.");
         ConsoleUI.println("YOU HAVE " + manager.getMaxGuesses() + " GUESSES.");
     }
@@ -229,7 +200,7 @@ public class GameManager {
                     null
             );
         }
-       doesGuessMatch(normalized);
+        doesGuessMatch(normalized);
 
         WordRepo.FeedbackType[] feedbackColors =
                 evaluateGuessAndGiveColoredFeedback(normalized, getTargetWord()); //Get the colored feedback as Enum
@@ -239,11 +210,9 @@ public class GameManager {
             stringFeedbackColors[i] = feedbackColors[i].name();
         }
 
-
-        //TODO: Probably need to refactor how this DTO is returned - specifically the guessesUsed piece
         return new GameResponse(
                 getTargetWord(),
-                gameStateMessage(hasWon, getTargetWord()),
+                gameStateMessage(hasWon),
                 hasWon,
                 getGuessesUsed(),
                 true,
