@@ -79,6 +79,7 @@ public class GameManager {
      * getGuessedUsed() - Allows Game Manager object to access number of guesses user has made <br>
      * @return guessesUsed - (int) number of valid guesses the player has made
      */
+    //TODO: Currently if the game page is refreshed, this variable is not reset - check submit-guess request
     public int getGuessesUsed(){
         return guessesUsed;
     }
@@ -159,6 +160,7 @@ public class GameManager {
      * @param manager instance of the GameManager class, used to display max guesses
      */
     public static void showIntro (GameManager manager){
+        //TODO: Refactor to be in index.html
         ConsoleUI.println("WELCOME TO WORDLE! GUESS THE SECRET WORD.");
         ConsoleUI.println("YOU HAVE " + manager.getMaxGuesses() + " GUESSES.");
     }
@@ -234,6 +236,7 @@ public class GameManager {
             stringFeedbackColors[i] = feedbackColors[i].name();
         }
 
+        //TODO: Probably need to refactor how this DTO is returned - specifically the guessesUsed piece
         return new GameResponse(
                 getTargetWord(),
                 gameStateMessage(hasWon),
