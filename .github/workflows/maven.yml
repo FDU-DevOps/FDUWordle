@@ -27,3 +27,14 @@ jobs:
         with:
           name: wordle-jar
           path: target/*.jar
+
+
+      - name: Build with Maven and generate JaCoCo report
+        run: mvn clean verify
+
+      - name: Publish JaCoCo Report
+        uses: Madrapps/jacoco-report@v1.3.1
+        with:
+          paths: ${{ github.workspace }}/*/target/site/jacoco/jacoco.xml 
+          token: ${{ secrets.GITHUB_TOKEN }}
+          min-coverage-overall: 70
