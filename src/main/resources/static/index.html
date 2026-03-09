@@ -37,6 +37,8 @@
         const response = await fetch("api/FDUWordle/start-game");
         document.getElementById("submit-guess").value = "";
         document.getElementById("output").innerText = "";
+
+
     };
     async function sendUserGuess() {
         const value = document.getElementById("submit-guess").value;
