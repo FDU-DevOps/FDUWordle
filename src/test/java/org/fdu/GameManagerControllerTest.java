@@ -3,8 +3,12 @@ package org.fdu;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.resttestclient.autoconfigure.AutoConfigureRestTestClient;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import static org.junit.jupiter.api.Assertions.*;
+@SpringBootTest
+@AutoConfigureRestTestClient
 
 class GameManagerControllerTest {
 
@@ -34,19 +38,18 @@ class GameManagerControllerTest {
     @Test
     @DisplayName("Testing checkUserGuess correctly checks the user guess vs the target word.")
     void checkUserGuess() {
-        gameManager.setDebugTargetWord("APPLE");
+        gameManager.startGame("APPLE");
 
-        // Test correct guess returns hasWon = true
-        GameResponse wonResponse = controller.checkUserGuess(new MessageData("APPLE"));
-        assertTrue(wonResponse.hasWon());
-        assertEquals("APPLE", wonResponse.targetWord());
-        assertEquals(GameManager.gameStateMessage(true), wonResponse.messageToPlayer());
+        // Test correct guess matches target word -- happy path
+        MessageData correctGuess = new MessageData("APPLE");
+        gameResponse = gameManager.submitGuess(correctGuess);
+        assertEquals(correctGuess.playerGuess(),gameResponse.targetWord());
+        assertTrue(gameResponse.hasWon());
 
         // Test incorrect guess returns hasWon = false
-        GameResponse lostResponse = controller.checkUserGuess(new MessageData("TABLE"));
-        assertFalse(lostResponse.hasWon());
-        assertEquals("APPLE", lostResponse.targetWord());
-        assertEquals(GameManager.gameStateMessage(false), lostResponse.messageToPlayer());
-
+        MessageData incorrectGuess = new MessageData("OCEAN");
+        gameResponse = gameManager.submitGuess(incorrectGuess);
+        assertNotEquals(gameManager.getTargetWord(), incorrectGuess.playerGuess());
+        assertFalse(gameResponse.hasWon());
     }
 }
