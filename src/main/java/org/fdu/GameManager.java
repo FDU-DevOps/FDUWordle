@@ -47,6 +47,8 @@ public class GameManager {
         //ToDo: make isInvalidGuess throw an exception or pick new word
         if(WordRepo.isInvalidGuess(secretWord)) { secretWord = "DEVIL";}
         this.targetWord = secretWord;
+        guessesUsed =0;
+        hasWon = false;
         String[] initialFeedback = new String[0];
         // secretWord, message to player is empty, player has yet to win, zero guesses used to begin game
         return new GameResponse(secretWord, "", false, 0, true, initialFeedback);
