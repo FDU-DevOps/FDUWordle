@@ -43,7 +43,8 @@ jobs:
         with:
           paths: ${{ github.workspace }}/target/site/jacoco/jacoco.xml
           token: ${{ secrets.GITHUB_TOKEN }}
-          #github-token: ${{ secrets.GITHUB_TOKEN }}
+          # team agreed to 70% target coverage
           min-coverage-overall: 70
           min-coverage-changed-files: 70
-
+          # future change - rather than creating multiple comments, update the same comment
+          # update-comment: true
