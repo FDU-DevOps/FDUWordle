@@ -118,6 +118,7 @@ class GameManagerTest {
     public void testSetDebugTargetWord_overridesOriginal() {
         GameManager manager = new GameManager();
         String original = manager.getTargetWord();
+        System.out.println("Original Target word: " + original);
         manager.setDebugTargetWord("CRANE");
         assertNotEquals(original, manager.getTargetWord());
     }
