@@ -43,7 +43,11 @@
 
     window.onload = async function()
     {
-        const response = await fetch("api/FDUWordle/start-game");
+        const response = await fetch("api/FDUWordle/start-game",
+            {
+                method: "POST",
+                headers: { "Content-Type": "application/json" }
+            });
         document.getElementById("submit-guess").value = "";
         document.getElementById("output").innerText = "";
     };
@@ -56,6 +60,7 @@
         });
         const data = await response.json();
 
+        //TODO: tying back into the removal of messageToPlayer piece of the DTO, this would need to be refactored
         if (!data.isValidGuess) {
             document.getElementById("output").innerText = data.messageToPlayer;
             return;  // stop here, no row added
