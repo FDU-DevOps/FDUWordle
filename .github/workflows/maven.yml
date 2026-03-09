@@ -6,7 +6,7 @@ on:
     branches: [ 'master' ]
 
   permissions:    #CHANGE WORDING
-      packages: write
+      contents: write
 
 jobs:
   build:
@@ -36,7 +36,7 @@ jobs:
       #  run: mvn clean verify org.jacoco:jacoco-maven-plugin:report
 
       - name: Publish JaCoCo Report as PR comment
-        uses: madrapps/jacoco-report@v1.7.2.
+        uses: madrapps/jacoco-report@v1.6
         with:
           paths: ${{ github.workspace }}/target/site/jacoco/jacoco.
           token: ${{ secrets.GITHUB_TOKEN }}
