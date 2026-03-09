@@ -128,7 +128,7 @@ public class GameManager {
 
     public static String gameStateMessage(boolean hasWon)
     {
-        return hasWon ? "CORRECT! YOU GUESSED THE WORD: " : "YOU LOST! THE CORRECT ANSWER WAS:";
+        return hasWon ? "YOU WON! YOU GUESSED THE WORD: " : "YOU LOST! THE CORRECT ANSWER WAS:";
     }
 
     /**
@@ -202,7 +202,7 @@ public class GameManager {
                     null
             );
         }
-        doesGuessMatch(normalized);
+       doesGuessMatch(normalized);
 
         WordRepo.FeedbackType[] feedbackColors =
                 evaluateGuessAndGiveColoredFeedback(normalized, getTargetWord()); //Get the colored feedback as Enum
@@ -211,6 +211,7 @@ public class GameManager {
         for (int i = 0; i < feedbackColors.length; i++) {
             stringFeedbackColors[i] = feedbackColors[i].name();
         }
+
 
         //TODO: Probably need to refactor how this DTO is returned - specifically the guessesUsed piece
         return new GameResponse(
