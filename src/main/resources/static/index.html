@@ -17,8 +17,8 @@
     loadVersion();
 </script>
 
-<p>Type your guess:</p>
-
+<label for="submit-guess">Type your guess:</label>
+<br><br>
 <input id="submit-guess">
 <br><br>
 
@@ -26,6 +26,8 @@
 <div id="guess-row"></div>
 
 <button id="submitButton" onclick="sendUserGuess()">Submit</button>
+
+<button id="resetButton"  onclick="resetGame()" style="margin-left:24px">Reset Game</button>
 
 <h3>Response:</h3>
 <p id="output"></p>
