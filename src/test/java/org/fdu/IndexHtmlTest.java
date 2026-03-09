@@ -73,4 +73,22 @@ public class IndexHtmlTest
         RestTestClientResponse response = RestTestClientResponse.from(spec);
         assertThat(response).hasStatusOk().bodyText().contains("addRowWithColoredFeedback");
     }
+
+    @Test
+    @DisplayName("Testing that the index page contains the reset button.")
+    void testIndexPageContainsResetButton(@Autowired RestTestClient restClient)
+    {
+        RestTestClient.ResponseSpec spec = restClient.get().uri("/").exchange();
+        RestTestClientResponse response = RestTestClientResponse.from(spec);
+        assertThat(response).hasStatusOk().bodyText().contains("resetButton");
+    }
+
+    @Test
+    @DisplayName("Testing that the index page contains the reset game function.")
+    void testIndexPageContainsResetGameFunction(@Autowired RestTestClient restClient)
+    {
+        RestTestClient.ResponseSpec spec = restClient.get().uri("/").exchange();
+        RestTestClientResponse response = RestTestClientResponse.from(spec);
+        assertThat(response).hasStatusOk().bodyText().contains("resetGame");
+    }
 }
