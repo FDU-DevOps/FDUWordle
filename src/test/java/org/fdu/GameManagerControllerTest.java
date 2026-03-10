@@ -8,14 +8,15 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class GameManagerControllerTest {
 
-    private GameManager gameManager;
+    private GameManagerController controller;
     private GameResponse gameResponse;
+    private GameManager gameManager;
 
     @BeforeEach
     void setUp()
     {
         gameManager = new GameManager();
-        //controller = new GameManagerController(gameManager);
+        controller = new GameManagerController(gameManager);
     }
 
     @Test
