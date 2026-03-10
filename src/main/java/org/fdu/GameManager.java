@@ -46,8 +46,13 @@ public class GameManager {
     {
         //ToDo: make isInvalidGuess throw an exception or pick new word
         if(WordRepo.isInvalidGuess(secretWord)) { secretWord = "DEVIL";}
+        //TODO: Refactor when DTO is implemented with all needed variables - initialized DTO is passed
+
+        // Reset variables when game is created - gameState
         this.targetWord = secretWord;
         String[] initialFeedback = new String[0];
+        guessesUsed = 0;
+        hasWon = false;
         // secretWord, message to player is empty, player has yet to win, zero guesses used to begin game
         return new GameResponse(secretWord, "", false, 0, true, initialFeedback);
     }
