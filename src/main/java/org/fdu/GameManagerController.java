@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 public class GameManagerController
 {
     // Stores target word for this session of Wordle
-    private GameManager gameManager = new GameManager();
+    private GameManager gameManager;
     private GameResponse gameState;
 
     // Opening page initializes a new game
