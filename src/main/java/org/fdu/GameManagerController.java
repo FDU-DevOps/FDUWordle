@@ -13,7 +13,7 @@ public class GameManagerController
 {
 
     // Stores target word for this session of Wordle
-    private GameManager gameManager = new GameManager();
+    private GameManager gameManager;
     private GameResponse gameState;
     public GameManagerController(GameManager gameManager) {
         this.gameManager = gameManager;

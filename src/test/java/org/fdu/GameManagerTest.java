@@ -43,6 +43,7 @@ class GameManagerTest {
     @Test
     void doesGuessMatch() {
         GameManager manager = new GameManager();
+        manager.startGame();
         String targetWord = manager.getTargetWord();
         assertTrue(manager.doesGuessMatch(targetWord), "Should return true for correct guess");
         assertFalse(manager.doesGuessMatch("ZZZZZ"), "Should return false for incorrect guess");
