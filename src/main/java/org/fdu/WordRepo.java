@@ -1,5 +1,6 @@
 package org.fdu;
 
+import java.io.IOException;
 import java.util.HashMap;
 
 import java.util.List;
@@ -7,6 +8,8 @@ import java.util.Random;
 import java.util.ArrayList;
 
 import com.opencsv.CSVReader;
+import com.opencsv.exceptions.CsvException;
+
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
@@ -100,33 +103,27 @@ public class WordRepo {
      @param filePath path to the dictionary file
      @author Emirlan Asanakunov
      */
-    public static void loadDictionary(String filePath){
+    public static void loadDictionary(String filePath) {
         words.clear();
-        try
-        {
+        try {
             //Load the file from the classpath
             InputStream dictionary = WordRepo.class.getClassLoader().getResourceAsStream(filePath);
 
             // If dictionary is null, exception is thrown, and default word DEVIL is utilized for the game
-            if (dictionary != null) {
-                try (Reader reader = new InputStreamReader(dictionary); CSVReader csvReader = new CSVReader(reader)) {
+            if (dictionary == null) throw new RuntimeException("File not found: " + filePath);
+            try (Reader reader = new InputStreamReader(dictionary); CSVReader csvReader = new CSVReader(reader)) {
 
-                    // Read all rows and grab only the first column of each row (there is only one column)
-                    for (String[] row : csvReader.readAll()) {
-                        if (row[0] == null || row[0].trim().isEmpty()) continue;
-                        words.add(row[0].trim().toUpperCase());
-                    }
+                // Read all rows and grab only the first column of each row (there is only one column)
+                for (String[] row : csvReader.readAll()) {
+                    if (row[0] == null || row[0].trim().isEmpty()) continue;
+                    words.add(row[0].trim().toUpperCase());
                 }
             }
-            // If file loads successfully, but is empty, give a dummy word
-            if(words.isEmpty()) words.add("DEVIL");
-        }
-        catch(Exception e) // If file does not load, give a dummy word
-        {
-            words.add("DEVIL");
+            if (words.isEmpty()) throw new RuntimeException("Dictionary is empty!");
+        } catch (IOException | CsvException e) {
+            throw new RuntimeException(e);
         }
     }
-
     /**
      * Picks a random target word from the static list.
      * Objective: Provide the word the user is trying to guess.
