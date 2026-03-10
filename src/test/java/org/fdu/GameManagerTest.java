@@ -19,6 +19,7 @@ class GameManagerTest {
     @Test
     void getTargetWord() {
         GameManager manager = new GameManager();
+        manager.startGame();
         String targetWord = manager.getTargetWord();
         assertNotNull(targetWord, "Target word should not be null");
     }
