@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.resttestclient.autoconfigure.AutoConfigureRestTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.client.RestTestClient;
 import org.springframework.test.web.servlet.client.assertj.RestTestClientResponse;
 
@@ -20,8 +21,7 @@ class GameManagerControllerTest {
     private GameResponse gameResponse;
 
     @BeforeEach
-    void setUp()
-    {
+    void setUp() {
         gameManager = new GameManager();
     }
 
@@ -29,7 +29,7 @@ class GameManagerControllerTest {
     @DisplayName("Testing getTargetWord sends back a properly instantiated DTO.")
     void getTargetWord() {
         String[] feedback = new String[0];
-        gameResponse = new GameResponse("DUMMY","", false,0,true, feedback);
+        gameResponse = new GameResponse("DUMMY", "", false, 0, true, feedback);
         assertNotNull(gameResponse.targetWord());
         assertEquals("", gameResponse.messageToPlayer());
         assertFalse(gameResponse.hasWon());
@@ -46,7 +46,7 @@ class GameManagerControllerTest {
         // Test correct guess matches target word -- happy path
         MessageData correctGuess = new MessageData("APPLE");
         gameResponse = gameManager.submitGuess(correctGuess);
-        assertEquals(correctGuess.playerGuess(),gameResponse.targetWord());
+        assertEquals(correctGuess.playerGuess(), gameResponse.targetWord());
         assertTrue(gameResponse.hasWon());
 
         // Test incorrect guess returns hasWon = false
@@ -55,6 +55,7 @@ class GameManagerControllerTest {
         assertNotEquals(gameManager.getTargetWord(), incorrectGuess.playerGuess());
         assertFalse(gameResponse.hasWon());
     }
+
     @Test
     @DisplayName("Test starting a new game via API")
     void testStartGame(@Autowired RestTestClient restClient) {
@@ -62,7 +63,7 @@ class GameManagerControllerTest {
         RestTestClient.ResponseSpec spec = restClient.post().uri("/api/FDUWordle/start-game").exchange();
         RestTestClientResponse response = RestTestClientResponse.from(spec);
 
-       // Check for 200 OK response and if DTO items are contained -- just checking fields
+        // Check for 200 OK response and if DTO items are contained -- just checking fields
         assertThat(response).hasStatusOk().bodyText().contains("targetWord").contains("hasWon")
                 .contains("guessesUsed").contains("isValidGuess").contains("feedbackColors");
 
@@ -82,5 +83,116 @@ class GameManagerControllerTest {
         assertThat(loadedGame.guessesUsed()).isEqualTo(0);
         assertThat(loadedGame.isValidGuess()).isTrue();
         assertThat(loadedGame.feedbackColors()).isEmpty();
+    }
+
+    @Test
+    @DisplayName("Testing that submit game works for invalid guesses")
+    void testSubmitGameInvalid(@Autowired RestTestClient restClient)
+    {
+
+        // Start a game of Wordle prior to checking for guess submission
+        GameResponse newGame = restClient.post()
+                .uri("/api/FDUWordle/start-game")
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(GameResponse.class)
+                .returnResult()
+                .getResponseBody();
+
+        assertThat(newGame).isNotNull();
+        String actualTarget = newGame.targetWord();
+        int initialGuessesUsed = newGame.guessesUsed();
+
+        // Assume the User has guessed an invalid word
+        MessageData userGuessInvalidWord = new MessageData("DEVILS"); // 6 letter word is invalid
+
+        GameResponse responseInvalidWord = restClient.post()
+                .uri("/api/FDUWordle/submit-guess")
+                .contentType(MediaType.APPLICATION_JSON).body(userGuessInvalidWord)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(GameResponse.class)
+                .returnResult()
+                .getResponseBody();
+
+        assertThat(responseInvalidWord).isNotNull();
+        assertThat(responseInvalidWord.targetWord()).isEqualTo(actualTarget);
+        assertThat(responseInvalidWord.hasWon()).isFalse();
+        assertThat(responseInvalidWord.isValidGuess()).isFalse();
+        assertThat(responseInvalidWord.guessesUsed()).isEqualTo(initialGuessesUsed); // guesses used should not increase
+        assertThat(responseInvalidWord.feedbackColors()).isNull();
+    }
+
+    @Test
+    @DisplayName("Test submit guess works for correct words")
+    void testSubmitGuessCorrect(@Autowired RestTestClient restClient)
+    {
+        // Start a game of Wordle prior to checking for guess submission
+        GameResponse newGame = restClient.post()
+                .uri("/api/FDUWordle/start-game")
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(GameResponse.class)
+                .returnResult()
+                .getResponseBody();
+
+        assertThat(newGame).isNotNull();
+        String actualTarget = newGame.targetWord();
+
+        // Assume the User has guessed the word correctly
+        MessageData userGuessCorrectWord = new MessageData(actualTarget);
+
+        GameResponse responseCorrectWord = restClient.post()
+                .uri("/api/FDUWordle/submit-guess")
+                .contentType(MediaType.APPLICATION_JSON).body(userGuessCorrectWord)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(GameResponse.class)
+                .returnResult()
+                .getResponseBody();
+
+        assertThat(responseCorrectWord).isNotNull();
+        assertThat(responseCorrectWord.targetWord()).isEqualTo(actualTarget);
+        assertThat(responseCorrectWord.hasWon()).isTrue();
+        assertThat(responseCorrectWord.isValidGuess()).isTrue();
+        assertThat(responseCorrectWord.guessesUsed()).isGreaterThanOrEqualTo(1);
+        assertThat(responseCorrectWord.feedbackColors()).isNotEmpty();
+    }
+
+    @Test
+    @DisplayName("Testing that submit game works for incorrect user guesses")
+    void testSubmitGameIncorrect(@Autowired RestTestClient restClient)
+    {
+        // Start a game of Wordle prior to checking for guess submission
+        GameResponse newGame = restClient.post()
+                .uri("/api/FDUWordle/start-game")
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(GameResponse.class)
+                .returnResult()
+                .getResponseBody();
+
+        assertThat(newGame).isNotNull();
+        String actualTarget = newGame.targetWord();
+
+        // Assume the User has guessed the word incorrectly
+        // Testing with a word that will never be the target word
+        MessageData userGuessIncorrectWord = new MessageData("AARON");
+
+        GameResponse responseIncorrectWord = restClient.post()
+                .uri("/api/FDUWordle/submit-guess")
+                .contentType(MediaType.APPLICATION_JSON).body(userGuessIncorrectWord)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(GameResponse.class)
+                .returnResult()
+                .getResponseBody();
+
+        assertThat(responseIncorrectWord).isNotNull();
+        assertThat(responseIncorrectWord.targetWord()).isEqualTo(actualTarget);
+        assertThat(responseIncorrectWord.hasWon()).isFalse();
+        assertThat(responseIncorrectWord.isValidGuess()).isTrue();
+        assertThat(responseIncorrectWord.guessesUsed()).isGreaterThanOrEqualTo(1);
+        assertThat(responseIncorrectWord.feedbackColors()).isNotEmpty();
     }
 }
