@@ -152,9 +152,10 @@ public class GameManager {
      * @return message indicating whether the player has won or lost the game
      */
 
-    public static String gameStateMessage(boolean hasWon)
+    public static String gameStateMessage(boolean hasWon, String targetWord)
     {
-        return hasWon ? "YOU WON! YOU GUESSED THE WORD: " : "YOU LOST! THE CORRECT ANSWER WAS:";
+        return hasWon ? "YOU WON! YOU GUESSED THE WORD: " + targetWord :
+                "YOU LOST! THE CORRECT ANSWER WAS: " + targetWord;
     }
 
     /**
@@ -242,7 +243,7 @@ public class GameManager {
         //TODO: Probably need to refactor how this DTO is returned - specifically the guessesUsed piece
         return new GameResponse(
                 getTargetWord(),
-                gameStateMessage(hasWon),
+                gameStateMessage(hasWon, getTargetWord()),
                 hasWon,
                 getGuessesUsed(),
                 true,
