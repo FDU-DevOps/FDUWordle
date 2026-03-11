@@ -11,7 +11,7 @@
     </parent>
     <groupId>org.fdu</groupId>
     <artifactId>FDUWordle</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0-DEVOPS-333</version>
     <packaging>jar</packaging>
 
     <name>FDUWordle</name>

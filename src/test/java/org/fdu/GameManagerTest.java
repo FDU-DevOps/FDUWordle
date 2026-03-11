@@ -10,17 +10,19 @@ import org.junit.jupiter.api.BeforeEach;
 import static org.junit.jupiter.api.Assertions.*;
 
 class GameManagerTest {
+    private GameResponse gameResponse;
 
     @BeforeEach
-    void setUp() throws Exception {
+    void setUp() {
         WordRepo.loadDictionary("valid_dictionary.csv");
     }
 
     @Test
     void getTargetWord() {
         GameManager manager = new GameManager();
-        String targetWord = manager.getTargetWord();
-        assertNotNull(targetWord, "Target word should not be null");
+        gameResponse = manager.startGame("APPLE");
+        assertNotNull(gameResponse.targetWord(), "Target word should not be null");
+        assertEquals("APPLE", gameResponse.targetWord());
     }
 
     @Test
@@ -43,8 +45,8 @@ class GameManagerTest {
     @Test
     void doesGuessMatch() {
         GameManager manager = new GameManager();
-        String targetWord = manager.getTargetWord();
-        assertTrue(manager.doesGuessMatch(targetWord), "Should return true for correct guess");
+        gameResponse = manager.startGame("APPLE");
+        assertTrue(manager.doesGuessMatch(gameResponse.targetWord()), "Should return true for correct guess");
         assertFalse(manager.doesGuessMatch("ZZZZZ"), "Should return false for incorrect guess");
     }
     @Test
@@ -215,7 +217,6 @@ class GameManagerTest {
 
         assertFalse(response.hasWon());
         assertTrue(response.isValidGuess());
-        assertFalse(response.hasWon());
         for (String color : response.feedbackColors()) {
             assertEquals("GRAY", color);
         }

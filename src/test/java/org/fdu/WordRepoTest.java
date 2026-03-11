@@ -23,7 +23,7 @@ class WordRepoTest {
     }
 
     @Test
-    public void getWords() throws Exception{
+    public void getWords(){
         WordRepo.loadDictionary("valid_dictionary.csv");
         List<String> words = WordRepo.getWords();
         assertNotNull(words, "Word list should not be null");
@@ -225,7 +225,7 @@ class WordRepoTest {
 
     @Test
     @DisplayName("Happy path: valid csv loads words correctly")
-    void testLoadDictionaryValidFileWordsLoaded() throws Exception {
+    void testLoadDictionaryValidFileWordsLoaded(){
         WordRepo.loadDictionary("valid_dictionary.csv");
 
         List<String> words = WordRepo.getWords();
@@ -238,7 +238,7 @@ class WordRepoTest {
 
     @Test
     @DisplayName("Words are uppercased")
-    void testLoadDictionaryWordsAreUppercased() throws Exception {
+    void testLoadDictionaryWordsAreUppercased() {
         // Load test dictionary
         WordRepo.loadDictionary("valid_dictionary.csv");
 
@@ -248,28 +248,32 @@ class WordRepoTest {
     }
 
     @Test
-    @DisplayName("Sad Path ;( File not found throws RuntimeException")
+    @DisplayName("Sad Path - File not found ")
     void testLoadDictionaryFileNotFound(){
-        // Store exception in ex
-        RuntimeException ex = assertThrows(RuntimeException.class, () ->
-                WordRepo.loadDictionary("random_dictionary.csv"));
-        // Check exception message
-        assertTrue(ex.getMessage().contains("File not found"), "Exception message not found");
+        // Try to load a file that does not exist
+        WordRepo.loadDictionary("file_not_found.csv");
+
+        // Check fallback word and size logic
+        assertFalse(WordRepo.getWords().isEmpty(), "Dictionary should not be empty after a failed load");
+        assertTrue(WordRepo.getWords().contains("DEVIL"), "Dictionary should contain the fallback word 'DEVIL'");
+        assertEquals(1, WordRepo.getWords().size(), "Dictionary should only contain the fallback word");
     }
 
     @Test
-    @DisplayName("Sad Path ;( Empty file throws an exception")
-    void testLoadDictionaryEmptyFile(){
-        // Store exception in ex
-        RuntimeException ex =  assertThrows(RuntimeException.class, () ->
-                WordRepo.loadDictionary("empty_dictionary.csv"));
-        // Check exception message
-        assertTrue(ex.getMessage().contains("Dictionary is empty!"), "Exception message not found");
+    @DisplayName("Sad Path - Empty file defaults to DEVIL")
+    void testLoadDictionaryEmptyFile() {
+        // Try to load empty file
+        WordRepo.loadDictionary("empty_dictionary.csv");
+
+        // Check fallback word and size logic
+        assertFalse(WordRepo.getWords().isEmpty(), "Dictionary should contain fallback word");
+        assertTrue(WordRepo.getWords().contains("DEVIL"), "Fallback word 'DEVIL' not found");
+        assertEquals(1, WordRepo.getWords().size(), "Dictionary should only contain the fallback word");
     }
 
     @Test
     @DisplayName("Calling loadDictionary twice clears the old words (words.clear() works)")
-    void testLoadDictionaryTwiceClearsTheOldWords() throws Exception {
+    void testLoadDictionaryTwiceClearsTheOldWords(){
         WordRepo.loadDictionary("valid_dictionary.csv");
         int firstLoadCount = WordRepo.getWords().size();
 
@@ -283,7 +287,7 @@ class WordRepoTest {
 
     @Test
     @DisplayName("Empty rows in file are skipped")
-    void testLoadDictionaryEmptyRowsAreSkipped() throws Exception {
+    void testLoadDictionaryEmptyRowsAreSkipped() {
         WordRepo.loadDictionary("valid_dictionary.csv");
         List<String> words = WordRepo.getWords();
 
