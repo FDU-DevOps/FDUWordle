@@ -9,4 +9,5 @@ package org.fdu;
  * @param isValidGuess flag to store if the guess that user entered is valid
  * @param feedbackColors sting array to store type of color of the feedback
  */
+//TODO: Refactor to remove messageToPlayer from DTO, index.html should handle
 public record GameResponse(String targetWord, String messageToPlayer, boolean hasWon, int guessesUsed, boolean isValidGuess,String[] feedbackColors) {}

@@ -12,31 +12,19 @@ import org.springframework.web.bind.annotation.*;
 public class GameManagerController
 {
     // Stores target word for this session of Wordle
-    private final GameManager gameManager;
-    /**
-     * Constructs the controller to be used within this session
-     * @param gameManager used to track the current session's gameManager constructor
-     */
-    public GameManagerController(GameManager gameManager) {
-        this.gameManager = gameManager;
-    }
+    private GameManager gameManager = new GameManager();
+    private GameResponse gameState;
 
     // Opening page initializes a new game
     /** Generates a target word and sends it to the client
      * @return the selected target word for the current session
      */
-    @GetMapping("/start-game")
-    public String getTargetWord()
+    @PostMapping("/start-game")
+    public GameResponse getTargetWord()
     {
-        // Use WordRepo to pick a random target word and store it in the session
-        String currentTargetWord = WordRepo.pickTargetWord();
-        gameManager.setDebugTargetWord(currentTargetWord); // using this as it completes the same function needed in this case
-        gameManager.setWon(false);      // make sure player did not win
-        gameManager.resetGuessesUsed(); // reset used guesses at the start of the game
-        // Send target word to client
-        return gameManager.getTargetWord();
+        gameState = gameManager.startGame();
+        return gameState;
     }
-
     // Player Submitting Guess
 
     /**
