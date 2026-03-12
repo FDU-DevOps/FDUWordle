@@ -71,12 +71,14 @@
             body: JSON.stringify({ "playerGuess": value })
         });
         const data = await response.json();
-
-
-
-        addRowWithColoredFeedback(value.toUpperCase().trim(), data.feedbackColors);
-
-
+        if (data.isValidGuess)
+        {
+            addRowWithColoredFeedback(value.toUpperCase().trim(), data.feedbackColors);
+        }
+        else
+        {
+            document.getElementById("output").innerText += " "+( data.messageToPlayer );
+        }
 
         if (data.hasWon || data.guessesUsed >= 6) {
             document.getElementById("output").innerText += " "+( data.messageToPlayer +" " +data.targetWord);

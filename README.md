@@ -13,6 +13,8 @@ Then, run the command java -jar FDUWordle-1.0-VERSION.jar
 Finally, open a browser and go to either localhost:8080 or 127.0.0.1:8080
 
 Updates & Fixes:
+* Version: 1.0-DEVOPS-273 <br>
+    created multiple guesses game
 * Version: 1.0-DEVOPS-333
 * Introduced architectural changes for a better user experience, better utilizing DTOs.
 * Current functionality is still the same - one guess, one run through
