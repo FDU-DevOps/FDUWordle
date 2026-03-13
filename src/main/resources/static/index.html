@@ -47,7 +47,7 @@
 
     async function resetGame() {
         //Get new game
-        const response = await fetch("api/FDUWordle/start-game",
+       await fetch("api/FDUWordle/start-game",
             {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -64,26 +64,28 @@
 
     async function sendUserGuess() {
         const value = document.getElementById("submit-guess").value;
+        document.getElementById("output").innerText = "";
         const response = await fetch("api/FDUWordle/submit-guess", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ "playerGuess": value })
         });
         const data = await response.json();
-
-        if (!data.isValidGuess) {
-            document.getElementById("output").innerText = data.messageToPlayer;
-            return;  // stop here, no row added
+        if (data.isValidGuess)
+        {
+            addRowWithColoredFeedback(value.toUpperCase().trim(), data.feedbackColors);
+        }
+        else
+        {
+            document.getElementById("output").innerText += " "+( data.messageToPlayer );
         }
 
-        addRowWithColoredFeedback(value.toUpperCase().trim(), data.feedbackColors);
+        if (data.hasWon || data.guessesUsed >= 6) {
+            document.getElementById("output").innerText += " "+( data.messageToPlayer +" " +data.targetWord);
 
-
-        document.getElementById("output").innerText = data.messageToPlayer + " " + data.targetWord;
-
-        //Disable Input and Button
-        document.getElementById("submit-guess").disabled = true;
-        document.getElementById("submitButton").disabled = true;
+            document.getElementById("submit-guess").disabled = true;
+            document.getElementById("submitButton").disabled = true;
+        }
     }
 
     function addRowWithColoredFeedback(guess, feedback) {
