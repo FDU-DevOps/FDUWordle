@@ -12,13 +12,21 @@ Then, run the command java -jar FDUWordle-1.0-VERSION.jar
 
 Finally, open a browser and go to either localhost:8080 or 127.0.0.1:8080
 
-Updates & Fixes:
-* Version: 1.0-DEVOPS-273 <br>
-    created multiple guesses game
-* Version: 1.0-DEVOPS-333
-* Introduced architectural changes for a better user experience, better utilizing DTOs.
-* Current functionality is still the same - one guess, one run through
-
-Current Open Bugs:
+**Current Open Bugs:**
 * Game cannot be ran multiple times. Only ONE instance can be ran at a time as running multiple instances can affect either game.
+
+**Updates & Fixes:**
+* Version: 1.0-DEVOPS-389
+     * Added "Submit Game Feedback Button" in the UI - leads user to feedback form for Wordle
+
+
+* Version: 1.0-DEVOPS-273
+     * created multiple guesses game
+
+
+* Version: 1.0-DEVOPS-333
+     * Introduced architectural changes for a better user experience, better utilizing DTOs.
+     * Current functionality is still the same - one guess, one run through
+
+
 
