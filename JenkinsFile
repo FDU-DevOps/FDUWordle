@@ -1,0 +1,48 @@
+//Testing 
+pipeline {
+    agent any
+    parameters {
+        string(name: 'BRANCH_NAME', defaultValue: 'master', description: 'GitHub branch to retrieve')
+    }
+    stages {
+        stage('Verify Environment') {
+            steps {
+                echo "Running manual retrieval for branch: ${params.BRANCH_NAME}"
+                sh 'pwd'
+                sh 'whoami'
+            }
+        }
+        stage('Checkout Branch') {
+            steps {
+                git branch: "${params.BRANCH_NAME}", url: 'https://github.com/FDU-DevOps/FDUWordle.git'
+            }
+        }
+        stage('Verify Retrieved Files') {
+            steps {
+                sh 'ls -la'
+            }
+        }
+        stage('Build JAR') {
+            steps {
+              sh 'mvn package -DskipTests -Dmaven.compiler.release=21'
+            }
+        }
+        stage('Copy to Test Directory') {
+            steps {
+                sh 'mkdir -p /opt/wordle/test'
+                sh 'cp -r * /opt/wordle/test/'
+            }
+        }
+        stage('Verify Deployment Directory') {
+            steps {
+                sh 'ls -la /opt/wordle/test'
+            }
+        }
+        stage('Run JAR') {
+            steps {
+                sh 'pkill -f "java -jar" || true'
+                sh 'nohup java -jar /opt/wordle/test/target/*.jar --server.port=8081 > /opt/wordle/test/app.log 2>&1 &'
+            }
+        }
+    }
+}
