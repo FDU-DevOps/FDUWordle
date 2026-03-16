@@ -1,20 +1,12 @@
 //Testing 
 pipeline {
     agent any
-    parameters {
-        string(name: 'BRANCH_NAME', defaultValue: 'master', description: 'GitHub branch to retrieve')
-    }
     stages {
         stage('Verify Environment') {
             steps {
-                echo "Running manual retrieval for branch: ${params.BRANCH_NAME}"
+                echo "Running retrieval for push (for test)"
                 sh 'pwd'
                 sh 'whoami'
-            }
-        }
-        stage('Checkout Branch') {
-            steps {
-                git branch: "${params.BRANCH_NAME}", url: 'https://github.com/FDU-DevOps/FDUWordle.git'
             }
         }
         stage('Verify Retrieved Files') {
