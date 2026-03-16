@@ -16,7 +16,7 @@ pipeline {
         }
         stage('Build JAR') {
             steps {
-              sh 'mvn package -DskipTests -Dmaven.compiler.release=21'
+              sh 'mvn clean package -DskipTests -Dmaven.compiler.release=21'
             }
         }
         stage('Copy to Test Directory') {
@@ -32,7 +32,7 @@ pipeline {
         }
         stage('Run JAR') {
             steps {
-                sh 'pkill -f "java -jar" || true'
+                sh 'pkill -f "FDUWordle" || true'
                 sh 'nohup java -jar /opt/wordle/test/target/*.jar --server.port=8081 > /opt/wordle/test/app.log 2>&1 &'
             }
         }
