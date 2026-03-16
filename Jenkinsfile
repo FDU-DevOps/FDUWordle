@@ -22,6 +22,7 @@ pipeline {
         stage('Copy to Test Directory') {
             steps {
                 sh 'mkdir -p /opt/wordle/test'
+                sh 'rm -rf /opt/wordle/test/*'
                 sh 'cp -r * /opt/wordle/test/'
             }
         }
