@@ -42,6 +42,7 @@
 
 <h1>Welcome to FDU Wordle!</h1>
 <p id="version"></p>
+    <p id="guessesRemaining"> 6 Guesses Remaining</p>
 <script>
     async function loadVersion() {
         const response = await fetch("/version");
@@ -93,7 +94,8 @@
         //Clear the UI
         document.getElementById("submit-guess").value = "";
         document.getElementById("output").innerText = "";
-        document.getElementById("guess-row").innerHTML = "";        // clear the board
+        document.getElementById("guess-row").innerHTML = "";
+        document.getElementById("guessesRemaining").innerText = "6 Guesses Remaining";
         document.getElementById("submit-guess").disabled = false;   // enable input
         document.getElementById("submitButton").disabled = false;   // enable submit button
     }
@@ -111,6 +113,11 @@
         if (data.isValidGuess)
         {
             addRowWithColoredFeedback(value.toUpperCase().trim(), data.feedbackColors);
+            let remaining = Math.max(0, 6 - data.guessesUsed);
+
+            document.getElementById("guessesRemaining").innerText =
+                remaining + " Guesses Remaining" ;
+
         }
         else
         {
