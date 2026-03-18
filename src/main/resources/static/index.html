@@ -32,6 +32,23 @@
     align-items:center;
     }
 
+        #input-row{
+            display:flex;
+            justify-content:center;
+            gap:6px;
+            margin-top:10px;
+        }
+
+        .tile-input{
+            width:45px;
+            height:45px;
+            text-align:center;
+            font-size:26px;
+            font-weight:bold;
+            border:2px solid #888;
+            text-transform:uppercase;
+        }
+
     </style>
 
 </head>
@@ -52,9 +69,16 @@
     loadVersion();
 </script>
 
-<label for="submit-guess">Type your guess:</label>
 <br><br>
-<input id="submit-guess">
+    <label>Type your guess:</label>
+
+    <div id="input-row">
+        <input class="tile-input" maxlength="1" aria-label="Letter 1" >
+        <input class="tile-input" maxlength="1" aria-label="Letter 2">
+        <input class="tile-input" maxlength="1" aria-label="Letter 3">
+        <input class="tile-input" maxlength="1" aria-label="Letter 4">
+        <input class="tile-input" maxlength="1" aria-label="Letter 5">
+    </div>
 <br><br>
 
 <!-- The guess board -->
@@ -92,17 +116,22 @@
         });
 
         //Clear the UI
-        document.getElementById("submit-guess").value = "";
+
         document.getElementById("output").innerText = "";
         document.getElementById("guess-row").innerHTML = "";
         document.getElementById("guessesRemaining").innerText = "6 Guesses Remaining";
-        document.getElementById("submit-guess").disabled = false;   // enable input
+        document.querySelectorAll(".tile-input").forEach(tile => {
+            tile.disabled = false;
+            tile.value = "";});
         document.getElementById("submitButton").disabled = false;   // enable submit button
+        document.querySelector(".tile-input").focus();
     }
 
 
     async function sendUserGuess() {
-        const value = document.getElementById("submit-guess").value;
+        const value = Array.from(document.querySelectorAll(".tile-input"))
+            .map(tile => tile.value)
+            .join("");
         document.getElementById("output").innerText = "";
         const response = await fetch("api/FDUWordle/submit-guess", {
             method: "POST",
@@ -125,10 +154,13 @@
         }
 
         if (data.hasWon || data.guessesUsed >= 6) {
+
             document.getElementById("output").innerText += " "+( data.messageToPlayer +" " +data.targetWord);
 
-            document.getElementById("submit-guess").disabled = true;
             document.getElementById("submitButton").disabled = true;
+            document.querySelectorAll(".tile-input").forEach(tile => {
+                tile.disabled = true;
+            });
         }
     }
 
@@ -161,6 +193,30 @@
             row.appendChild(tile);  //Add tile to the row object
         }
     }
+    const tiles = document.querySelectorAll(".tile-input");
+
+    tiles.forEach((tile, index) => {
+
+        tile.addEventListener("input", () => {
+            tile.value = tile.value.toUpperCase();
+
+            if (tile.value.length === 1 && index < tiles.length - 1) {
+                tiles[index + 1].focus();   // move to next tile
+            }
+        });
+
+        tile.addEventListener("keydown", (e) => {
+
+            if (e.key === "Backspace" && tile.value === "" && index > 0) {
+                tiles[index - 1].focus();   // move to previous tile
+            }
+
+            if (e.key === "Enter") {
+                sendUserGuess();            // submit guess
+            }
+        });
+
+    });
 
     function styleTile(tile) {
         tile.style.width = "40px";             //Width of the tile
