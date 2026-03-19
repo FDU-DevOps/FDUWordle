@@ -3,63 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <title>FDUWordle</title>
-    <style>
-
-        /* center the game */
-
-        body{
-            font-family: Arial, Helvetica, sans-serif;
-            background:white;
-            color:black;
-
-            display:flex;
-            justify-content:center;
-            align-items:center;
-            height:100vh;
-        }
-
-
-        #game{
-    text-align:center;
-    }
-
-    /* guess board */
-
-    #guess-row{
-    margin-top:20px;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    }
-
-        #input-row{
-            display:flex;
-            justify-content:center;
-            gap:6px;
-            margin-top:10px;
-        }
-
-        .tile-input{
-            width:45px;
-            height:45px;
-            text-align:center;
-            font-size:26px;
-            font-weight:bold;
-            border:2px solid #888;
-            text-transform:uppercase;
-        }
-
-    </style>
+    <link rel="stylesheet" href="style.css">
 
 </head>
-<body>
 
 <div id="game">
 
 
 <h1>Welcome to FDU Wordle!</h1>
 <p id="version"></p>
-    <p id="guessesRemaining"> 6 Guesses Remaining</p>
+    <p id="guessesRemaining" style="color:red;font-weight: bold;"> 6 Guesses Remaining</p>
 <script>
     async function loadVersion() {
         const response = await fetch("/version");
@@ -138,6 +91,14 @@
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ "playerGuess": value })
         });
+        function clearInputTiles() {
+            document.querySelectorAll(".tile-input").forEach(tile => {
+                tile.value = "";
+            });
+
+            // move cursor back to first tile
+            document.querySelector(".tile-input").focus();
+        }
         const data = await response.json();
         if (data.isValidGuess)
         {
@@ -145,12 +106,13 @@
             let remaining = Math.max(0, 6 - data.guessesUsed);
 
             document.getElementById("guessesRemaining").innerText =
-                remaining + " Guesses Remaining" ;
-
+                remaining + " Guesses Remaining";
+            clearInputTiles();
         }
         else
         {
             document.getElementById("output").innerText += " "+( data.messageToPlayer );
+            clearInputTiles();
         }
 
         if (data.hasWon || data.guessesUsed >= 6) {
@@ -211,12 +173,10 @@
                 tiles[index - 1].focus();   // move to previous tile
             }
 
-            if (e.key === "Enter") {
-                sendUserGuess();            // submit guess
-            }
         });
 
     });
+
 
     function styleTile(tile) {
         tile.style.width = "40px";             //Width of the tile
@@ -236,5 +196,4 @@
 </script>
 
 </div>
-</body>
 </html>
