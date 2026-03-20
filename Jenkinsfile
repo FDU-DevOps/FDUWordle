@@ -1,4 +1,3 @@
-//Testing 
 pipeline {
     agent any
     stages {
@@ -16,14 +15,14 @@ pipeline {
         }
         stage('Build JAR') {
             steps {
-              sh 'mvn clean package -DskipTests -Dmaven.compiler.release=21'
+              sh 'mvn clean package -Dmaven.compiler.release=21'
             }
         }
         stage('Copy to Test Directory') {
             steps {
                 sh 'mkdir -p /opt/wordle/test'
                 sh 'rm -rf /opt/wordle/test/*'
-                sh 'cp -r * /opt/wordle/test/'
+                sh 'cp target/*.jar /opt/wordle/test/'
             }
         }
         stage('Verify Deployment Directory') {
@@ -32,8 +31,8 @@ pipeline {
             }
         }
         stage('Run JAR') {
-            steps {
-                sh 'pkill -f "FDUWordle" || true'
+            steps {   
+                sh 'pkill -f "/opt/wordle/test/.*jar" || true'
                 sh 'JENKINS_NODE_COOKIE=dontKillMe nohup java -jar /opt/wordle/test/target/*.jar --server.port=8081 > /opt/wordle/test/app.log 2>&1 &'
             } //https://stackoverflow.com/questions/37341545/unable-to-run-nohup-command-from-jenkins-as-a-background-process
         }
