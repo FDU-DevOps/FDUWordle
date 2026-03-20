@@ -1,40 +1,70 @@
+/* Page layout */
 body{
+    margin:0;
     font-family: Arial, Helvetica, sans-serif;
     background:white;
     color:black;
 
     display:flex;
     justify-content:center;
-    align-items:center;
-    height:100vh;
+    align-items:flex-start;
+    min-height:100vh;
+    padding-top:40px;
 }
 
-
+/* Main container */
 #game{
     text-align:center;
+    width:100%;
+    max-width:320px;
 }
 
-/* guess board */
 
 #guess-row{
     margin-top:20px;
     display:flex;
     flex-direction:column;
     align-items:center;
+    width:100%;
 }
 
+/* Each guess row */
+.row{
+    display:flex;
+    justify-content:center;
+    gap:4px;
+    margin-bottom:6px;
+    width:100%;
+}
+
+
+.tile{
+    width:35px;
+    height:35px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    font-size:24px;
+    font-weight:bold;
+    color:white;
+}
+
+/* Input row */
 #input-row{
     display:flex;
     justify-content:center;
-    gap:6px;
+    gap:5px;
     margin-top:10px;
 }
 
+/* Input tiles */
 .tile-input{
-    width:45px;
-    height:45px;
+    width:35px;
+    height:35px;
     text-align:center;
-    font-size:26px;
+
+    font-size:24px;
     font-weight:bold;
     border:2px solid #888;
     text-transform:uppercase;
