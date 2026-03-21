@@ -131,6 +131,15 @@
         tile.style.color = "white";            //Set color of the word
         tile.style.fontSize = "30px";          //Set size of the letter
     }
+
+    document.addEventListener("keyup", (e) => {
+        if (e.key === "Enter") {
+            const submitBtn = document.getElementById("submitButton");
+            if (!submitBtn.disabled) {
+                sendUserGuess();
+            }
+        }
+    });
 </script>
 
 <script> // User Feedback Helper Function

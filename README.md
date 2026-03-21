@@ -28,5 +28,7 @@ Finally, open a browser and go to either localhost:8080 or 127.0.0.1:8080
      * Introduced architectural changes for a better user experience, better utilizing DTOs.
      * Current functionality is still the same - one guess, one run through
 
+* Version: 1.0-DEVOPS-402
+  * Added keyboard "Enter" key support to submit guesses without clicking the button
 
 
