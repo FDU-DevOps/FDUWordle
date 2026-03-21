@@ -11,6 +11,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class GameManagerTest {
     private GameResponse gameResponse;
+    private GameResponse gameResponseALT; // alternative game
 
     @BeforeEach
     void setUp() {
@@ -37,9 +38,11 @@ class GameManagerTest {
     void getMaxGuesses() {
         GameManager manager = new GameManager();
         GameManager manager2 = new GameManager();
-        assertEquals(manager.getMaxGuesses(), manager2.getMaxGuesses(), "MAX_GUESSES should be the same across different instances.");
-        assertTrue(manager.getMaxGuesses() > 0, "MAX_GUESSES should always be above 0.");
-        assertEquals(GameManager.MAX_GUESSES, manager.getMaxGuesses(),"MAX_GUESSES constant should be 6");
+        gameResponse = manager.startGame("APPLE");
+        gameResponseALT = manager2.startGame("DEVIL");
+        assertEquals(gameResponse.maxGuesses(), gameResponseALT.maxGuesses(), "Max Guesses should be the same across different instances.");
+        assertTrue(gameResponse.maxGuesses() > 0, "Max Guesses should always be above 0.");
+        assertEquals(6,gameResponse.maxGuesses(),"Max Guesses should should be 6");
     }
 
     @Test
@@ -65,6 +68,7 @@ class GameManagerTest {
         System.setOut(new PrintStream(outContent));
 
         GameManager manager = new GameManager();
+        gameResponse = manager.startGame("APPLE");
         GameManager.showIntro(manager);
 
         System.setOut(System.out);

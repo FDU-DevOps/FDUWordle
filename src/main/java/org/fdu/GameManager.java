@@ -15,12 +15,10 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class GameManager {
-
-    /** Max number of guesses allowed in a Wordle game */
-    public static final int MAX_GUESSES = 6;
     private String targetWord;
     private int guessesUsed = 0;
     private boolean hasWon = false;
+    private GameResponse gameResponse;
 
     /**
      * Public for Springboot to instantiate object and load dictionary <br>
@@ -50,11 +48,13 @@ public class GameManager {
 
         // Reset variables when game is created - gameState
         this.targetWord = secretWord;
+
         String[] initialFeedback = new String[0];
+        int maxGuesses = 6;
         guessesUsed = 0;
         hasWon = false;
         // secretWord, player has yet to win, zero guesses used to begin game
-        return new GameResponse(secretWord, false, 0, true, initialFeedback);
+        return new GameResponse(secretWord, maxGuesses,false, 0, true, initialFeedback);
     }
 
     /**
@@ -102,7 +102,7 @@ public class GameManager {
      * @return MAX_GUESSES - (int) number of guesses the player is allowed
      */
     public int getMaxGuesses(){
-        return MAX_GUESSES;
+        return gameResponse.maxGuesses();
     }
 
 
@@ -124,7 +124,7 @@ public class GameManager {
      * @return True if player used the maximum number of guess or if player guessed the correct word. False otherwise
      */
     public boolean isGameNotOver() {
-            return getGuessesUsed()< MAX_GUESSES;
+            return getGuessesUsed()< gameResponse.maxGuesses();
         }
 
     /**
@@ -212,6 +212,7 @@ public class GameManager {
         if (WordRepo.isInvalidGuess(normalized)) { //if guess is invalid
             return new GameResponse(
                     getTargetWord(),
+                    6,
                     false,
                     getGuessesUsed(),
                     false,
@@ -231,6 +232,7 @@ public class GameManager {
         //TODO: Probably need to refactor how this DTO is returned - specifically the guessesUsed piece
         return new GameResponse(
                 getTargetWord(),
+                6,
                 hasWon,
                 getGuessesUsed(),
                 true,
