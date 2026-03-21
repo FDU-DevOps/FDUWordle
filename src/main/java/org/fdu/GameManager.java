@@ -53,8 +53,8 @@ public class GameManager {
         String[] initialFeedback = new String[0];
         guessesUsed = 0;
         hasWon = false;
-        // secretWord, message to player is empty, player has yet to win, zero guesses used to begin game
-        return new GameResponse(secretWord, "", false, 0, true, initialFeedback);
+        // secretWord, player has yet to win, zero guesses used to begin game
+        return new GameResponse(secretWord, false, 0, true, initialFeedback);
     }
 
     /**
@@ -149,18 +149,6 @@ public class GameManager {
     }
 
     /**
-     * Checks if the user has won or lost and outputs text correlating to the game state <br>
-     * Scope: Currently programmed to handle 1 case (player has won or player has lost - REFACTOR for future uses)
-     * @param hasWon - indicates if the player has won or lost the game
-     * @return message indicating whether the player has won or lost the game
-     */
-
-    public static String gameStateMessage(boolean hasWon)
-    {
-        return hasWon ? "CORRECT! YOU GUESSED THE WORD: " : "YOU LOST! THE CORRECT ANSWER WAS:";
-    }
-
-    /**
      * Displays the introduction messages for the game. <br>
      * @param manager instance of the GameManager class, used to display max guesses
      */
@@ -224,7 +212,6 @@ public class GameManager {
         if (WordRepo.isInvalidGuess(normalized)) { //if guess is invalid
             return new GameResponse(
                     getTargetWord(),
-                    "Invalid guess. Must be exactly 5 letters (A–Z).",
                     false,
                     getGuessesUsed(),
                     false,
@@ -244,7 +231,6 @@ public class GameManager {
         //TODO: Probably need to refactor how this DTO is returned - specifically the guessesUsed piece
         return new GameResponse(
                 getTargetWord(),
-                gameStateMessage(hasWon),
                 hasWon,
                 getGuessesUsed(),
                 true,

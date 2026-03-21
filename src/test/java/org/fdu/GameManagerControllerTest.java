@@ -30,9 +30,8 @@ class GameManagerControllerTest {
     @DisplayName("Testing getTargetWord sends back a properly instantiated DTO.")
     void getTargetWord() {
         String[] feedback = new String[0];
-        gameResponse = new GameResponse("DUMMY", "", false, 0, true, feedback);
+        gameResponse = new GameResponse("DUMMY", false, 0, true, feedback);
         assertNotNull(gameResponse.targetWord());
-        assertEquals("", gameResponse.messageToPlayer());
         assertFalse(gameResponse.hasWon());
         assertEquals(0, gameResponse.guessesUsed());
         assertTrue(gameResponse.isValidGuess());

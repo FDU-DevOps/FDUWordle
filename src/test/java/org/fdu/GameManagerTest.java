@@ -156,7 +156,6 @@ class GameManagerTest {
         //Too short
         GameResponse response = manager.submitGuess(new MessageData("CAT"));
 
-        assertTrue(response.messageToPlayer().contains("Invalid guess."));
         assertFalse(response.hasWon());
         assertEquals(0, response.guessesUsed());
         assertFalse(response.isValidGuess());
@@ -171,7 +170,6 @@ class GameManagerTest {
 
         GameResponse response = manager.submitGuess(new MessageData("Enormous"));
 
-        assertTrue(response.messageToPlayer().contains("Invalid guess."));
         assertFalse(response.hasWon());
         assertEquals(0, response.guessesUsed());
         assertFalse(response.isValidGuess());
