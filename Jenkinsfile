@@ -15,7 +15,9 @@ pipeline {
         }
         stage('Build JAR') {
             steps {
-              sh 'mvn clean package -Dmaven.compiler.release=21'
+                withMaven(maven: 'Maven') {   
+                  sh 'mvn clean package -Dmaven.compiler.release=21'
+                }
             }
         }
         stage('Copy to Test Directory') {
