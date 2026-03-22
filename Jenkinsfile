@@ -15,7 +15,7 @@ pipeline {
         }
         stage('Build JAR') {
             steps {
-                withMaven(maven: 'Maven') {   
+                withMaven(maven: 'Maven') {   //using plugin for maven pipeline
                   sh 'mvn clean package -Dmaven.compiler.release=21'
                 }
             }
