@@ -51,6 +51,8 @@
 
         /**
          * @typedef {Object} GameResponse
+         * @property {int} guessesRemaining
+         * @property {int} maxGuesses
          * @property {boolean} isValidGuess
          * @property {boolean} hasWon
          * @property {string} messageToPlayer
@@ -103,11 +105,9 @@
             if (data.isValidGuess)
             {
                 addRowWithColoredFeedback(value.toUpperCase().trim(), data.feedbackColors);
-                //TODO: could just be updated to use a single data.guessesRemaining DTO item so no math is needed
-                let remaining = Math.max(0, data.maxGuesses - data.guessesUsed);
 
                 document.getElementById("guessesRemaining").innerText =
-                    remaining + " Guesses Remaining";
+                    data.guessesRemaining + " Guesses Remaining";
                 clearInputTiles();
             }
             else
@@ -117,7 +117,8 @@
             }
 
             let gameStateMessage = data.hasWon ? "CORRECT! YOU GUESSED THE WORD: " + data.targetWord: "YOU LOST! THE CORRECT ANSWER WAS: " +data.targetWord;
-            if(data.hasWon || data.guessesUsed >= data.maxGuesses)
+            //TODO: QOL update - flavor text of "x guesses remaining" is still there if user wins before using up all guesses, so could remove once user wins
+            if(data.hasWon || data.guessesRemaining === 0)
             {
                 document.getElementById("output").innerText += " "+gameStateMessage;
                 document.getElementById("submitButton").disabled = true;

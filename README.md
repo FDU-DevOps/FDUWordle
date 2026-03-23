@@ -13,9 +13,13 @@ Then, run the command java -jar FDUWordle-1.0-VERSION.jar
 Finally, open a browser and go to either localhost:8080 or 127.0.0.1:8080
 
 **Current Open Bugs:**
-* Game cannot be ran multiple times. Only ONE instance can be ran at a time as running multiple instances can affect either game.
+* Current State there are no known game breaking bugs
 
 **Updates & Fixes:**
+* Version: 1.0-DEVOPS-274
+     * Fixed bug where user could not play more than one instance at a time. Introduced sessions to fix this bug.
+
+
 * Version: 1.0-DEVOPS-389
      * Added "Submit Game Feedback Button" in the UI - leads user to feedback form for Wordle
 
