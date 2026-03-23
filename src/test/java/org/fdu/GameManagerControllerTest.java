@@ -19,23 +19,25 @@ class GameManagerControllerTest {
 
     //private GameManager gameManager;
     private GameResponse gameResponse;
-    @Autowired private RestTestClient restClient;
+    @Autowired
+    private RestTestClient restClient;
 
     @BeforeEach
     void setUp() {
-        //gameManager = new GameManager();
+        //Start a fresh game before each test
+        restClient.post().uri("/api/FDUWordle/start-game").exchange();
     }
 
     @Test
     @DisplayName("Testing getTargetWord sends back a properly instantiated DTO.")
     void getTargetWord() {
-        String[] feedback = new String[0];
-        gameResponse = new GameResponse("DUMMY", 6,false, 0, true, feedback);
-        assertNotNull(gameResponse.targetWord());
+        gameResponse = new GameResponse(null, 6,6,5,false, false, true, null, null);
+
+        assertNull(gameResponse.targetWord());
         assertFalse(gameResponse.hasWon());
-        assertEquals(0, gameResponse.guessesUsed());
+        assertEquals(6, gameResponse.guessesRemaining());
         assertTrue(gameResponse.isValidGuess());
-        assertEquals(feedback, gameResponse.feedbackColors());
+        assertNull(gameResponse.feedbackColors());
     }
 
     @Test
@@ -51,10 +53,12 @@ class GameManagerControllerTest {
         assertTrue(gameResponse.hasWon());
 
         // Test incorrect guess returns hasWon = false
+        GameManager gameManager2 = new GameManager();
+        gameManager2.startGame("APPLE");
         MessageData incorrectGuess = new MessageData("OCEAN");
-        gameResponse = gameManager.submitGuess(incorrectGuess);
-        assertNotEquals(gameManager.getTargetWord(), incorrectGuess.playerGuess());
+        gameResponse = gameManager2.submitGuess(incorrectGuess);
         assertFalse(gameResponse.hasWon());
+        assertNull(gameResponse.targetWord());
     }
 
     @Test
@@ -65,8 +69,16 @@ class GameManagerControllerTest {
         RestTestClientResponse response = RestTestClientResponse.from(spec);
 
         // Check for 200 OK response and if DTO items are contained -- just checking fields
-        assertThat(response).hasStatusOk().bodyText().contains("targetWord").contains("hasWon")
-                .contains("guessesUsed").contains("isValidGuess").contains("feedbackColors");
+        assertThat(response).hasStatusOk().bodyText()
+                .contains("targetWord")
+                .contains("hasWon")
+                .contains("guessesRemaining")
+                .contains("maxGuesses")
+                .contains("wordLength")
+                .contains("isGameOver")
+                .contains("isValidGuess")
+                .contains("previousGuess")
+                .contains("feedbackColors");
 
         // Load up a response of /start-game
         GameResponse loadedGame = restClient.post()
@@ -79,10 +91,14 @@ class GameManagerControllerTest {
 
         // Assert that all the proper initialized pieces of the DTO match -- checking actual response
         assertThat(loadedGame).isNotNull();
-        assertThat(loadedGame.targetWord()).isNotEmpty();
+        assertThat(loadedGame.targetWord()).isNull();
+        assertThat(loadedGame.guessesRemaining()).isEqualTo(6);
+        assertThat(loadedGame.maxGuesses()).isEqualTo(6);
+        assertThat(loadedGame.wordLength()).isEqualTo(5);
         assertThat(loadedGame.hasWon()).isFalse();
-        assertThat(loadedGame.guessesUsed()).isEqualTo(0);
+        assertThat(loadedGame.isGameOver()).isFalse();
         assertThat(loadedGame.isValidGuess()).isTrue();
+        assertThat(loadedGame.previousGuess()).isNull();
         assertThat(loadedGame.feedbackColors()).isEmpty();
     }
 
@@ -100,12 +116,11 @@ class GameManagerControllerTest {
                 .getResponseBody();
 
         assertThat(newGame).isNotNull();
-        String actualTarget = newGame.targetWord();
-        int initialGuessesUsed = newGame.guessesUsed();
-        System.out.println(initialGuessesUsed);
+        int initialGuessesRemaining = newGame.guessesRemaining();
+        System.out.println(initialGuessesRemaining);
 
         // Assume the User has guessed an invalid word
-        MessageData userGuessInvalidWord = new MessageData("DEVILS"); // 6 letter word is invalid
+        MessageData userGuessInvalidWord = new MessageData("DEVILS"); // 6-letter word is invalid
 
         GameResponse responseInvalidWord = restClient.post()
                 .uri("/api/FDUWordle/submit-guess")
@@ -117,13 +132,16 @@ class GameManagerControllerTest {
                 .getResponseBody();
 
         assertThat(responseInvalidWord).isNotNull();
-        assertThat(responseInvalidWord.targetWord()).isEqualTo(actualTarget);
+        assertThat(responseInvalidWord.targetWord()).isNull();
         assertThat(responseInvalidWord.hasWon()).isFalse();
         assertThat(responseInvalidWord.isValidGuess()).isFalse();
-        System.out.println("Invalid Word Guesses Used: " + responseInvalidWord.guessesUsed());
-        System.out.println("Initial Guesses Used: " + initialGuessesUsed);
-        assertThat(responseInvalidWord.guessesUsed()).isEqualTo(initialGuessesUsed); // guesses used should not increase
+        assertThat(responseInvalidWord.isGameOver()).isFalse();
+        assertThat(responseInvalidWord.previousGuess()).isNull();
         assertThat(responseInvalidWord.feedbackColors()).isNull();
+        assertThat(responseInvalidWord.guessesRemaining()).isEqualTo(initialGuessesRemaining);
+        System.out.println("Invalid Word Guesses Used: " + responseInvalidWord.guessesRemaining());
+        System.out.println("Initial Guesses Used: " + initialGuessesRemaining);
+        assertThat(responseInvalidWord.guessesRemaining()).isEqualTo(initialGuessesRemaining); // guesses used should not increase
     }
 
     @Test
@@ -140,7 +158,13 @@ class GameManagerControllerTest {
                 .getResponseBody();
 
         assertThat(newGame).isNotNull();
-        String actualTarget = newGame.targetWord();
+
+        GameManager gameManager = new GameManager();
+        gameManager.startGame("CRANE");
+        String actualTarget = gameManager.getTargetWord();
+
+        //Restart with known word via API
+        restClient.post().uri("/api/FDUWordle/start-game").exchange();
 
         // Assume the User has guessed the word correctly
         MessageData userGuessCorrectWord = new MessageData(actualTarget);
@@ -156,10 +180,13 @@ class GameManagerControllerTest {
 
         assertThat(responseCorrectWord).isNotNull();
         assertThat(responseCorrectWord.targetWord()).isEqualTo(actualTarget);
+        assertThat(responseCorrectWord.targetWord()).isNotNull();
         assertThat(responseCorrectWord.hasWon()).isTrue();
+        assertThat(responseCorrectWord.isGameOver()).isTrue();
         assertThat(responseCorrectWord.isValidGuess()).isTrue();
-        assertThat(responseCorrectWord.guessesUsed()).isGreaterThanOrEqualTo(1);
-        assertThat(responseCorrectWord.feedbackColors()).isNotEmpty();
+        assertThat(responseCorrectWord.previousGuess()).isNotNull();
+        assertThat(responseCorrectWord.guessesRemaining()).isLessThan(6);
+        assertThat(responseCorrectWord.feedbackColors()).isNotNull();
     }
 
     @Test
@@ -176,7 +203,7 @@ class GameManagerControllerTest {
                 .getResponseBody();
 
         assertThat(newGame).isNotNull();
-        String actualTarget = newGame.targetWord();
+        int initialGuessesRemaining = newGame.guessesRemaining();
 
         // Assume the User has guessed the word incorrectly
         // Testing with a word that will never be the target word
@@ -192,10 +219,12 @@ class GameManagerControllerTest {
                 .getResponseBody();
 
         assertThat(responseIncorrectWord).isNotNull();
-        assertThat(responseIncorrectWord.targetWord()).isEqualTo(actualTarget);
+        assertThat(responseIncorrectWord.targetWord()).isNull();
         assertThat(responseIncorrectWord.hasWon()).isFalse();
+        assertThat(responseIncorrectWord.isGameOver()).isFalse();
         assertThat(responseIncorrectWord.isValidGuess()).isTrue();
-        assertThat(responseIncorrectWord.guessesUsed()).isGreaterThanOrEqualTo(1);
-        assertThat(responseIncorrectWord.feedbackColors()).isNotEmpty();
+        assertThat(responseIncorrectWord.previousGuess()).isEqualTo("AARON");
+        assertThat(responseIncorrectWord.guessesRemaining()).isEqualTo(initialGuessesRemaining-1);
+        assertThat(responseIncorrectWord.feedbackColors()).isNotNull();
     }
 }

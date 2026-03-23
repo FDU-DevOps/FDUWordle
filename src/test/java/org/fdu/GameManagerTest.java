@@ -11,7 +11,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class GameManagerTest {
     private GameResponse gameResponse;
-    private GameResponse gameResponseALT; // alternative game
 
     @BeforeEach
     void setUp() {
@@ -20,10 +19,14 @@ class GameManagerTest {
 
     @Test
     void getTargetWord() {
-        GameManager manager = new GameManager();
-        gameResponse = manager.startGame("APPLE");
-        assertNotNull(gameResponse.targetWord(), "Target word should not be null");
-        assertEquals("APPLE", gameResponse.targetWord());
+        String[] feedback = null;
+        gameResponse = new GameResponse(null, 6,6,5,false, false,true, null, feedback);
+
+        assertNull(gameResponse.targetWord());
+        assertFalse(gameResponse.hasWon());
+        assertEquals(6, gameResponse.guessesRemaining());
+        assertTrue(gameResponse.isValidGuess());
+        assertNull(gameResponse.feedbackColors());
     }
 
     @Test
@@ -39,7 +42,8 @@ class GameManagerTest {
         GameManager manager = new GameManager();
         GameManager manager2 = new GameManager();
         gameResponse = manager.startGame("APPLE");
-        gameResponseALT = manager2.startGame("DEVIL");
+        // alternative game
+        GameResponse gameResponseALT = manager2.startGame("DEVIL");
         assertEquals(gameResponse.maxGuesses(), gameResponseALT.maxGuesses(), "Max Guesses should be the same across different instances.");
         assertTrue(gameResponse.maxGuesses() > 0, "Max Guesses should always be above 0.");
         assertEquals(6,gameResponse.maxGuesses(),"Max Guesses should should be 6");
@@ -49,7 +53,7 @@ class GameManagerTest {
     void doesGuessMatch() {
         GameManager manager = new GameManager();
         gameResponse = manager.startGame("APPLE");
-        assertTrue(manager.doesGuessMatch(gameResponse.targetWord()), "Should return true for correct guess");
+        assertTrue(manager.doesGuessMatch(manager.getTargetWord()), "Should return true for correct guess");
         assertFalse(manager.doesGuessMatch("ZZZZZ"), "Should return false for incorrect guess");
     }
 
@@ -165,9 +169,10 @@ class GameManagerTest {
         GameResponse response = manager.submitGuess(new MessageData("CAT"));
 
         assertFalse(response.hasWon());
-        assertEquals(0, response.guessesUsed());
+        assertEquals(6, response.guessesRemaining() );
         assertFalse(response.isValidGuess());
         assertNull(response.feedbackColors());
+        assertNull(response.previousGuess());
     }
 
     @Test
@@ -179,9 +184,10 @@ class GameManagerTest {
         GameResponse response = manager.submitGuess(new MessageData("Enormous"));
 
         assertFalse(response.hasWon());
-        assertEquals(0, response.guessesUsed());
+        assertEquals(6, response.guessesRemaining());
         assertFalse(response.isValidGuess());
         assertNull(response.feedbackColors());
+        assertNull(response.previousGuess());
     }
 
     @Test
@@ -195,7 +201,10 @@ class GameManagerTest {
         assertTrue(response.isValidGuess());
         assertNotNull(response.feedbackColors());
         assertEquals(5, response.feedbackColors().length);
-        assertEquals(1, response.guessesUsed());
+        assertEquals(5, response.guessesRemaining());
+        assertEquals("CLOSE", response.previousGuess());
+        assertFalse(response.isGameOver());
+        assertNull(response.targetWord());      //targetWord not revealed yet
     }
 
     @Test
@@ -206,8 +215,12 @@ class GameManagerTest {
 
         GameResponse response = manager.submitGuess(new MessageData("GREEN"));
         assertTrue(response.isValidGuess());
+        assertTrue(response.hasWon());
+        assertTrue(response.isGameOver());
         assertNotNull(response.feedbackColors());
-        assertEquals(1, response.guessesUsed());
+        assertEquals(5, response.guessesRemaining());
+        assertEquals("GREEN", response.previousGuess());
+        assertEquals("GREEN", response.targetWord());
 
         for (String color : response.feedbackColors()) {
             assertEquals("GREEN", color);
@@ -223,6 +236,10 @@ class GameManagerTest {
 
         assertFalse(response.hasWon());
         assertTrue(response.isValidGuess());
+        assertFalse(response.isGameOver());
+        assertNull(response.targetWord());
+        assertEquals("BLOCK", response.previousGuess());
+
         for (String color : response.feedbackColors()) {
             assertEquals("GRAY", color);
         }
