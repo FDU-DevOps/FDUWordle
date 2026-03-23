@@ -1,4 +1,4 @@
-FDU Devops Class Wordle Project
+FDU DEVOPS Class Wordle Project
 
 Requirements: We support Java 25, 21, and 17 and the Windows 11 Command Prompt
 
@@ -18,7 +18,7 @@ Finally, open a browser and go to either localhost:8080 or 127.0.0.1:8080
 **Updates & Fixes:**
 * Version: 1.0-DEVOPS-274
      * Fixed bug where user could not play more than one instance at a time. Introduced sessions to fix this bug.
-     * Players can now play mutiple instances of the game at the same time.
+     * Players can now play multiple instances of the game at the same time.
        * Note: Some browsers on the same machine may experience this differently. To test, open one instance in a normal browser and another in a private browser.
 
 
