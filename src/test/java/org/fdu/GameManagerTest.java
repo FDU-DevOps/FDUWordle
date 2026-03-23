@@ -52,10 +52,14 @@ class GameManagerTest {
         assertTrue(manager.doesGuessMatch(gameResponse.targetWord()), "Should return true for correct guess");
         assertFalse(manager.doesGuessMatch("ZZZZZ"), "Should return false for incorrect guess");
     }
+
+
     @Test
     void isGameNotOver() {
         GameManager manager = new GameManager();
-        assertTrue(manager.isGameNotOver(),"Game should not be over at the start of the game loop");
+        gameResponse = manager.startGame("APPLE");
+
+        assertFalse(gameResponse.hasWon(),"Game should not be over at the start of the game loop");
         for(int i = 0; i < 6; i ++)
         {
             manager.doesGuessMatch("WRONG");

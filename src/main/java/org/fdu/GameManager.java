@@ -18,7 +18,6 @@ public class GameManager {
     private String targetWord;
     private int guessesUsed = 0;
     private boolean hasWon = false;
-    private GameResponse gameResponse;
 
     /**
      * Public for Springboot to instantiate object and load dictionary <br>
@@ -61,6 +60,7 @@ public class GameManager {
      * getWon() - Returns whether the player has won the game <br>
      * @return won - (boolean) true if the player has won, false otherwise
      */
+    //TODO: REMOVE IN CONSOLE DEPRECEATION
     public boolean getWon(){
         return hasWon;
     }
@@ -69,6 +69,7 @@ public class GameManager {
      * setWon() - Sets the won status of the game <br>
      * @param won - (boolean) true if the player has won, false otherwise
      */
+    //TODO: REMOVE IN CONSOLE DEPRECEATION
     public void setWon(boolean won){
         hasWon = won;
     }
@@ -101,10 +102,10 @@ public class GameManager {
      * getMaxGuesses() - Allows Game Manager object to access number of max guesses a user has to guess the word <br>
      * @return MAX_GUESSES - (int) number of guesses the player is allowed
      */
+    //TODO: REMOVE IN CONSOLE DEPRECEATION
     public int getMaxGuesses(){
-        return gameResponse.maxGuesses();
+        return 6;
     }
-
 
     /**
      * doesGuessMatch(String norm_guess) - compares the normalized guess to the target word <br>
@@ -119,12 +120,13 @@ public class GameManager {
         return hasWon;
     }
 
+    //TODO: REMOVE IN CONSOLE DEPRECEATION
     /**
      * isGameNotOver() - keeps game loop going if player has yet to reach number of max guesses or got the right answer <br>
      * @return True if player used the maximum number of guess or if player guessed the correct word. False otherwise
      */
     public boolean isGameNotOver() {
-            return getGuessesUsed()< gameResponse.maxGuesses();
+            return getGuessesUsed()< 6;
         }
 
     /**
@@ -152,8 +154,8 @@ public class GameManager {
      * Displays the introduction messages for the game. <br>
      * @param manager instance of the GameManager class, used to display max guesses
      */
+    //TODO: REMOVE IN CONSOLE DEPRECEATION
     public static void showIntro (GameManager manager){
-        //TODO: Refactor to be in index.html
         ConsoleUI.println("WELCOME TO WORDLE! GUESS THE SECRET WORD.");
         ConsoleUI.println("YOU HAVE " + manager.getMaxGuesses() + " GUESSES.");
     }
