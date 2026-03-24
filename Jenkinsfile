@@ -34,7 +34,7 @@ pipeline {
         }
         stage('Run JAR') {
             steps {   
-                sh 'pkill -f "/opt/wordle/test/.*jar" || true'
+                sh 'pkill -f "/opt/wordle/test/*.jar" || true'
                 sh 'JENKINS_NODE_COOKIE=dontKillMe nohup java -jar /opt/wordle/test/*.jar --server.port=8081 > /opt/wordle/test/app.log 2>&1 &'
             } //https://stackoverflow.com/questions/37341545/unable-to-run-nohup-command-from-jenkins-as-a-background-process test
         }
