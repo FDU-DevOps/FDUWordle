@@ -13,7 +13,7 @@ Then, run the command java -jar FDUWordle-1.0-VERSION.jar
 Finally, open a browser and go to either localhost:8080 or 127.0.0.1:8080
 
 **Current Open Bugs:**
-* Current State there are no known game breaking bugs
+* If game is ran in same browser, it will affect how the guesses are played, allowing you to enter more than 6 guesses. This only occurs if you open the game on the same browser, but different tabs. If this is done with different browsers, or one normal tab/one private tab, this bug does not occur.
 
 **Updates & Fixes:**
 * Version: 1.0-DEVOPS-274

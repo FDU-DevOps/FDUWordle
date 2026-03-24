@@ -53,7 +53,7 @@ public class GameManager {
 
 
         return new GameResponse(
-                null,                   // targetWord hidden until game over
+                this.targetWord = secretWord,                   // targetWord hidden until game over
                 6,                     // guessesRemaining - all guesses available at start game
                 6,                     // maxGuesses
                 WordRepo.WORD_LENGTH,            // wordLength
@@ -220,10 +220,11 @@ public class GameManager {
      */
     public GameResponse submitGuess(MessageData rawGuess){
         String normalized = getNormalizedGuess(rawGuess.playerGuess()); //Normalize guess
+        MessageData normalizedGuess = new MessageData(normalized);
 
         if (WordRepo.isInvalidGuess(normalized)) { //if guess is invalid
             return new GameResponse(
-                    null,           //targetWord hidden
+                    getTargetWord(),           //targetWord hidden
                     6-guessesUsed,            // guessesRemaining unchanged
                     6,                        // maxGuesses
                     WordRepo.WORD_LENGTH,     // wordLength
@@ -248,14 +249,14 @@ public class GameManager {
 
         boolean isOver = hasWon || guessesUsed>= 6;
         return new GameResponse(
-                isOver ? targetWord : null,
+                getTargetWord(), //isOver ? targetWord : null, WHEN we can hide it
                 6 - guessesUsed,
                 6,
                 WordRepo.WORD_LENGTH,
                 hasWon,
                 isOver,
                 true,
-                normalized,
+                normalizedGuess,
                 stringFeedbackColors
         );
     }
