@@ -244,4 +244,63 @@ class GameManagerControllerTest {
         assertThat(responseIncorrectWord.guessesRemaining()).isEqualTo(initialGuessesRemaining-1);
         assertThat(responseIncorrectWord.feedbackColors()).isNotNull();
     }
+    @Test
+    @DisplayName("Game should still start by default is submit-guess call is made.")
+    void testSubmitGuessWithoutSession()
+    {
+        MessageData guess = new MessageData("APPLE");
+
+        // Run submit-guess without running start-game
+        // Testing if(gameManager == null) block is executed
+        GameResponse response = restClient.post()
+                .uri("/api/FDUWordle/submit-guess")
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(guess)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(GameResponse.class)
+                .returnResult()
+                .getResponseBody();
+
+        assertThat(response).isNotNull();
+        assertThat(response.hasWon()).isFalse();
+        assertThat(response.isGameOver()).isFalse();
+        assertThat(response.isValidGuess()).isTrue();
+        assertThat(response.previousGuess()).isNull();
+        assertThat(response.guessesRemaining()).isEqualTo(6);
+        assertThat(response.feedbackColors()).isNull();
+    }
+
+    @Test
+    @DisplayName("Testing game is over after 6 failed attempts")
+    void testGameOverLossAfterSixGuesses() {
+        MessageData wrongGuess = new MessageData("WRONG");
+
+        GameResponse response = userA.post()
+                .uri("/api/FDUWordle/start-game")
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(wrongGuess)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(GameResponse.class)
+                .returnResult()
+                .getResponseBody();
+
+        for (int i = 0; i < 6; i++) {
+            response = userA.post()
+                    .uri("/api/FDUWordle/submit-guess")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(wrongGuess)
+                    .exchange()
+                    .expectBody(GameResponse.class)
+                    .returnResult()
+                    .getResponseBody();
+        }
+        assert response != null;
+        assertThat(response.isGameOver()).isTrue();
+        assertThat(response.hasWon()).isFalse();
+        assertThat(response.guessesRemaining()).isEqualTo(0);
+    }
+
+
 }
