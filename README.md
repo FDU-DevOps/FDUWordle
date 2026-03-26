@@ -1,4 +1,4 @@
-FDU Devops Class Wordle Project
+FDU DEVOPS Class Wordle Project
 
 Requirements: We support Java 25, 21, and 17 and the Windows 11 Command Prompt
 
@@ -13,9 +13,15 @@ Then, run the command java -jar FDUWordle-1.0-VERSION.jar
 Finally, open a browser and go to either localhost:8080 or 127.0.0.1:8080
 
 **Current Open Bugs:**
-* Game cannot be ran multiple times. Only ONE instance can be ran at a time as running multiple instances can affect either game.
+* If game is ran in same browser, it will affect how the guesses are played, allowing you to enter more than 6 guesses. This only occurs if you open the game on the same browser, but different tabs. If this is done with different browsers, or one normal tab/one private tab, this bug does not occur.
 
 **Updates & Fixes:**
+* Version: 1.0-DEVOPS-274
+     * Fixed bug where user could not play more than one instance at a time. Introduced sessions to fix this bug.
+     * Players can now play multiple instances of the game at the same time.
+       * Note: Some browsers on the same machine may experience this differently. To test, open one instance in a normal browser and another in a private browser.
+
+
 * Version: 1.0-DEVOPS-389
      * Added "Submit Game Feedback Button" in the UI - leads user to feedback form for Wordle
 

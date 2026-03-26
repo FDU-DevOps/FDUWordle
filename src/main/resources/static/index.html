@@ -10,19 +10,19 @@
 <div id="game">
 
 
-<h1>Welcome to FDU Wordle!</h1>
-<p id="version"></p>
+    <h1>Welcome to FDU Wordle!</h1>
+    <p id="version"></p>
     <p id="guessesRemaining" style="color:red;font-weight: bold;"> 6 Guesses Remaining</p>
-<script>
-    async function loadVersion() {
-        const response = await fetch("/version");
-        const version = await response.text(); //https://stackoverflow.com/questions/41946457/getting-text-from-fetch-response-object
-        document.getElementById("version").innerText = "Version: " + version;
-    }
-    loadVersion();
-</script>
+    <script>
+        async function loadVersion() {
+            const response = await fetch("/version");
+            const version = await response.text(); //https://stackoverflow.com/questions/41946457/getting-text-from-fetch-response-object
+            document.getElementById("version").innerText = "Version: " + version;
+        }
+        loadVersion();
+    </script>
 
-<br><br>
+    <br><br>
     <label>Type your guess:</label>
 
     <div id="input-row">
@@ -32,177 +32,179 @@
         <input class="tile-input" maxlength="1" aria-label="Letter 4">
         <input class="tile-input" maxlength="1" aria-label="Letter 5">
     </div>
-<br><br>
+    <br><br>
 
-<!-- The guess board -->
-<div id="guess-row"></div>
+    <!-- The guess board -->
+    <div id="guess-row"></div>
 
-<button id="submitButton" onclick="sendUserGuess()">Submit</button>
+    <button id="submitButton" onclick="sendUserGuess()">Submit</button>
 
-<button id="resetButton"  onclick="resetGame()" style="margin-left:24px">Reset Game</button>
+    <button id="resetButton"  onclick="resetGame()" style="margin-left:24px">Reset Game</button>
 
-<h3>Response:</h3>
-<p id="output"></p>
+    <h3>Response:</h3>
+    <p id="output"></p>
 
-<button id="userFeedbackButton" onclick="handleFeedbackClick()">Submit Game Feedback
-</button>
+    <button id="userFeedbackButton" onclick="handleFeedbackClick()">Submit Game Feedback
+    </button>
 
-<script>
+    <script>
 
-    /**
-     * @typedef {Object} GameResponse
-     * @property {boolean} isValidGuess
-     * @property {boolean} hasWon
-     * @property {string} messageToPlayer
-     * @property {string[]} feedbackColors
-     * @property {string} targetWord
-     */
+        /**
+         * @typedef {Object} GameResponse
+         * @property {int} guessesRemaining
+         * @property {int} maxGuesses
+         * @property {boolean} isValidGuess
+         * @property {boolean} hasWon
+         * @property {string} messageToPlayer
+         * @property {string[]} feedbackColors
+         * @property {string} targetWord
+         */
 
-    window.onload = resetGame;
+        window.onload = resetGame;
 
-    async function resetGame() {
-        //Get new game
-       await fetch("api/FDUWordle/start-game",
-            {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-        });
+        async function resetGame() {
+            //Get new game
+            await fetch("api/FDUWordle/start-game",
+                {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                });
 
-        //Clear the UI
+            //Clear the UI
 
-        document.getElementById("output").innerText = "";
-        document.getElementById("guess-row").innerHTML = "";
-        document.getElementById("guessesRemaining").innerText = "6 Guesses Remaining";
-        document.querySelectorAll(".tile-input").forEach(tile => {
-            tile.disabled = false;
-            tile.value = "";});
-        document.getElementById("submitButton").disabled = false;   // enable submit button
-        document.querySelector(".tile-input").focus();
-    }
-
-
-    async function sendUserGuess() {
-        const value = Array.from(document.querySelectorAll(".tile-input"))
-            .map(tile => tile.value)
-            .join("");
-        document.getElementById("output").innerText = "";
-        const response = await fetch("api/FDUWordle/submit-guess", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ "playerGuess": value })
-        });
-        function clearInputTiles() {
+            document.getElementById("output").innerText = "";
+            document.getElementById("guess-row").innerHTML = "";
+            document.getElementById("guessesRemaining").innerText = "6 Guesses Remaining";
             document.querySelectorAll(".tile-input").forEach(tile => {
-                tile.value = "";
-            });
-
-            // move cursor back to first tile
+                tile.disabled = false;
+                tile.value = "";});
+            document.getElementById("submitButton").disabled = false;   // enable submit button
             document.querySelector(".tile-input").focus();
         }
-        const data = await response.json();
-        if (data.isValidGuess)
-        {
-            addRowWithColoredFeedback(value.toUpperCase().trim(), data.feedbackColors);
-            let remaining = Math.max(0, 6 - data.guessesUsed);
 
-            document.getElementById("guessesRemaining").innerText =
-                remaining + " Guesses Remaining";
-            clearInputTiles();
-        }
-        else
-        {
-            document.getElementById("output").innerText += " "+( data.messageToPlayer );
-            clearInputTiles();
-        }
 
-        if (data.hasWon || data.guessesUsed >= 6) {
-
-            document.getElementById("output").innerText += " "+( data.messageToPlayer +" " +data.targetWord);
-
-            document.getElementById("submitButton").disabled = true;
-            document.querySelectorAll(".tile-input").forEach(tile => {
-                tile.disabled = true;
+        async function sendUserGuess() {
+            const value = Array.from(document.querySelectorAll(".tile-input"))
+                .map(tile => tile.value)
+                .join("");
+            document.getElementById("output").innerText = "";
+            const response = await fetch("api/FDUWordle/submit-guess", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ "playerGuess": value })
             });
-        }
-    }
+            function clearInputTiles() {
+                document.querySelectorAll(".tile-input").forEach(tile => {
+                    tile.value = "";
+                });
 
-    function addRowWithColoredFeedback(guess, feedback) {
-        const board = document.getElementById("guess-row");
-        const row = document.createElement("div"); //Create a row
+                // move cursor back to first tile
+                document.querySelector(".tile-input").focus();
+            }
+            const data = await response.json();
+            if (data.isValidGuess)
+            {
+                addRowWithColoredFeedback(value.toUpperCase().trim(), data.feedbackColors);
 
-        // Set the row to use flexbox layout so that tiles inside are aligned horizontally
-        row.style.display = "flex";
-        row.style.flexDirection = "row";
-
-        row.style.gap = "6px";            // Set spacing between each tile
-        row.style.marginBottom = "6px";   //Add space below the row so next rows in the future will not be stick to the row
-        board.appendChild(row);           //Add row to the guess-board space
-
-        for (let i = 0; i < guess.length; i++) {
-            const tile = document.createElement("div");  //Create tile for each letter
-            tile.innerText = guess[i];    //Add a letter to each tile
-
-            styleTile(tile)    //Use the style for each tile
-
-            if (feedback[i] === "GREEN") {     //Set specific color for each tile depending on the feedback
-                tile.style.backgroundColor = "green";
-            } else if (feedback[i] === "YELLOW") {
-                tile.style.backgroundColor = "goldenrod";
-            } else {
-                tile.style.backgroundColor = "gray";
+                document.getElementById("guessesRemaining").innerText =
+                    data.guessesRemaining + " Guesses Remaining";
+                clearInputTiles();
+            }
+            else
+            {
+                document.getElementById("output").innerText += " "+("INVALID GUESS. MUST BE EXACTLY 5 LETTERS (A-Z).");
+                clearInputTiles();
             }
 
-            row.appendChild(tile);  //Add tile to the row object
-        }
-    }
-    const tiles = document.querySelectorAll(".tile-input");
-
-    tiles.forEach((tile, index) => {
-
-        tile.addEventListener("input", () => {
-            tile.value = tile.value.toUpperCase();
-
-            if (tile.value.length === 1 && index < tiles.length - 1) {
-                tiles[index + 1].focus();   // move to next tile
+            let gameStateMessage = data.hasWon ? "CORRECT! YOU GUESSED THE WORD: " + data.targetWord: "YOU LOST! THE CORRECT ANSWER WAS: " +data.targetWord;
+            //TODO: QOL update - flavor text of "x guesses remaining" is still there if user wins before using up all guesses, so could remove once user wins
+            if(data.hasWon || data.guessesRemaining === 0)
+            {
+                document.getElementById("output").innerText += " "+gameStateMessage;
+                document.getElementById("submitButton").disabled = true;
+                document.querySelectorAll(".tile-input").forEach(tile => {
+                    tile.disabled = true;
+                });
             }
+        }
+
+        function addRowWithColoredFeedback(guess, feedback) {
+            const board = document.getElementById("guess-row");
+            const row = document.createElement("div"); //Create a row
+
+            // Set the row to use flexbox layout so that tiles inside are aligned horizontally
+            row.style.display = "flex";
+            row.style.flexDirection = "row";
+
+            row.style.gap = "6px";            // Set spacing between each tile
+            row.style.marginBottom = "6px";   //Add space below the row so next rows in the future will not be stick to the row
+            board.appendChild(row);           //Add row to the guess-board space
+
+            for (let i = 0; i < guess.length; i++) {
+                const tile = document.createElement("div");  //Create tile for each letter
+                tile.innerText = guess[i];    //Add a letter to each tile
+
+                styleTile(tile)    //Use the style for each tile
+
+                if (feedback[i] === "GREEN") {     //Set specific color for each tile depending on the feedback
+                    tile.style.backgroundColor = "green";
+                } else if (feedback[i] === "YELLOW") {
+                    tile.style.backgroundColor = "goldenrod";
+                } else {
+                    tile.style.backgroundColor = "gray";
+                }
+
+                row.appendChild(tile);  //Add tile to the row object
+            }
+        }
+        const tiles = document.querySelectorAll(".tile-input");
+
+        tiles.forEach((tile, index) => {
+
+            tile.addEventListener("input", () => {
+                tile.value = tile.value.toUpperCase();
+
+                if (tile.value.length === 1 && index < tiles.length - 1) {
+                    tiles[index + 1].focus();   // move to next tile
+                }
+            });
+
+            tile.addEventListener("keydown", (e) => {
+
+                if (e.key === "Backspace" && tile.value === "" && index > 0) {
+                    tiles[index - 1].focus();   // move to previous tile
+                }
+
+            });
+
         });
 
-        tile.addEventListener("keydown", (e) => {
 
-            if (e.key === "Backspace" && tile.value === "" && index > 0) {
-                tiles[index - 1].focus();   // move to previous tile
-            }
-
-        });
-
-    });
-
-
-    function styleTile(tile) {
-        tile.style.width = "40px";             //Width of the tile
-        tile.style.height = "40px";            //Heigh of the tile
-        tile.style.display = "flex";           // Use flexbox layout so we can center the letter inside the tile
-        tile.style.alignItems = "center";      //vertically center the letter
-        tile.style.justifyContent = "center";  //horizontally center the letter
-        tile.style.fontWeight = "bold";        //Make the letter bold
-        tile.style.color = "white";            //Set color of the word
-        tile.style.fontSize = "30px";          //Set size of the letter
-    }
-
-    document.addEventListener("keyup", (e) => {
-        if (e.key === "Enter") {
-            const submitBtn = document.getElementById("submitButton");
-            if (!submitBtn.disabled) {
-                sendUserGuess();
-            }
+        function styleTile(tile) {
+            tile.style.width = "40px";             //Width of the tile
+            tile.style.height = "40px";            //Heigh of the tile
+            tile.style.display = "flex";           // Use flexbox layout so we can center the letter inside the tile
+            tile.style.alignItems = "center";      //vertically center the letter
+            tile.style.justifyContent = "center";  //horizontally center the letter
+            tile.style.fontWeight = "bold";        //Make the letter bold
+            tile.style.color = "white";            //Set color of the word
+            tile.style.fontSize = "30px";          //Set size of the letter
         }
-    });
-</script>
 
-<script> // User Feedback Helper Function
+        document.addEventListener("keyup", (e) => {
+            if (e.key === "Enter") {
+                const submitBtn = document.getElementById("submitButton");
+                if (!submitBtn.disabled) {
+                    sendUserGuess();
+                }
+            }
+        });
+    </script>
+
+    <script> // User Feedback Helper Function
     const USER_FEEDBACK_LINK = 'https://docs.google.com/forms/d/e/1FAIpQLSdr2xzx1jbwUW6hDL321aXq4rXhb8n56_qPCpv8hvU4RCcTCA/viewform';
     function handleFeedbackClick() { window.open(USER_FEEDBACK_LINK, '_blank'); }
-</script>
+    </script>
 
 </div>
 </html>

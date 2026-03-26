@@ -1,5 +1,6 @@
 package org.fdu;
 
+import jakarta.servlet.http.HttpSession;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -11,21 +12,18 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/FDUWordle")
 public class GameManagerController
 {
-    // Stores target word for this session of Wordle
-    private GameManager gameManager = new GameManager();
-    private GameResponse gameState;
 
-    // Opening page initializes a new game
-    /** Generates a target word and sends it to the client
-     * @return the selected target word for the current session
+    /** Generates a target word, stores a fresh GameManager in the session and returns the initial game state
+     * @param session HttpSession to store the GameManger instance per browser session
+     * @return GameResponse DTO with initial game state
      */
     @PostMapping("/start-game")
-    public GameResponse getTargetWord()
+    public GameResponse startGame(HttpSession session)
     {
-        gameState = gameManager.startGame();
-        return gameState;
+       GameManager gameManager = new GameManager();
+       session.setAttribute("gameManager", gameManager);
+       return gameManager.startGame();
     }
-    // Player Submitting Guess
 
     /**
      * Checks whether the player's guess compared to the target word and responds accordingly
@@ -33,8 +31,14 @@ public class GameManagerController
      * @return GameResponse DTO that stores the target word, message to the user, and whether the user won or not
      */
     @PostMapping("/submit-guess")
-    public GameResponse checkUserGuess(@RequestBody MessageData playerGuess)
+    public GameResponse submitGuess(@RequestBody MessageData playerGuess, HttpSession session)
     {
+        GameManager gameManager = (GameManager) session.getAttribute("gameManager");
+        if(gameManager == null){
+            GameManager newGameManager = new GameManager();
+            session.setAttribute("gameManager", newGameManager);
+            return newGameManager.startGame();
+        }
         return gameManager.submitGuess(playerGuess);
     }
 }

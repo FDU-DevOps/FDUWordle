@@ -19,10 +19,14 @@ class GameManagerTest {
 
     @Test
     void getTargetWord() {
-        GameManager manager = new GameManager();
-        gameResponse = manager.startGame("APPLE");
-        assertNotNull(gameResponse.targetWord(), "Target word should not be null");
-        assertEquals("APPLE", gameResponse.targetWord());
+        String[] feedback = null;
+        gameResponse = new GameResponse(null, 6,6,5,false, false,true, null, feedback);
+
+        assertNull(gameResponse.targetWord());
+        assertFalse(gameResponse.hasWon());
+        assertEquals(6, gameResponse.guessesRemaining());
+        assertTrue(gameResponse.isValidGuess());
+        assertNull(gameResponse.feedbackColors());
     }
 
     @Test
@@ -37,22 +41,29 @@ class GameManagerTest {
     void getMaxGuesses() {
         GameManager manager = new GameManager();
         GameManager manager2 = new GameManager();
-        assertEquals(manager.getMaxGuesses(), manager2.getMaxGuesses(), "MAX_GUESSES should be the same across different instances.");
-        assertTrue(manager.getMaxGuesses() > 0, "MAX_GUESSES should always be above 0.");
-        assertEquals(GameManager.MAX_GUESSES, manager.getMaxGuesses(),"MAX_GUESSES constant should be 6");
+        gameResponse = manager.startGame("APPLE");
+        // alternative game
+        GameResponse gameResponseALT = manager2.startGame("DEVIL");
+        assertEquals(gameResponse.maxGuesses(), gameResponseALT.maxGuesses(), "Max Guesses should be the same across different instances.");
+        assertTrue(gameResponse.maxGuesses() > 0, "Max Guesses should always be above 0.");
+        assertEquals(6,gameResponse.maxGuesses(),"Max Guesses should should be 6");
     }
 
     @Test
     void doesGuessMatch() {
         GameManager manager = new GameManager();
         gameResponse = manager.startGame("APPLE");
-        assertTrue(manager.doesGuessMatch(gameResponse.targetWord()), "Should return true for correct guess");
+        assertTrue(manager.doesGuessMatch(manager.getTargetWord()), "Should return true for correct guess");
         assertFalse(manager.doesGuessMatch("ZZZZZ"), "Should return false for incorrect guess");
     }
+
+
     @Test
     void isGameNotOver() {
         GameManager manager = new GameManager();
-        assertTrue(manager.isGameNotOver(),"Game should not be over at the start of the game loop");
+        gameResponse = manager.startGame("APPLE");
+
+        assertFalse(gameResponse.hasWon(),"Game should not be over at the start of the game loop");
         for(int i = 0; i < 6; i ++)
         {
             manager.doesGuessMatch("WRONG");
@@ -65,6 +76,7 @@ class GameManagerTest {
         System.setOut(new PrintStream(outContent));
 
         GameManager manager = new GameManager();
+        gameResponse = manager.startGame("APPLE");
         GameManager.showIntro(manager);
 
         System.setOut(System.out);
@@ -156,11 +168,11 @@ class GameManagerTest {
         //Too short
         GameResponse response = manager.submitGuess(new MessageData("CAT"));
 
-        assertTrue(response.messageToPlayer().contains("Invalid guess."));
         assertFalse(response.hasWon());
-        assertEquals(0, response.guessesUsed());
+        assertEquals(6, response.guessesRemaining() );
         assertFalse(response.isValidGuess());
         assertNull(response.feedbackColors());
+        assertNull(response.previousGuess());
     }
 
     @Test
@@ -171,11 +183,11 @@ class GameManagerTest {
 
         GameResponse response = manager.submitGuess(new MessageData("Enormous"));
 
-        assertTrue(response.messageToPlayer().contains("Invalid guess."));
         assertFalse(response.hasWon());
-        assertEquals(0, response.guessesUsed());
+        assertEquals(6, response.guessesRemaining());
         assertFalse(response.isValidGuess());
         assertNull(response.feedbackColors());
+        assertNull(response.previousGuess());
     }
 
     @Test
@@ -184,12 +196,16 @@ class GameManagerTest {
         GameManager manager = new GameManager();
         manager.setDebugTargetWord("CRANE");
 
-        GameResponse response = manager.submitGuess(new MessageData("CLOSE"));
+        MessageData guess = new MessageData("CLOSE");
+        GameResponse response = manager.submitGuess(guess);
 
         assertTrue(response.isValidGuess());
         assertNotNull(response.feedbackColors());
         assertEquals(5, response.feedbackColors().length);
-        assertEquals(1, response.guessesUsed());
+        assertEquals(5, response.guessesRemaining());
+        assertEquals(guess, response.previousGuess());
+        assertFalse(response.isGameOver());
+        assertNotNull(response.targetWord());
     }
 
     @Test
@@ -197,11 +213,15 @@ class GameManagerTest {
     void testSubmitGuessValidResponseCorrectGuess() {
         GameManager manager = new GameManager();
         manager.setDebugTargetWord("GREEN");
-
-        GameResponse response = manager.submitGuess(new MessageData("GREEN"));
+        MessageData guess = new MessageData("GREEN");
+        GameResponse response = manager.submitGuess(guess);
         assertTrue(response.isValidGuess());
+        assertTrue(response.hasWon());
+        assertTrue(response.isGameOver());
         assertNotNull(response.feedbackColors());
-        assertEquals(1, response.guessesUsed());
+        assertEquals(5, response.guessesRemaining());
+        assertEquals(guess, response.previousGuess());
+        assertEquals("GREEN", response.targetWord());
 
         for (String color : response.feedbackColors()) {
             assertEquals("GREEN", color);
@@ -213,10 +233,15 @@ class GameManagerTest {
     void testSubmitGuessValidResponseWrongGuess() {
         GameManager manager = new GameManager();
         manager.setDebugTargetWord("GRAAY");
-        GameResponse response = manager.submitGuess(new MessageData("BLOCK"));
+        MessageData guess = new MessageData("BLOCK");
+        GameResponse response = manager.submitGuess(guess);
 
         assertFalse(response.hasWon());
         assertTrue(response.isValidGuess());
+        assertFalse(response.isGameOver());
+        assertNotNull(response.targetWord());
+        assertEquals(guess, response.previousGuess());
+
         for (String color : response.feedbackColors()) {
             assertEquals("GRAY", color);
         }

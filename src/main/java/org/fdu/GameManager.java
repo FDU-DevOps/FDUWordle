@@ -1,6 +1,5 @@
 package org.fdu;
 
-import org.springframework.stereotype.Service;
 /**
  * Entry point into the game flow from main, processes player guesses,
  *   tracks game state and returns (or has queries) for game status, guess evaluations, etc.Controls the game flow: <br>
@@ -13,11 +12,9 @@ import org.springframework.stereotype.Service;
  *
  * @author tbd
  */
-@Service
 public class GameManager {
-
-    /** Max number of guesses allowed in a Wordle game */
-    public static final int MAX_GUESSES = 6;
+    //Max number of guesses allowed in a Wordle Game
+    //public static final int MAX_GUESSES = 6;
     private String targetWord;
     private int guessesUsed = 0;
     private boolean hasWon = false;
@@ -42,25 +39,38 @@ public class GameManager {
      * @param secretWord targetWord that the user will try to guess
      * @return new game state DTO with initial game settings
      */
-    public GameResponse startGame(String secretWord)
-    {
+    public GameResponse startGame(String secretWord) {
         //ToDo: make isInvalidGuess throw an exception or pick new word
-        if(WordRepo.isInvalidGuess(secretWord)) { secretWord = "DEVIL";}
+        if (WordRepo.isInvalidGuess(secretWord)) {
+            secretWord = "DEVIL";
+        }
         //TODO: Refactor when DTO is implemented with all needed variables - initialized DTO is passed
 
         // Reset variables when game is created - gameState
         this.targetWord = secretWord;
-        String[] initialFeedback = new String[0];
         guessesUsed = 0;
         hasWon = false;
-        // secretWord, message to player is empty, player has yet to win, zero guesses used to begin game
-        return new GameResponse(secretWord, "", false, 0, true, initialFeedback);
+
+
+        return new GameResponse(
+                this.targetWord = secretWord,                   // targetWord hidden until game over
+                6,                     // guessesRemaining - all guesses available at start game
+                6,                     // maxGuesses
+                WordRepo.WORD_LENGTH,            // wordLength
+                false,                           // hasWon
+                false,                          // isGameOver
+                true,                           // isValidGuess
+                null,                           // previousGuess - no guess made yet
+                null                            // feedbackColors - no feedback yet
+        );
     }
+
 
     /**
      * getWon() - Returns whether the player has won the game <br>
      * @return won - (boolean) true if the player has won, false otherwise
      */
+    //TODO: REMOVE IN CONSOLE DEPRECEATION
     public boolean getWon(){
         return hasWon;
     }
@@ -69,6 +79,7 @@ public class GameManager {
      * setWon() - Sets the won status of the game <br>
      * @param won - (boolean) true if the player has won, false otherwise
      */
+    //TODO: REMOVE IN CONSOLE DEPRECEATION
     public void setWon(boolean won){
         hasWon = won;
     }
@@ -101,10 +112,10 @@ public class GameManager {
      * getMaxGuesses() - Allows Game Manager object to access number of max guesses a user has to guess the word <br>
      * @return MAX_GUESSES - (int) number of guesses the player is allowed
      */
+    //TODO: REMOVE IN CONSOLE DEPRECEATION
     public int getMaxGuesses(){
-        return MAX_GUESSES;
+        return 6;
     }
-
 
     /**
      * doesGuessMatch(String norm_guess) - compares the normalized guess to the target word <br>
@@ -119,12 +130,13 @@ public class GameManager {
         return hasWon;
     }
 
+    //TODO: REMOVE IN CONSOLE DEPRECEATION
     /**
      * isGameNotOver() - keeps game loop going if player has yet to reach number of max guesses or got the right answer <br>
      * @return True if player used the maximum number of guess or if player guessed the correct word. False otherwise
      */
     public boolean isGameNotOver() {
-            return getGuessesUsed()< MAX_GUESSES;
+            return getGuessesUsed()< 6 && !hasWon;
         }
 
     /**
@@ -149,23 +161,11 @@ public class GameManager {
     }
 
     /**
-     * Checks if the user has won or lost and outputs text correlating to the game state <br>
-     * Scope: Currently programmed to handle 1 case (player has won or player has lost - REFACTOR for future uses)
-     * @param hasWon - indicates if the player has won or lost the game
-     * @return message indicating whether the player has won or lost the game
-     */
-
-    public static String gameStateMessage(boolean hasWon)
-    {
-        return hasWon ? "CORRECT! YOU GUESSED THE WORD: " : "YOU LOST! THE CORRECT ANSWER WAS:";
-    }
-
-    /**
      * Displays the introduction messages for the game. <br>
      * @param manager instance of the GameManager class, used to display max guesses
      */
+    //TODO: REMOVE IN CONSOLE DEPRECEATION
     public static void showIntro (GameManager manager){
-        //TODO: Refactor to be in index.html
         ConsoleUI.println("WELCOME TO WORDLE! GUESS THE SECRET WORD.");
         ConsoleUI.println("YOU HAVE " + manager.getMaxGuesses() + " GUESSES.");
     }
@@ -220,15 +220,19 @@ public class GameManager {
      */
     public GameResponse submitGuess(MessageData rawGuess){
         String normalized = getNormalizedGuess(rawGuess.playerGuess()); //Normalize guess
+        MessageData normalizedGuess = new MessageData(normalized);
 
         if (WordRepo.isInvalidGuess(normalized)) { //if guess is invalid
             return new GameResponse(
-                    getTargetWord(),
-                    "Invalid guess. Must be exactly 5 letters (A–Z).",
-                    false,
-                    getGuessesUsed(),
-                    false,
-                    null
+                    getTargetWord(),           //targetWord hidden
+                    6-guessesUsed,            // guessesRemaining unchanged
+                    6,                        // maxGuesses
+                    WordRepo.WORD_LENGTH,     // wordLength
+                    false,                    // hasWon
+                    false,                    // isGameOver
+                    false,                    // isValidGuess
+                    null,                     // previousGuess
+                    null                      // feedbackColors
             );
         }
         doesGuessMatch(normalized);
@@ -242,12 +246,17 @@ public class GameManager {
         }
 
         //TODO: Probably need to refactor how this DTO is returned - specifically the guessesUsed piece
+
+        boolean isOver = hasWon || guessesUsed>= 6;
         return new GameResponse(
-                getTargetWord(),
-                gameStateMessage(hasWon),
+                getTargetWord(), //isOver ? targetWord : null, WHEN we can hide it
+                6 - guessesUsed,
+                6,
+                WordRepo.WORD_LENGTH,
                 hasWon,
-                getGuessesUsed(),
+                isOver,
                 true,
+                normalizedGuess,
                 stringFeedbackColors
         );
     }
