@@ -112,7 +112,11 @@
             }
             else
             {
-                document.getElementById("output").innerText += " "+("INVALID GUESS. MUST BE EXACTLY 5 LETTERS (A-Z).");
+                if (data.isNotInWordList) {
+                    document.getElementById("output").innerText = "NOT IN WORD LIST.";
+                } else {
+                    document.getElementById("output").innerText = "INVALID GUESS. MUST BE EXACTLY 5 LETTERS (A-Z).";
+                }
                 clearInputTiles();
             }
 
