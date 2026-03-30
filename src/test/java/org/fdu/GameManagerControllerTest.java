@@ -52,7 +52,7 @@ class GameManagerControllerTest {
     @Test
     @DisplayName("Testing getTargetWord sends back a properly instantiated DTO.")
     void getTargetWord() {
-        gameResponse = new GameResponse(null, 6,6,5,false, false, true, null, null);
+        gameResponse = new GameResponse(null, 6,6,5,false, false, true, false,null, null);
 
         assertNull(gameResponse.targetWord());
         assertFalse(gameResponse.hasWon());
@@ -222,7 +222,7 @@ class GameManagerControllerTest {
 
         // Assume the User has guessed the word incorrectly
         // Testing with a word that will never be the target word
-        MessageData userGuessIncorrectWord = new MessageData("AARON");
+        MessageData userGuessIncorrectWord = new MessageData("BLAZE");
 
         // Submitting Guess within this specific session
         GameResponse responseIncorrectWord = userA.post()

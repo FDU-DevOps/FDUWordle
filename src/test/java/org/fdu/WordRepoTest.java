@@ -61,7 +61,7 @@ class WordRepoTest {
         // Valid cases (should return false)
         assertFalse(WordRepo.isInvalidGuess("HAIRY"));
         assertFalse(WordRepo.isInvalidGuess("TABLE"));
-        assertFalse(WordRepo.isInvalidGuess("ABCDE"));
+        assertFalse(WordRepo.isInvalidGuess("BLAZE"));
     }
 
     @Test
