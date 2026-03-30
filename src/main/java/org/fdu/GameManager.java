@@ -20,7 +20,7 @@ public class GameManager {
     private boolean hasWon = false;
 
     /**
-     * Public for Springboot to instantiate object and load dictionary <br>
+     * Public for Spring Boot to instantiate object and load dictionary <br>
      */
     public GameManager() { WordRepo.loadDictionary("dictionary.csv"); }
 
@@ -53,7 +53,7 @@ public class GameManager {
 
 
         return new GameResponse(
-                this.targetWord = secretWord,                   // targetWord hidden until game over
+                null,                   // targetWord hidden until game over
                 6,                     // guessesRemaining - all guesses available at start game
                 6,                     // maxGuesses
                 WordRepo.WORD_LENGTH,            // wordLength
@@ -63,25 +63,6 @@ public class GameManager {
                 null,                           // previousGuess - no guess made yet
                 null                            // feedbackColors - no feedback yet
         );
-    }
-
-
-    /**
-     * getWon() - Returns whether the player has won the game <br>
-     * @return won - (boolean) true if the player has won, false otherwise
-     */
-    //TODO: REMOVE IN CONSOLE DEPRECEATION
-    public boolean getWon(){
-        return hasWon;
-    }
-
-    /**
-     * setWon() - Sets the won status of the game <br>
-     * @param won - (boolean) true if the player has won, false otherwise
-     */
-    //TODO: REMOVE IN CONSOLE DEPRECEATION
-    public void setWon(boolean won){
-        hasWon = won;
     }
 
     /**
@@ -108,14 +89,6 @@ public class GameManager {
         guessesUsed = 0;
     }
 
-    /**
-     * getMaxGuesses() - Allows Game Manager object to access number of max guesses a user has to guess the word <br>
-     * @return MAX_GUESSES - (int) number of guesses the player is allowed
-     */
-    //TODO: REMOVE IN CONSOLE DEPRECEATION
-    public int getMaxGuesses(){
-        return 6;
-    }
 
     /**
      * doesGuessMatch(String norm_guess) - compares the normalized guess to the target word <br>
@@ -129,15 +102,6 @@ public class GameManager {
         hasWon = normalizedGuess.equals(targetWord);
         return hasWon;
     }
-
-    //TODO: REMOVE IN CONSOLE DEPRECEATION
-    /**
-     * isGameNotOver() - keeps game loop going if player has yet to reach number of max guesses or got the right answer <br>
-     * @return True if player used the maximum number of guess or if player guessed the correct word. False otherwise
-     */
-    public boolean isGameNotOver() {
-            return getGuessesUsed()< 6 && !hasWon;
-        }
 
     /**
      * getNormalizedGuess(String rawGuess) - Retrieves the normalized guess from the WordRepo Class
@@ -160,15 +124,6 @@ public class GameManager {
         return WordRepo.GenerateColoredFeedback(playerGuess, targetWord);
     }
 
-    /**
-     * Displays the introduction messages for the game. <br>
-     * @param manager instance of the GameManager class, used to display max guesses
-     */
-    //TODO: REMOVE IN CONSOLE DEPRECEATION
-    public static void showIntro (GameManager manager){
-        ConsoleUI.println("WELCOME TO WORDLE! GUESS THE SECRET WORD.");
-        ConsoleUI.println("YOU HAVE " + manager.getMaxGuesses() + " GUESSES.");
-    }
     /**
      Overrides the randomly selected target word with a tester-defined word in debug mode. <br>
      <p>
@@ -220,7 +175,6 @@ public class GameManager {
      */
     public GameResponse submitGuess(MessageData rawGuess){
         String normalized = getNormalizedGuess(rawGuess.playerGuess()); //Normalize guess
-        MessageData normalizedGuess = new MessageData(normalized);
 
         if (WordRepo.isInvalidGuess(normalized)) { //if guess is invalid
             return new GameResponse(
@@ -249,14 +203,14 @@ public class GameManager {
 
         boolean isOver = hasWon || guessesUsed>= 6;
         return new GameResponse(
-                getTargetWord(), //isOver ? targetWord : null, WHEN we can hide it
+                isOver ? targetWord : null, //WHEN we can hide it
                 6 - guessesUsed,
                 6,
                 WordRepo.WORD_LENGTH,
                 hasWon,
                 isOver,
                 true,
-                normalizedGuess,
+                normalized,
                 stringFeedbackColors
         );
     }
