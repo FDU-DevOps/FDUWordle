@@ -37,5 +37,9 @@ Finally, open a browser and go to either localhost:8080 or 127.0.0.1:8080
 * Version: 1.0-DEVOPS-283
      * Transition UI to Wordle Look and Feel
 
+* Version: 1.0-DEVOPS-421
+     * added new dictionary
+     * checks if the word exists in the dictionary, otherwise throws error
+  
 
 
