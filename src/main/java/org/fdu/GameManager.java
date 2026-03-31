@@ -22,7 +22,9 @@ public class GameManager {
     /**
      * Public for Springboot to instantiate object and load dictionary <br>
      */
-    public GameManager() { WordRepo.loadDictionary("dictionary.csv"); }
+    public GameManager() { WordRepo.loadDictionary("dictionary.csv");
+        WordRepo.loadUserGuessDictionary("userGuessDictionary.csv");
+    }
 
     /**
      * Selects a random word and returns an initialized DTO <br>
@@ -59,7 +61,8 @@ public class GameManager {
                 WordRepo.WORD_LENGTH,            // wordLength
                 false,                           // hasWon
                 false,                          // isGameOver
-                true,                           // isValidGuess
+                true,
+                false,
                 null,                           // previousGuess - no guess made yet
                 null                            // feedbackColors - no feedback yet
         );
@@ -218,44 +221,66 @@ public class GameManager {
      isValidGuess: returns validity of guess <br>
      feedbackColors: String[] of color feedback (e.g. "GREEN", "YELLOW", "GRAY")
      */
-    public GameResponse submitGuess(MessageData rawGuess){
-        String normalized = getNormalizedGuess(rawGuess.playerGuess()); //Normalize guess
+    public GameResponse submitGuess(MessageData rawGuess) {
+        String normalized = getNormalizedGuess(rawGuess.playerGuess());
         MessageData normalizedGuess = new MessageData(normalized);
 
-        if (WordRepo.isInvalidGuess(normalized)) { //if guess is invalid
+        // First check: length and character validity
+        boolean failsFormat = normalized == null ||
+                normalized.length() != WordRepo.WORD_LENGTH ||
+                !normalized.chars().allMatch(c -> c >= 'A' && c <= 'Z');
+
+        if (failsFormat) {
             return new GameResponse(
-                    getTargetWord(),           //targetWord hidden
-                    6-guessesUsed,            // guessesRemaining unchanged
-                    6,                        // maxGuesses
-                    WordRepo.WORD_LENGTH,     // wordLength
-                    false,                    // hasWon
-                    false,                    // isGameOver
-                    false,                    // isValidGuess
-                    null,                     // previousGuess
-                    null                      // feedbackColors
+                    getTargetWord(),
+                    6 - guessesUsed,
+                    6,
+                    WordRepo.WORD_LENGTH,
+                    false,
+                    false,
+                    false,
+                    false,      // isNotInWordList — failed format check, not dictionary check
+                    null,
+                    null
             );
         }
+
+        // Second check: dictionary lookup
+        if (WordRepo.checkUserGuessAgainstDictionary(normalized)) {
+            return new GameResponse(
+                    getTargetWord(),
+                    6 - guessesUsed,
+                    6,
+                    WordRepo.WORD_LENGTH,
+                    false,
+                    false,
+                    false,
+                    true,       // isNotInWordList
+                    null,
+                    null
+            );
+        }
+
         doesGuessMatch(normalized);
 
         WordRepo.FeedbackType[] feedbackColors =
-                evaluateGuessAndGiveColoredFeedback(normalized, getTargetWord()); //Get the colored feedback as Enum
+                evaluateGuessAndGiveColoredFeedback(normalized, getTargetWord());
 
-        String[] stringFeedbackColors = new String[feedbackColors.length];  //Convert Enum to the string
+        String[] stringFeedbackColors = new String[feedbackColors.length];
         for (int i = 0; i < feedbackColors.length; i++) {
             stringFeedbackColors[i] = feedbackColors[i].name();
         }
 
-        //TODO: Probably need to refactor how this DTO is returned - specifically the guessesUsed piece
-
-        boolean isOver = hasWon || guessesUsed>= 6;
+        boolean isOver = hasWon || guessesUsed >= 6;
         return new GameResponse(
-                getTargetWord(), //isOver ? targetWord : null, WHEN we can hide it
+                getTargetWord(),
                 6 - guessesUsed,
                 6,
                 WordRepo.WORD_LENGTH,
                 hasWon,
                 isOver,
                 true,
+                false,          // isNotInWordList — valid guess
                 normalizedGuess,
                 stringFeedbackColors
         );
