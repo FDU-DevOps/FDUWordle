@@ -178,7 +178,7 @@ public class GameManager {
 
         if (WordRepo.isInvalidGuess(normalized)) { //if guess is invalid
             return new GameResponse(
-                    getTargetWord(),           //targetWord hidden
+                    null,           //targetWord hidden
                     6-guessesUsed,            // guessesRemaining unchanged
                     6,                        // maxGuesses
                     WordRepo.WORD_LENGTH,     // wordLength

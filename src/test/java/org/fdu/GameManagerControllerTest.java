@@ -79,7 +79,7 @@ class GameManagerControllerTest {
         MessageData incorrectGuess = new MessageData("OCEAN");
         gameResponse = gameManager2.submitGuess(incorrectGuess);
         assertFalse(gameResponse.hasWon());
-        assertNotNull(gameResponse.targetWord());
+        assertNull(gameResponse.targetWord());
     }
 
     @Test
@@ -112,7 +112,7 @@ class GameManagerControllerTest {
 
         // Assert that all the proper initialized pieces of the DTO match -- checking actual response
         assertThat(loadedGame).isNotNull();
-        assertThat(loadedGame.targetWord()).isNotNull();
+        assertThat(loadedGame.targetWord()).isNull();
         assertThat(loadedGame.guessesRemaining()).isEqualTo(6);
         assertThat(loadedGame.maxGuesses()).isEqualTo(6);
         assertThat(loadedGame.wordLength()).isEqualTo(5);
@@ -153,7 +153,7 @@ class GameManagerControllerTest {
                 .getResponseBody();
 
         assertThat(responseInvalidWord).isNotNull();
-        assertThat(responseInvalidWord.targetWord()).isNotNull();
+        assertThat(responseInvalidWord.targetWord()).isNull();
         assertThat(responseInvalidWord.hasWon()).isFalse();
         assertThat(responseInvalidWord.isValidGuess()).isFalse();
         assertThat(responseInvalidWord.isGameOver()).isFalse();
@@ -167,7 +167,7 @@ class GameManagerControllerTest {
     @DisplayName("Test submit guess works for correct words")
     void testSubmitGuessCorrect()
     {
-        // Start a game of Wordle prior to checking for guess submission
+        // Start a fresh game via API
         GameResponse newGame = userA.post()
                 .uri("/api/FDUWordle/start-game")
                 .exchange()
@@ -177,11 +177,13 @@ class GameManagerControllerTest {
                 .getResponseBody();
 
         assertThat(newGame).isNotNull();
-        String actualTarget = newGame.targetWord(); // Grab the chosen target word
-        assertThat(actualTarget).isNotNull();
+
+        //Submit a Known Valid Word
+        //NOTE: A Future Story will create a POST endpoint for testers to inject
+        //      a known target into the session so we can test winning directly via API
 
         // Assume the User has guessed the word correctly
-        MessageData userGuessCorrectWord = new MessageData(actualTarget);
+        MessageData userGuessCorrectWord = new MessageData("CRANE");
 
         GameResponse responseCorrectWord = userA.post()
                 .uri("/api/FDUWordle/submit-guess")
@@ -194,10 +196,8 @@ class GameManagerControllerTest {
                 .getResponseBody();
 
         assertThat(responseCorrectWord).isNotNull();
-        assertThat(responseCorrectWord.targetWord()).isEqualTo(actualTarget);
-        assertThat(responseCorrectWord.targetWord()).isNotNull();
-        assertThat(responseCorrectWord.hasWon()).isTrue();
-        assertThat(responseCorrectWord.isGameOver()).isTrue();
+        assertThat(responseCorrectWord.targetWord()).isNull();
+        assertThat(responseCorrectWord.previousGuess()).isEqualTo("CRANE");
         assertThat(responseCorrectWord.isValidGuess()).isTrue();
         assertThat(responseCorrectWord.previousGuess()).isNotNull();
         assertThat(responseCorrectWord.guessesRemaining()).isLessThan(6);
@@ -236,11 +236,11 @@ class GameManagerControllerTest {
                 .getResponseBody();
 
         assertThat(responseIncorrectWord).isNotNull();
-        assertThat(responseIncorrectWord.targetWord()).isNotNull();
+        assertThat(responseIncorrectWord.targetWord()).isNull();
         assertThat(responseIncorrectWord.hasWon()).isFalse();
         assertThat(responseIncorrectWord.isGameOver()).isFalse();
         assertThat(responseIncorrectWord.isValidGuess()).isTrue();
-        assertThat(responseIncorrectWord.previousGuess()).isEqualTo(userGuessIncorrectWord);
+        assertThat(responseIncorrectWord.previousGuess()).isEqualTo("AARON");
         assertThat(responseIncorrectWord.guessesRemaining()).isEqualTo(initialGuessesRemaining-1);
         assertThat(responseIncorrectWord.feedbackColors()).isNotNull();
     }
