@@ -182,7 +182,6 @@ class GameManagerControllerTest {
         //NOTE: A Future Story will create a POST endpoint for testers to inject
         //      a known target into the session so we can test winning directly via API
 
-        // Assume the User has guessed the word correctly
         MessageData userGuessCorrectWord = new MessageData("CRANE");
 
         GameResponse responseCorrectWord = userA.post()
