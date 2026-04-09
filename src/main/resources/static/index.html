@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>FDUWordle</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="/wordle/style.css">
 
 </head>
 
@@ -15,7 +15,7 @@
     <p id="guessesRemaining" style="color:red;font-weight: bold;"> 6 Guesses Remaining</p>
     <script>
         async function loadVersion() {
-            const response = await fetch("/version");
+            const response = await fetch("/wordle/version");
             const version = await response.text(); //https://stackoverflow.com/questions/41946457/getting-text-from-fetch-response-object
             document.getElementById("version").innerText = "Version: " + version;
         }
@@ -64,7 +64,7 @@
 
         async function resetGame() {
             //Get new game
-            await fetch("api/FDUWordle/start-game",
+            await fetch("/wordle/api/FDUWordle/start-game",
                 {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
@@ -88,7 +88,7 @@
                 .map(tile => tile.value)
                 .join("");
             document.getElementById("output").innerText = "";
-            const response = await fetch("api/FDUWordle/submit-guess", {
+            const response = await fetch("/wordle/api/FDUWordle/submit-guess", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ "playerGuess": value })
