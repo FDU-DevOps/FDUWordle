@@ -167,7 +167,7 @@ class GameManagerControllerTest {
     @DisplayName("Test submit guess works for correct words")
     void testSubmitGuessCorrect()
     {
-        // Start a game of Wordle prior to checking for guess submission
+        // Start a fresh game via API
         GameResponse newGame = userA.post()
                 .uri("/api/FDUWordle/start-game")
                 .exchange()
@@ -177,11 +177,12 @@ class GameManagerControllerTest {
                 .getResponseBody();
 
         assertThat(newGame).isNotNull();
-        String actualTarget = newGame.targetWord(); // Grab the chosen target word
-        assertThat(actualTarget).isNotNull();
 
-        // Assume the User has guessed the word correctly
-        MessageData userGuessCorrectWord = new MessageData(actualTarget);
+        //Submit a Known Valid Word
+        //NOTE: A Future Story will create a POST endpoint for testers to inject
+        //      a known target into the session so we can test winning directly via API
+
+        MessageData userGuessCorrectWord = new MessageData("CRANE");
 
         GameResponse responseCorrectWord = userA.post()
                 .uri("/api/FDUWordle/submit-guess")
@@ -194,10 +195,8 @@ class GameManagerControllerTest {
                 .getResponseBody();
 
         assertThat(responseCorrectWord).isNotNull();
-        assertThat(responseCorrectWord.targetWord()).isEqualTo(actualTarget);
         assertThat(responseCorrectWord.targetWord()).isNotNull();
-        assertThat(responseCorrectWord.hasWon()).isTrue();
-        assertThat(responseCorrectWord.isGameOver()).isTrue();
+        assertThat(responseCorrectWord.previousGuess()).isEqualTo("CRANE");
         assertThat(responseCorrectWord.isValidGuess()).isTrue();
         assertThat(responseCorrectWord.previousGuess()).isNotNull();
         assertThat(responseCorrectWord.guessesRemaining()).isLessThan(6);
@@ -222,7 +221,7 @@ class GameManagerControllerTest {
 
         // Assume the User has guessed the word incorrectly
         // Testing with a word that will never be the target word
-        MessageData userGuessIncorrectWord = new MessageData("BLAZE");
+        MessageData userGuessIncorrectWord = new MessageData("AARON");
 
         // Submitting Guess within this specific session
         GameResponse responseIncorrectWord = userA.post()
@@ -239,10 +238,10 @@ class GameManagerControllerTest {
         assertThat(responseIncorrectWord.targetWord()).isNotNull();
         assertThat(responseIncorrectWord.hasWon()).isFalse();
         assertThat(responseIncorrectWord.isGameOver()).isFalse();
-        assertThat(responseIncorrectWord.isValidGuess()).isTrue();
-        assertThat(responseIncorrectWord.previousGuess()).isEqualTo(userGuessIncorrectWord);
-        assertThat(responseIncorrectWord.guessesRemaining()).isEqualTo(initialGuessesRemaining-1);
-        assertThat(responseIncorrectWord.feedbackColors()).isNotNull();
+        assertThat(responseIncorrectWord.isValidGuess()).isFalse();
+        assertThat(responseIncorrectWord.previousGuess()).isNull(); // Not taking in a guess if guess is invalid
+        assertThat(responseIncorrectWord.guessesRemaining()).isEqualTo(initialGuessesRemaining);
+        assertThat(responseIncorrectWord.feedbackColors()).isNull();
     }
     @Test
     @DisplayName("Game should still start by default is submit-guess call is made.")

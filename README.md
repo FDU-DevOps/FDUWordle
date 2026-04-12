@@ -16,6 +16,11 @@ Finally, open a browser and go to either localhost:8080 or 127.0.0.1:8080
 * If game is ran in same browser, it will affect how the guesses are played, allowing you to enter more than 6 guesses. This only occurs if you open the game on the same browser, but different tabs. If this is done with different browsers, or one normal tab/one private tab, this bug does not occur.
 
 **Updates & Fixes:**
+* Version: 1.0-DEVOPS-368
+  * Deprecated Wordle Console Version - game can only be accessed via browser at localhost:8080 or 127.0.0.1:8080
+  * Added JDK 21 as the supported Java version
+  
+
 * Version: 1.0-DEVOPS-274
      * Fixed bug where user could not play more than one instance at a time. Introduced sessions to fix this bug.
      * Players can now play multiple instances of the game at the same time.
