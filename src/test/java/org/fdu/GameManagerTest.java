@@ -22,19 +22,8 @@ class GameManagerTest {
         GameManager manager = new GameManager();
         gameResponse = manager.startGame("APPLE");
 
-        assertNull(gameResponse.targetWord(), "Target word should be null until the game is over");
+        assertNotNull(gameResponse.targetWord(), "Target word should be NOT be null when the game starts.");
         assertEquals("APPLE", manager.getTargetWord(),"Target should be accessible through getTargetWord()");
-
-        /*
-        String[] feedback = null;
-        gameResponse = new GameResponse(null, 6,6,5,false, false,true, false, null, null);
-
-        assertNull(gameResponse.targetWord());
-        assertFalse(gameResponse.hasWon());
-        assertEquals(6, gameResponse.guessesRemaining());
-        assertTrue(gameResponse.isValidGuess());
-        assertNull(gameResponse.feedbackColors());
-         */
     }
 
     @Test
@@ -162,7 +151,7 @@ class GameManagerTest {
         assertEquals(5, response.guessesRemaining());
         assertEquals("CLOSE", response.previousGuess());
         assertFalse(response.isGameOver());
-        assertNull(response.targetWord());
+        assertNotNull(response.targetWord());
     }
 
     @Test
@@ -197,7 +186,7 @@ class GameManagerTest {
         assertFalse(response.hasWon());
         assertTrue(response.isValidGuess());
         assertFalse(response.isGameOver());
-        assertNull(response.targetWord());
+        assertNotNull(response.targetWord());
         assertEquals("BLOCK", response.previousGuess());
 
         for (String color : response.feedbackColors()) {
@@ -210,7 +199,7 @@ class GameManagerTest {
         GameManager manager = new GameManager();
         GameResponse response = manager.startGame("CRANE");
 
-        assertNull(response.targetWord());
+        assertNotNull(response.targetWord());
         assertEquals(6, response.guessesRemaining());
         assertEquals(6, response.maxGuesses());
         assertEquals(5, response.wordLength());

@@ -79,7 +79,7 @@ class GameManagerControllerTest {
         MessageData incorrectGuess = new MessageData("OCEAN");
         gameResponse = gameManager2.submitGuess(incorrectGuess);
         assertFalse(gameResponse.hasWon());
-        assertNull(gameResponse.targetWord());
+        assertNotNull(gameResponse.targetWord());
     }
 
     @Test
@@ -112,7 +112,7 @@ class GameManagerControllerTest {
 
         // Assert that all the proper initialized pieces of the DTO match -- checking actual response
         assertThat(loadedGame).isNotNull();
-        assertThat(loadedGame.targetWord()).isNull();
+        assertThat(loadedGame.targetWord()).isNotNull();
         assertThat(loadedGame.guessesRemaining()).isEqualTo(6);
         assertThat(loadedGame.maxGuesses()).isEqualTo(6);
         assertThat(loadedGame.wordLength()).isEqualTo(5);
@@ -153,7 +153,7 @@ class GameManagerControllerTest {
                 .getResponseBody();
 
         assertThat(responseInvalidWord).isNotNull();
-        assertThat(responseInvalidWord.targetWord()).isNull();
+        assertThat(responseInvalidWord.targetWord()).isNotNull();
         assertThat(responseInvalidWord.hasWon()).isFalse();
         assertThat(responseInvalidWord.isValidGuess()).isFalse();
         assertThat(responseInvalidWord.isGameOver()).isFalse();
@@ -195,7 +195,7 @@ class GameManagerControllerTest {
                 .getResponseBody();
 
         assertThat(responseCorrectWord).isNotNull();
-        assertThat(responseCorrectWord.targetWord()).isNull();
+        assertThat(responseCorrectWord.targetWord()).isNotNull();
         assertThat(responseCorrectWord.previousGuess()).isEqualTo("CRANE");
         assertThat(responseCorrectWord.isValidGuess()).isTrue();
         assertThat(responseCorrectWord.previousGuess()).isNotNull();
@@ -221,7 +221,7 @@ class GameManagerControllerTest {
 
         // Assume the User has guessed the word incorrectly
         // Testing with a word that will never be the target word
-        MessageData userGuessIncorrectWord = new MessageData("BLAZE");
+        MessageData userGuessIncorrectWord = new MessageData("AARON");
 
         // Submitting Guess within this specific session
         GameResponse responseIncorrectWord = userA.post()
@@ -235,13 +235,13 @@ class GameManagerControllerTest {
                 .getResponseBody();
 
         assertThat(responseIncorrectWord).isNotNull();
-        assertThat(responseIncorrectWord.targetWord()).isNull();
+        assertThat(responseIncorrectWord.targetWord()).isNotNull();
         assertThat(responseIncorrectWord.hasWon()).isFalse();
         assertThat(responseIncorrectWord.isGameOver()).isFalse();
-        assertThat(responseIncorrectWord.isValidGuess()).isTrue();
-        assertThat(responseIncorrectWord.previousGuess()).isEqualTo("AARON");
-        assertThat(responseIncorrectWord.guessesRemaining()).isEqualTo(initialGuessesRemaining-1);
-        assertThat(responseIncorrectWord.feedbackColors()).isNotNull();
+        assertThat(responseIncorrectWord.isValidGuess()).isFalse();
+        assertThat(responseIncorrectWord.previousGuess()).isNull(); // Not taking in a guess if guess is invalid
+        assertThat(responseIncorrectWord.guessesRemaining()).isEqualTo(initialGuessesRemaining);
+        assertThat(responseIncorrectWord.feedbackColors()).isNull();
     }
     @Test
     @DisplayName("Game should still start by default is submit-guess call is made.")
