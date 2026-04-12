@@ -20,6 +20,7 @@ public record GameResponse(
         boolean hasWon,
         boolean isGameOver,
         boolean isValidGuess,
+        boolean isNotInWordList,
         String previousGuess,
         String[] feedbackColors
 ){}

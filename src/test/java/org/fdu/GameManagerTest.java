@@ -27,7 +27,7 @@ class GameManagerTest {
 
         /*
         String[] feedback = null;
-        gameResponse = new GameResponse(null, 6,6,5,false, false,true, null, feedback);
+        gameResponse = new GameResponse(null, 6,6,5,false, false,true, false, null, null);
 
         assertNull(gameResponse.targetWord());
         assertFalse(gameResponse.hasWon());

@@ -25,6 +25,7 @@ import java.io.Reader;
 public class WordRepo {
     /* initial small Wordle dictionary */
     private static final List<String> words = new ArrayList<>();
+    private static final List<String> userGuessDictionary = new ArrayList<>();
 
     private static final Random random =  new  Random();
 
@@ -126,6 +127,35 @@ public class WordRepo {
             words.add("DEVIL");
         }
     }
+    /**
+     * Loads an external dictionary containing valid Wordle user guess words. <br>
+     * <p>
+     * Scope: <br>
+     * Reads a dictionary file CSV. <br>
+     * Stores all possible valid words that a user can guess <br>
+     * If the file is missing, unreadable, or results in an empty word list,
+     * allow the game to continue at previous state (user can guess anything as a valid guess)<br>
+     * </p>
+     * @param filePath path to the dictionary file
+     */
+    public static void loadUserGuessDictionary(String filePath) {
+        userGuessDictionary.clear();
+        try {
+            InputStream dictionary = WordRepo.class.getClassLoader().getResourceAsStream(filePath);
+            if (dictionary != null) {
+                try (Reader reader = new InputStreamReader(dictionary); CSVReader csvReader = new CSVReader(reader)) {
+                    for (String[] row : csvReader.readAll()) {
+                        if (row[0] == null || row[0].trim().isEmpty()) continue;
+                        userGuessDictionary.add(row[0].trim().toUpperCase());
+                    }
+                }
+            }
+            // If file is missing or empty, leave list empty so any guess is accepted
+        } catch (Exception e) {
+            // Leave userGuessDictionary empty — game continues, any guess is accepted
+        }
+    }
+
 
     /**
      * Picks a random target word from the static list.
@@ -170,20 +200,52 @@ public class WordRepo {
      * <p>
      *     Check if the player's guess is exactly 5 letters (WORD_LENGTH)
      *     Letters A-Z only (case-insensitive)
+     *     Checks if user's guess is within the userGuessDictionary
      * </p>
      * @param playerGuess normalized player guess (trimmed, uppercase)
      * @return true if guess is invalid; false otherwise
      */
     public static boolean isInvalidGuess(String playerGuess) {
+        // First Check
         if (playerGuess == null || playerGuess.length() != WORD_LENGTH) {
             return true;
         }
+        // Second Check
         for (char c : playerGuess.toCharArray()) {
             if (c < 'A' || c > 'Z') {
                 return true;
             }
         }
-        return false;
+        // Final Check - guess needs to be in userGuessDictionary
+        return checkUserGuessAgainstDictionary(playerGuess);
+    }
+    /**
+     * Compares the user's guess against the valid userGuessDictionary <br>
+     * Scope: User should only be allowed to guess within a specific set of words.
+     *        User should be able to guess any word found within the targetWord dictionary
+     * @param playerGuess normalized player guess (trimmed, uppercase)
+     * @return true if guess is invalid; false otherwise
+     */
+    public static boolean checkUserGuessAgainstDictionary(String playerGuess) {
+        // If userGuessDictionary failed to load, allow any guess
+        if (userGuessDictionary.isEmpty()) {
+            return false;
+        }
+        // Always allow words from the target word dictionary
+        if (words.contains(playerGuess)) {
+            return false;
+        }
+        // Binary search — requires CSV to be alphabetized
+        int low = 0;
+        int high = userGuessDictionary.size() - 1;
+        while (low <= high) {
+            int mid = (low + high) / 2;
+            int cmp = userGuessDictionary.get(mid).compareTo(playerGuess);
+            if (cmp == 0) return false; // Found — valid
+            else if (cmp < 0) low = mid + 1;
+            else high = mid - 1;
+        }
+        return true; // Not found — invalid
     }
 
     /**
