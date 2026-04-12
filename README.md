@@ -18,7 +18,6 @@ Finally, open a browser and go to either localhost:8080 or 127.0.0.1:8080
 **Updates & Fixes:**
 * Version: 1.0-DEVOPS-368
   * Deprecated Wordle Console Version - game can only be accessed via browser at localhost:8080 or 127.0.0.1:8080
-  * Fixed targetWord to be hidden in the DTO until game is over
   * Added JDK 21 as the supported Java version
   
 
