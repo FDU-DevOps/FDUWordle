@@ -68,25 +68,6 @@ public class GameManager {
         );
     }
 
-
-    /**
-     * getWon() - Returns whether the player has won the game <br>
-     * @return won - (boolean) true if the player has won, false otherwise
-     */
-    //TODO: REMOVE IN CONSOLE DEPRECEATION
-    public boolean getWon(){
-        return hasWon;
-    }
-
-    /**
-     * setWon() - Sets the won status of the game <br>
-     * @param won - (boolean) true if the player has won, false otherwise
-     */
-    //TODO: REMOVE IN CONSOLE DEPRECEATION
-    public void setWon(boolean won){
-        hasWon = won;
-    }
-
     /**
      * getTargetWord() - Allows Game Manager object to access the target word <br>
      * @return targetWord - (String) randomly chosen word
@@ -111,14 +92,6 @@ public class GameManager {
         guessesUsed = 0;
     }
 
-    /**
-     * getMaxGuesses() - Allows Game Manager object to access number of max guesses a user has to guess the word <br>
-     * @return MAX_GUESSES - (int) number of guesses the player is allowed
-     */
-    //TODO: REMOVE IN CONSOLE DEPRECEATION
-    public int getMaxGuesses(){
-        return 6;
-    }
 
     /**
      * doesGuessMatch(String norm_guess) - compares the normalized guess to the target word <br>
@@ -132,15 +105,6 @@ public class GameManager {
         hasWon = normalizedGuess.equals(targetWord);
         return hasWon;
     }
-
-    //TODO: REMOVE IN CONSOLE DEPRECEATION
-    /**
-     * isGameNotOver() - keeps game loop going if player has yet to reach number of max guesses or got the right answer <br>
-     * @return True if player used the maximum number of guess or if player guessed the correct word. False otherwise
-     */
-    public boolean isGameNotOver() {
-            return getGuessesUsed()< 6 && !hasWon;
-        }
 
     /**
      * getNormalizedGuess(String rawGuess) - Retrieves the normalized guess from the WordRepo Class
@@ -163,15 +127,6 @@ public class GameManager {
         return WordRepo.GenerateColoredFeedback(playerGuess, targetWord);
     }
 
-    /**
-     * Displays the introduction messages for the game. <br>
-     * @param manager instance of the GameManager class, used to display max guesses
-     */
-    //TODO: REMOVE IN CONSOLE DEPRECEATION
-    public static void showIntro (GameManager manager){
-        ConsoleUI.println("WELCOME TO WORDLE! GUESS THE SECRET WORD.");
-        ConsoleUI.println("YOU HAVE " + manager.getMaxGuesses() + " GUESSES.");
-    }
     /**
      Overrides the randomly selected target word with a tester-defined word in debug mode. <br>
      <p>
@@ -221,9 +176,8 @@ public class GameManager {
      isValidGuess: returns validity of guess <br>
      feedbackColors: String[] of color feedback (e.g. "GREEN", "YELLOW", "GRAY")
      */
-    public GameResponse submitGuess(MessageData rawGuess) {
-        String normalized = getNormalizedGuess(rawGuess.playerGuess());
-        MessageData normalizedGuess = new MessageData(normalized);
+    public GameResponse submitGuess(MessageData rawGuess){
+        String normalized = getNormalizedGuess(rawGuess.playerGuess()); //Normalize guess
 
         // First check: length and character validity
         boolean failsFormat = normalized == null ||
@@ -280,8 +234,8 @@ public class GameManager {
                 hasWon,
                 isOver,
                 true,
-                false,          // isNotInWordList — valid guess
-                normalizedGuess,
+                false, // isNotInWordList — valid guess
+                normalized,
                 stringFeedbackColors
         );
     }

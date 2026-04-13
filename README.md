@@ -26,6 +26,11 @@ Finally, open a browser and go to either localhost:8080 or 127.0.0.1:8080
     * Note: once merged, local access will also required explicit path
         * e.g. http://localhost:8081/battleship
 
+* Version: 1.0-DEVOPS-368
+  * Deprecated Wordle Console Version - game can only be accessed via browser at localhost:8080 or 127.0.0.1:8080
+  * Added JDK 21 as the supported Java version
+  
+
 * Version: 1.0-DEVOPS-274
      * Fixed bug where user could not play more than one instance at a time. Introduced sessions to fix this bug.
      * Players can now play multiple instances of the game at the same time.
