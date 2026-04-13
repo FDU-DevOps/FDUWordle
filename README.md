@@ -14,8 +14,18 @@ Finally, open a browser and go to either localhost:8080 or 127.0.0.1:8080
 
 **Current Open Bugs:**
 * If game is ran in same browser, it will affect how the guesses are played, allowing you to enter more than 6 guesses. This only occurs if you open the game on the same browser, but different tabs. If this is done with different browsers, or one normal tab/one private tab, this bug does not occur.
+* __DEVOPS-509__ - Manual build fails to start new build (old build continues to run on server)
 
 **Updates & Fixes:**
+* Version 1.0-DEVOPS-496
+    * Migrated to new path structure on servers
+        * e.g. test.fdugames.org/battleship
+        * test.fdugames.org/wordle
+        * test.fdugames.org/jenkins
+    * Will also support without application change production server as well
+    * Note: once merged, local access will also required explicit path
+        * e.g. http://localhost:8081/battleship
+
 * Version: 1.0-DEVOPS-368
   * Deprecated Wordle Console Version - game can only be accessed via browser at localhost:8080 or 127.0.0.1:8080
   * Added JDK 21 as the supported Java version
