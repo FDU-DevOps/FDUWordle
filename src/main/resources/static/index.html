@@ -44,6 +44,8 @@
     <h3>Response:</h3>
     <p id="output"></p>
 
+    <div id="keyboard-container" style="margin-top: 20px;"></div>
+
     <button id="userFeedbackButton" onclick="handleFeedbackClick()">Submit Game Feedback
     </button>
 
@@ -60,7 +62,10 @@
          * @property {string} targetWord
          */
 
-        window.onload = resetGame;
+        window.onload = () => {
+            createKeyboardUI(); // Initialize the visual keyboard
+            resetGame();        // Reset the game
+        };
 
         async function resetGame() {
             //Get new game
@@ -104,8 +109,9 @@
             const data = await response.json();
             if (data.isValidGuess)
             {
+                // Update both tiles for feedback and the keyboard
                 addRowWithColoredFeedback(value.toUpperCase().trim(), data.feedbackColors);
-
+                updateKeyboardState(value.toUpperCase().trim, data.feedbackColors);
                 document.getElementById("guessesRemaining").innerText =
                     data.guessesRemaining + " Guesses Remaining";
                 clearInputTiles();
@@ -203,6 +209,56 @@
                 }
             }
         });
+    </script>
+    <script>
+        const keyboardState = {};
+        "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("").forEach(char => {
+            keyboardState[char] = "lightgray"; });
+
+        function updateKeyboardState(guess, feedback) {
+            const feedbackPriority = { "green": 3, "goldenrod": 2, "gray": 1, "lightgray": 0 };
+            for (let i = 0; i < guess.length; i++) {
+                const letter = guess[i];
+                // Yellow is checked and changed to Goldenrod to follow color format in UI
+                const newColor = feedback[i] === "yellow" ? "goldenrod" : feedback[i];
+                const currentColor = keyboardState[letter];
+                // Only update if the new color has a higher priority than the current one
+                if (feedbackPriority[newColor] > feedbackPriority[currentColor]) {
+                    keyboardState[letter] = newColor;
+                    // Update the UI element
+                    const keyElement = document.getElementById(`key-${letter}`);
+                    if (keyElement) {
+                        keyElement.style.backgroundColor = newColor;
+                        keyElement.style.color = "white"; // Make text readable on colors
+                    }
+                }
+            }
+        }
+
+        function createKeyboardUI() {
+            // Dynamically generates the QWERTY keyboard UI from a data layout
+            const layout = ["QWERTYUIOP", "ASDFGHJKL", "ZXCVBNM"];
+            // HTML element where keyboard will be added
+            const container = document.getElementById("keyboard-container");
+            // Create Tiles for each letter
+            layout.forEach(rowString => {
+                const row = document.createElement("div");
+                row.style.display = "flex";
+                row.style.justifyContent = "center";
+                row.style.gap = "5px";
+                row.style.marginBottom = "5px";
+                // Convert string of keyboard keys to individual letters
+                rowString.split("").forEach(letter => {
+                    const btn = document.createElement("button");
+                    // ID to letter mapping for updates
+                    btn.id = `key-${letter}`;
+                    btn.innerText = letter;
+                    btn.className = "keyboard-tile"; // Add CSS styling here
+                    row.appendChild(btn);
+                });
+                container.appendChild(row);
+            });
+        }
     </script>
 
     <script> // User Feedback Helper Function
