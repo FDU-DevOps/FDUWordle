@@ -40,12 +40,17 @@
     <!-- The guess board -->
     <div id="guess-row"></div>
 
+
+    <div style="margin-top:20px">
     <button id="submitButton" onclick="sendUserGuess()">Submit</button>
 
-    <button id="resetButton"  onclick="resetGame()" style="margin-left:24px">Reset Game</button>
+    <button id="resetButton"  onclick="resetGame()" style="margin-left:24px">Reset Game</button> </div>
 
     <h3>Response:</h3>
     <p id="output"></p>
+
+    <div></div>
+    <div id="keyboard-container"></div>
 
     <button id="userFeedbackButton" onclick="handleFeedbackClick()">Submit Game Feedback
     </button>
@@ -63,7 +68,10 @@
          * @property {string} targetWord
          */
 
-        window.onload = resetGame;
+        window.onload = () => {
+            createKeyboardUI(); // Initialize the visual keyboard
+            resetGame();        // Reset the game
+        };
 
         async function resetGame() {
             //Get new game
@@ -83,6 +91,7 @@
                 tile.value = "";});
             document.getElementById("submitButton").disabled = false;   // enable submit button
             document.querySelector(".tile-input").focus();
+            createKeyboardUI(); // Reset the board when the reset button is selected
         }
 
 
@@ -107,8 +116,10 @@
             const data = await response.json();
             if (data.isValidGuess)
             {
-                addRowWithColoredFeedback(value.toUpperCase().trim(), data.feedbackColors);
-
+                // Update both tiles for feedback and the keyboard
+                const guessString = value.toUpperCase().trim();
+                addRowWithColoredFeedback(guessString, data.feedbackColors);
+                updateKeyboardState(guessString, data.feedbackColors);
                 document.getElementById("guessesRemaining").innerText =
                     data.guessesRemaining + " Guesses Remaining";
                 clearInputTiles();
@@ -207,6 +218,54 @@
             }
         });
     </script>
+    <script>
+        const keyboardState = {};
+        "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("").forEach(char => {
+            keyboardState[char] = "lightgray"; });
+
+        function updateKeyboardState(guess, feedback) {
+            const feedbackPriority = { "GREEN": 3, "goldenrod": 2, "GRAY": 1, "lightgray": 0 };
+            for (let i = 0; i < guess.length; i++) {
+                const letter = guess[i];
+                // Yellow is checked and changed to Goldenrod to follow color format in UI
+                const newColor = feedback[i] === "YELLOW" ? "goldenrod" : feedback[i];
+                const currentColor = keyboardState[letter];
+                // Only update if the new color has a higher priority than the current one
+                if (feedbackPriority[newColor] > feedbackPriority[currentColor]) {
+                    keyboardState[letter] = newColor;
+                    // Update the UI element
+                    const keyElement = document.getElementById(`key-${letter}`);
+                    if (keyElement) {
+                        keyElement.style.backgroundColor = newColor;
+                        keyElement.style.color = "white"; // Make text readable on colors
+                    }
+                }
+            }
+        }
+
+        function createKeyboardUI() {
+            // Dynamically generates the QWERTY keyboard UI from a data layout
+            const layout = ["QWERTYUIOP", "ASDFGHJKL", "ZXCVBNM"];
+            // HTML element where keyboard will be added
+            const container = document.getElementById("keyboard-container");
+            container.innerHTML = "";
+            // Create Tiles for each letter
+            layout.forEach(rowString => {
+                const row = document.createElement("div");
+
+                // Convert string of keyboard keys to individual letters
+                rowString.split("").forEach(letter => {
+                    const btn = document.createElement("button");
+                    // ID to letter mapping for updates
+                    btn.id = `key-${letter}`;
+                    btn.innerText = letter;
+                    btn.className = "keyboard-tile";
+                    row.appendChild(btn);
+                });
+                container.appendChild(row);
+            });
+        }
+    </script>
 
     <script> // User Feedback Helper Function
     const USER_FEEDBACK_LINK = 'https://docs.google.com/forms/d/e/1FAIpQLSdr2xzx1jbwUW6hDL321aXq4rXhb8n56_qPCpv8hvU4RCcTCA/viewform';
@@ -214,4 +273,5 @@
     </script>
 
 </div>
+
 </html>
