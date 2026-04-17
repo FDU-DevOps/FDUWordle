@@ -44,7 +44,7 @@
     <h3>Response:</h3>
     <p id="output"></p>
 
-    <div id="keyboard-container" style="margin-top: 20px;"></div>
+    <div id="keyboard-container"></div>
 
     <button id="userFeedbackButton" onclick="handleFeedbackClick()">Submit Game Feedback
     </button>
@@ -110,8 +110,9 @@
             if (data.isValidGuess)
             {
                 // Update both tiles for feedback and the keyboard
-                addRowWithColoredFeedback(value.toUpperCase().trim(), data.feedbackColors);
-                updateKeyboardState(value.toUpperCase().trim, data.feedbackColors);
+                const guessString = value.toUpperCase().trim();
+                addRowWithColoredFeedback(guessString, data.feedbackColors);
+                updateKeyboardState(guessString, data.feedbackColors);
                 document.getElementById("guessesRemaining").innerText =
                     data.guessesRemaining + " Guesses Remaining";
                 clearInputTiles();
@@ -216,11 +217,11 @@
             keyboardState[char] = "lightgray"; });
 
         function updateKeyboardState(guess, feedback) {
-            const feedbackPriority = { "green": 3, "goldenrod": 2, "gray": 1, "lightgray": 0 };
+            const feedbackPriority = { "GREEN": 3, "goldenrod": 2, "GRAY": 1, "lightgray": 0 };
             for (let i = 0; i < guess.length; i++) {
                 const letter = guess[i];
                 // Yellow is checked and changed to Goldenrod to follow color format in UI
-                const newColor = feedback[i] === "yellow" ? "goldenrod" : feedback[i];
+                const newColor = feedback[i] === "YELLOW" ? "goldenrod" : feedback[i];
                 const currentColor = keyboardState[letter];
                 // Only update if the new color has a higher priority than the current one
                 if (feedbackPriority[newColor] > feedbackPriority[currentColor]) {
@@ -240,20 +241,18 @@
             const layout = ["QWERTYUIOP", "ASDFGHJKL", "ZXCVBNM"];
             // HTML element where keyboard will be added
             const container = document.getElementById("keyboard-container");
+            container.innerHTML = "";
             // Create Tiles for each letter
             layout.forEach(rowString => {
                 const row = document.createElement("div");
-                row.style.display = "flex";
-                row.style.justifyContent = "center";
-                row.style.gap = "5px";
-                row.style.marginBottom = "5px";
+
                 // Convert string of keyboard keys to individual letters
                 rowString.split("").forEach(letter => {
                     const btn = document.createElement("button");
                     // ID to letter mapping for updates
                     btn.id = `key-${letter}`;
                     btn.innerText = letter;
-                    btn.className = "keyboard-tile"; // Add CSS styling here
+                    btn.className = "keyboard-tile";
                     row.appendChild(btn);
                 });
                 container.appendChild(row);
@@ -267,4 +266,5 @@
     </script>
 
 </div>
+
 </html>
