@@ -19,7 +19,11 @@ Finally, open a browser and go to either localhost:8081/wordle or 127.0.0.1:8081
 **Updates & Fixes:**
 * Version 1.0-DEVOPS-517
   *   Implemented on screen colored feedback keyboard - updates as user makes guesses
-  
+
+
+* Version 1.0.-535
+    * Implemented Tab Icon to Wordle Game on Web page
+
 
 * Version 1.0-DEVOPS-496
     * Migrated to new path structure on servers
@@ -29,6 +33,7 @@ Finally, open a browser and go to either localhost:8081/wordle or 127.0.0.1:8081
     * Will also support without application change production server as well
     * Note: once merged, local access will also required explicit path
         * e.g. http://localhost:8081/battleship
+
 
 * Version: 1.0-DEVOPS-368
   * Deprecated Wordle Console Version - game can only be accessed via browser at localhost:8080 or 127.0.0.1:8080
