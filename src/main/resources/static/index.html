@@ -28,6 +28,9 @@
     <br><br>
     <label>Type your guess:</label>
 
+    <!-- The guess board -->
+    <div id="guess-row"></div>
+
     <div id="input-row">
         <input class="tile-input" maxlength="1" aria-label="Letter 1" >
         <input class="tile-input" maxlength="1" aria-label="Letter 2">
@@ -37,8 +40,7 @@
     </div>
     <br><br>
 
-    <!-- The guess board -->
-    <div id="guess-row"></div>
+
 
 
     <div style="margin-top:20px">
@@ -82,7 +84,7 @@
                 });
 
             //Clear the UI
-
+            document.getElementById("input-row").style.display = "flex";
             document.getElementById("output").innerText = "";
             document.getElementById("guess-row").innerHTML = "";
             document.getElementById("guessesRemaining").innerText = "6 Guesses Remaining";
@@ -142,10 +144,12 @@
             {
                 document.getElementById("output").innerHTML += " "+gameStateMessage;
                 document.getElementById("submitButton").disabled = true;
+                document.getElementById("input-row").style.display = "none";
                 document.querySelectorAll(".tile-input").forEach(tile => {
                     tile.disabled = true;
                 });
             }
+
         }
 
         function addRowWithColoredFeedback(guess, feedback) {
