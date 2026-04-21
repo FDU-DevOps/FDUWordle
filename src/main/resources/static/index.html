@@ -134,11 +134,13 @@
                 clearInputTiles();
             }
 
-            let gameStateMessage = data.hasWon ? "CORRECT! YOU GUESSED THE WORD: " + data.targetWord: "YOU LOST! THE CORRECT ANSWER WAS: " +data.targetWord;
+            let gameStateMessage = data.hasWon
+                ? `CORRECT! YOU GUESSED THE WORD: <b>${data.targetWord}</b>`
+                : `YOU LOST! THE CORRECT ANSWER WAS: <b>${data.targetWord}</b>`;
             //TODO: QOL update - flavor text of "x guesses remaining" is still there if user wins before using up all guesses, so could remove once user wins
             if(data.hasWon || data.guessesRemaining === 0)
             {
-                document.getElementById("output").innerText += " "+gameStateMessage;
+                document.getElementById("output").innerHTML += " "+gameStateMessage;
                 document.getElementById("submitButton").disabled = true;
                 document.querySelectorAll(".tile-input").forEach(tile => {
                     tile.disabled = true;
