@@ -17,6 +17,11 @@ Finally, open a browser and go to either localhost:8081/wordle or 127.0.0.1:8081
 * __DEVOPS-509__ - Manual build fails to start new build (old build continues to run on server)
 
 **Updates & Fixes:**
+* Version 1.0-DEVOPS-518
+  * Target word is now displayed with bold formatting
+  * User feedback is now placed above the user input boxes
+
+
 * Version 1.0-DEVOPS-517
   *   Implemented on screen colored feedback keyboard - updates as user makes guesses
 
