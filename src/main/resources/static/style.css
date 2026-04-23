@@ -106,3 +106,43 @@ body{
     width: 100%;
     margin-bottom: 8px;  /* Vertical gap between keyboard rows */
 }
+
+.dropdown{
+    background: white;
+    border-radius: .3em;
+    position: absolute;
+    left: .1em;
+    padding: .5em;
+    width: 100%;
+    box-sizing: border-box;
+    transform: translateY(-1em);
+    transition: transform .5s;
+    visibility: hidden;
+
+    ul {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        li a{
+            display: flex;
+            padding: .8em;
+            text-decoration: none;
+            color: black;
+            span{
+                margin-left: .3em;
+            }
+            &:hover {
+                background: #E9E9E9;
+            }
+        }
+    }
+}
+
+.container{
+    position: relative;
+    &:hover .dropdown{
+        display: block;
+        visibility: visible;
+        transform: translateY(0);
+    }
+}
