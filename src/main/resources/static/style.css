@@ -64,10 +64,14 @@ body{
     height:35px;
     text-align:center;
 
-    font-size:24px;
+    font-size:16px;
     font-weight:bold;
     border:2px solid #888;
     text-transform:uppercase;
+    border-radius: 4px;
+    caret-color: transparent;
+    outline: none;
+    -webkit-appearance: none;
 }
 /* Keyboard Tiles */
 
@@ -105,6 +109,73 @@ body{
     justify-content: center;
     width: 100%;
     margin-bottom: 8px;  /* Vertical gap between keyboard rows */
+}
+
+@media (max-width: 480px) {
+
+    body {
+        padding-top: 16px;
+        align-items: flex-start;
+    }
+
+    #game {
+        max-width: 100%;
+        padding: 0 10px;
+        box-sizing: border-box;
+    }
+
+
+    .tile {
+        width: clamp(40px, 11vw, 52px);
+        height: clamp(40px, 11vw, 52px);
+        font-size: clamp(18px, 5vw, 26px);
+        border-radius: 4px;
+    }
+
+
+    .tile-input {
+        width: clamp(40px, 13vw, 52px);
+        height: clamp(40px, 13vw, 52px);
+        font-size: 16px;
+        border-radius: 4px;
+        -webkit-appearance: none;      /* removes iOS default input styling */
+        caret-color: transparent;      /* hides blinking cursor in the box */
+    }
+
+
+    .keyboard-tile {
+        width: clamp(28px, 8.5vw, 40px);
+        height: 50px;
+        font-size: clamp(11px, 3vw, 16px);
+        margin: 0 1px;
+        touch-action: manipulation;              /* removes 300ms tap delay on mobile */
+        -webkit-tap-highlight-color: transparent; /* removes blue flash on tap */
+    }
+
+
+    #keyboard-container {
+        margin-top: 24px;
+        margin-bottom: 12px;
+    }
+
+
+    #submitButton,
+    #resetButton,
+    #userFeedbackButton {
+        min-height: 44px;
+        padding: 10px 18px;
+        font-size: 15px;
+        border-radius: 6px;
+        touch-action: manipulation;
+        -webkit-tap-highlight-color: transparent;
+    }
+
+
+    h1 {
+        font-size: 22px;
+        margin-bottom: 6px;
+    }
+
 }
 
 .dropdown {

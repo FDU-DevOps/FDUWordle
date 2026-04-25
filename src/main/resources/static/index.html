@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <title>FDUWordle</title>
     <link rel="stylesheet" href="style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="mobile-web-app-capable" content="yes">
 
     <link rel="icon" type="image/png" sizes="32*32" href="/wordle/favicon.png">
     <link rel="icon" type="image/png" sizes="16*16" href="/wordle/favicon.png">
@@ -32,11 +34,16 @@
     <div id="guess-row"></div>
 
     <div id="input-row">
-        <input class="tile-input" maxlength="1" aria-label="Letter 1" >
-        <input class="tile-input" maxlength="1" aria-label="Letter 2">
-        <input class="tile-input" maxlength="1" aria-label="Letter 3">
-        <input class="tile-input" maxlength="1" aria-label="Letter 4">
-        <input class="tile-input" maxlength="1" aria-label="Letter 5">
+        <input class="tile-input" maxlength="1" inputmode="text" autocomplete="off"
+               autocorrect="off" autocapitalize="characters" spellcheck="false" aria-label="Letter 1" >
+        <input class="tile-input" maxlength="1" inputmode="text" autocomplete="off"
+               autocorrect="off" autocapitalize="characters" spellcheck="false" aria-label="Letter 2">
+        <input class="tile-input" maxlength="1" inputmode="text" autocomplete="off"
+               autocorrect="off" autocapitalize="characters" spellcheck="false" aria-label="Letter 3">
+        <input class="tile-input" maxlength="1" inputmode="text" autocomplete="off"
+               autocorrect="off" autocapitalize="characters" spellcheck="false" aria-label="Letter 4">
+        <input class="tile-input" maxlength="1" inputmode="text" autocomplete="off"
+               autocorrect="off" autocapitalize="characters" spellcheck="false" aria-label="Letter 5">
     </div>
     <br><br>
 
@@ -199,6 +206,10 @@
                     tiles[index - 1].focus();   // move to previous tile
                 }
 
+            });
+            tile.addEventListener("touchstart", () => {
+                tile.focus();
+            }, { passive: true
             });
 
         });
