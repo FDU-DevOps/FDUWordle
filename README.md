@@ -70,5 +70,9 @@ Finally, open a browser and go to either localhost:8081/wordle or 127.0.0.1:8081
      * added new dictionary
      * checks if the word exists in the dictionary, otherwise throws error
   
+* Version: 1.0-DEVOPS-559
+    * made the game to be mobile friendly
+    * added a seperate @media screen for mobile devices.
+  
 
 
