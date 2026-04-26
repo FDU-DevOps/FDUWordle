@@ -289,7 +289,9 @@
     function handleFeedbackClick() { window.open(USER_FEEDBACK_LINK, '_blank'); }
     </script>
 
+    <div></div>
     <div class="container">
+        <div class="dropdown-wrapper">
         <div>
             <button id="gameInfo" style="margin-top:20px">
                 <span>Game Info</span></button>
@@ -301,6 +303,7 @@
                     </li>
                 </ul>
             </div>
+        </div>
         </div>
     </div>
 
@@ -365,6 +368,23 @@
                 event.target.style.display = "none";
             }
         };
+        document.addEventListener('DOMContentLoaded', () => {
+            const gameInfoBtn = document.getElementById('gameInfo');
+            const dropdown = document.querySelector('.dropdown');
+
+            gameInfoBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                dropdown.classList.toggle('active');
+            });
+
+            document.addEventListener('click', () => {
+                dropdown.classList.remove('active');
+            });
+
+            dropdown.addEventListener('click', (e) => {
+                e.stopPropagation();
+            });
+        });
     </script>
 </div>
 
