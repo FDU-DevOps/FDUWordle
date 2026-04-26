@@ -229,6 +229,11 @@ body{
     visibility: visible;
     transform: translateY(0);
 }
+/* Temp disable on hover effect when dropdown item is clicked */
+.dropdown-wrapper.no-hover .dropdown {
+    visibility: hidden;
+    transform: translateY(-1em);
+}
 
 .container{
     position: relative;

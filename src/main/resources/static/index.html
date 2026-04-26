@@ -336,53 +336,59 @@
     </div>
 
     <script>
-        // Select all buttons that should open a modal
-        const triggers = document.querySelectorAll('.modal-trigger');
-
-        // Select all close buttons (the 'x')
-        const closeButtons = document.querySelectorAll('.close');
-
-        // Setup click events for the opening buttons
-        triggers.forEach(btn => {
-            btn.onclick = function() {
-                // Get the ID from the data-modal attribute
-                const modalId = btn.getAttribute('data-modal');
-                const modal = document.getElementById(modalId);
-                if (modal) {
-                    modal.style.display = "block";
-                }
-            };
-        });
-
-        // Setup click events for the 'x' buttons
-        closeButtons.forEach(span => {
-            span.onclick = function() {
-                // Find the closest parent with class "modal" and hide it
-                span.closest('.modal').style.display = "none";
-            };
-        });
-
-        // Close the modal if the user clicks the dark background
-        window.onclick = function(event) {
-            if (event.target.classList.contains('modal')) {
-                event.target.style.display = "none";
-            }
-        };
         document.addEventListener('DOMContentLoaded', () => {
             const gameInfoBtn = document.getElementById('gameInfo');
             const dropdown = document.querySelector('.dropdown');
+            const dropdownWrapper = document.querySelector('.dropdown-wrapper');
 
+            // Open/close dropdown on button click
             gameInfoBtn.addEventListener('click', (e) => {
                 e.stopPropagation();
                 dropdown.classList.toggle('active');
             });
 
+            // Close dropdown when clicking outside
             document.addEventListener('click', () => {
                 dropdown.classList.remove('active');
             });
 
+            // Prevent clicks inside dropdown from closing it
             dropdown.addEventListener('click', (e) => {
                 e.stopPropagation();
+            });
+
+            // Remove no-hover when mouse leaves wrapper
+            dropdownWrapper.addEventListener('mouseleave', () => {
+                dropdownWrapper.classList.remove('no-hover');
+            });
+
+            // Open modals
+            document.querySelectorAll('.modal-trigger').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const modalId = btn.getAttribute('data-modal');
+                    const modal = document.getElementById(modalId);
+                    if (modal) {
+                        modal.style.display = "block";
+                    }
+                    dropdown.classList.remove('active');
+                    dropdownWrapper.classList.add('no-hover');
+                });
+            });
+
+            // Close modals via X button
+            document.querySelectorAll('.close').forEach(span => {
+                span.addEventListener('click', () => {
+                    span.closest('.modal').style.display = "none";
+                    dropdownWrapper.classList.remove('no-hover');
+                });
+            });
+
+            // Close modal by clicking dark background
+            window.addEventListener('click', (e) => {
+                if (e.target.classList.contains('modal')) {
+                    e.target.style.display = "none";
+                    dropdownWrapper.classList.remove('no-hover');
+                }
             });
         });
     </script>
