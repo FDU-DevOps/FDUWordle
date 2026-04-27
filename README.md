@@ -17,6 +17,15 @@ Finally, open a browser and go to either localhost:8081/wordle or 127.0.0.1:8081
 * __DEVOPS-509__ - Manual build fails to start new build (old build continues to run on server)
 
 **Updates & Fixes:**
+
+* Version 1.0-DEVOPS-558
+  * Added Game Info button that has a dropdown with 2 buttons. "How to play" for rules and "Latest Updates" to include the last 3 updates made to the game.
+
+
+* Version: 1.0-DEVOPS-559
+    * made the game to be mobile friendly
+    * added a seperate @media screen for mobile devices.
+
 * Version 1.0-DEVOPS-518
   * Target word is now displayed with bold formatting
   * User feedback is now placed above the user input boxes
@@ -70,9 +79,6 @@ Finally, open a browser and go to either localhost:8081/wordle or 127.0.0.1:8081
      * added new dictionary
      * checks if the word exists in the dictionary, otherwise throws error
   
-* Version: 1.0-DEVOPS-559
-    * made the game to be mobile friendly
-    * added a seperate @media screen for mobile devices.
-  
+
 
 

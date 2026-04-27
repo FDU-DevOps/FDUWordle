@@ -289,6 +289,109 @@
     function handleFeedbackClick() { window.open(USER_FEEDBACK_LINK, '_blank'); }
     </script>
 
+    <div></div>
+    <div class="container">
+        <div class="dropdown-wrapper">
+        <div>
+            <button id="gameInfo" style="margin-top:20px">
+                <span>Game Info</span></button>
+            <div class="dropdown">
+                <ul>
+                    <li>
+                        <button class="modal-trigger" data-modal="howToPlayModal">How to Play</button>
+                        <button class="modal-trigger" data-modal="latestUpdatesModal">Latest Updates</button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        </div>
+    </div>
+
+    <div id="howToPlayModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>How to Play</h2>
+            <p>You have <b>6 attempts</b> to guess the target word.<br><br> Each guess must be a valid 5-letter word<br><br>
+            The grid and keyboard will update depending on your guess and how close the guess was.<br><br>
+                <b>Feedback Info:</b><br>
+                <img src="HowToPlayImages/GreenFeedback.jpg" alt="M is in the target word and in the correct spot - showing as green" width="200" height="100"><br>
+                M is in the target word and in the correct spot, so it shows as <b>GREEN</b><br><br>
+                <img src="HowToPlayImages/YellowFeedback.jpg" alt="O is in the target word, but not in the correct spot - showing as yellow" width="200" height="100"><br>
+                O is in the target word, but not in the correct spot, so it shows as <b>YELLOW</b><br><br>
+                <img src="HowToPlayImages/KeyboardFeedback.jpg" alt="Showing keyboard colored feedback based on guess - guess here was FRIED, target word was DRESS" width="350" height="200"><br>
+                Keyboard feedback based on user guess and how accurate it is to the target word<br>
+                Here the guess was <b>FRIED</b>, target word was <b>DRESS</b><br><br>
+            </p>
+        </div>
+    </div>
+
+    <div id="latestUpdatesModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Latest Updates</h2>
+            <p><b>Version 1.0-DEVOPS-558</b> <br>Added Game Info button that has a dropdown with 2 buttons. "How to play" for rules and "Latest Updates" to include the last 3 updates made to the game.<br><br>
+                <b>Version: 1.0-DEVOPS-559</b><br> ade the game to be mobile friendly and added a seperate @media screen for mobile devices.<br><br>
+                <b>Version 1.0-DEVOPS-518</b> <br>Target word is now displayed with bold formatting. User feedback is now placed above the user input boxes</p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const gameInfoBtn = document.getElementById('gameInfo');
+            const dropdown = document.querySelector('.dropdown');
+            const dropdownWrapper = document.querySelector('.dropdown-wrapper');
+
+            // Open/close dropdown on button click
+            gameInfoBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                dropdown.classList.toggle('active');
+            });
+
+            // Close dropdown when clicking outside
+            document.addEventListener('click', () => {
+                dropdown.classList.remove('active');
+            });
+
+            // Prevent clicks inside dropdown from closing it
+            dropdown.addEventListener('click', (e) => {
+                e.stopPropagation();
+            });
+
+            // Remove no-hover when mouse leaves wrapper
+            dropdownWrapper.addEventListener('mouseleave', () => {
+                dropdownWrapper.classList.remove('no-hover');
+            });
+
+            // Open modals
+            document.querySelectorAll('.modal-trigger').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const modalId = btn.getAttribute('data-modal');
+                    const modal = document.getElementById(modalId);
+                    if (modal) {
+                        modal.style.display = "block";
+                    }
+                    dropdown.classList.remove('active');
+                    dropdownWrapper.classList.add('no-hover');
+                });
+            });
+
+            // Close modals via X button
+            document.querySelectorAll('.close').forEach(span => {
+                span.addEventListener('click', () => {
+                    span.closest('.modal').style.display = "none";
+                    dropdownWrapper.classList.remove('no-hover');
+                });
+            });
+
+            // Close modal by clicking dark background
+            window.addEventListener('click', (e) => {
+                if (e.target.classList.contains('modal')) {
+                    e.target.style.display = "none";
+                    dropdownWrapper.classList.remove('no-hover');
+                }
+            });
+        });
+    </script>
 </div>
 
 </html>
