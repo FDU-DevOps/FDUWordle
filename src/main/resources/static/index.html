@@ -240,6 +240,20 @@
         "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("").forEach(char => {
             keyboardState[char] = "lightgray"; });
 
+        function handleVirtualKeyPress(key) {
+            const tiles = document.querySelectorAll(".tile-input");
+            // Regular letter — find the first empty tile
+            for (let i = 0; i < tiles.length; i++) {
+                if (tiles[i].value === "") {
+                    tiles[i].value = key;
+                    // Move focus to next tile (or stay on last)
+                    if (i < tiles.length - 1) tiles[i + 1].focus();
+                    else tiles[i].focus();
+                    return;
+                }
+            }
+        }
+
         function updateKeyboardState(guess, feedback) {
             const feedbackPriority = { "GREEN": 3, "goldenrod": 2, "GRAY": 1, "lightgray": 0 };
             for (let i = 0; i < guess.length; i++) {
@@ -277,6 +291,7 @@
                     btn.id = `key-${letter}`;
                     btn.innerText = letter;
                     btn.className = "keyboard-tile";
+                    btn.addEventListener("click", () => handleVirtualKeyPress(letter));
                     row.appendChild(btn);
                 });
                 container.appendChild(row);
