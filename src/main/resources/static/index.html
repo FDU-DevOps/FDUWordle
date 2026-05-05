@@ -83,6 +83,11 @@
         };
 
         async function resetGame() {
+            // Reset keyboard state tracking - all color feedback to gray
+            "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("").forEach(char => {
+                keyboardState[char] = "lightgray";
+            });
+
             //Get new game
             await fetch("api/FDUWordle/start-game",
                 {
