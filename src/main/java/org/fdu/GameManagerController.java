@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
  * Controller manages a Wordle Game with guesses <br>
  * GetMapping("/start-game")    - Handles Logic once the game starts (choosing target word)
  * PostMapping("/submit-guess") - Handles player guessing a word and telling player if they won
+ * hehehehe testing
  */
 @RestController
 @RequestMapping("/api/FDUWordle")
