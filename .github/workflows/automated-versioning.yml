@@ -2,7 +2,7 @@ name: Version Bump
 on:
   pull_request:
     # Only target pull requests that are merging into master.
-    branches: [ 'master' ]
+    branches: [ 'main' ]
     # Only trigger when a PR is closed (merged or not, filtered below).
     types: [ closed ]
 
