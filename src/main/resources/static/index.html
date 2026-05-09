@@ -14,6 +14,28 @@
 
 <div id="game">
 
+    <div style="position:fixed; right:16px; top:15%; transform:translateY(-50%); display:flex; flex-direction:column; gap:14px; z-index:100;">
+        <div class="container">
+            <div class="dropdown-wrapper">
+                <button id="gameInfoSide" title="Game Info"
+                        style="width:48px; height:48px; border-radius:50%; font-size:22px; cursor:pointer; border:1px solid #ccc; background:navy; color:white; display:flex; align-items:center; justify-content:center;">
+                    &#9432;
+                </button>
+                <div class="dropdown" style="right:58px; top:0;">
+                    <ul>
+                        <li>
+                            <button class="modal-trigger" data-modal="howToPlayModal">How to Play</button>
+                            <button class="modal-trigger" data-modal="latestUpdatesModal">Latest Updates</button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <button onclick="handleFeedbackClick()" title="Submit Feedback"
+                style="width:48px; height:48px; border-radius:50%; font-size:22px; cursor:pointer; border:1px solid #ccc; background:navy; color:white; display:flex; align-items:center; justify-content:center;">
+            &#128203;
+        </button>
+    </div>
 
     <h1>Welcome to FDU Wordle!</h1>
     <p id="version"></p>
@@ -25,15 +47,16 @@
             document.getElementById("version").innerText = "Version: " + version;
         }
         loadVersion();
+        document.getElementById("game").addEventListener("click", () => {
+            document.getElementById("errorModal").style.display = "none";
+        });
     </script>
-
-    <br><br>
-    <label>Type your guess:</label>
 
     <!-- The guess board -->
     <div id="guess-row"></div>
-
-    <div id="input-row">
+    <div style="display: flex; justify-content: center; align-items: center; gap: 8px; margin-right: 120px; font-weight: bold">
+        <label id="guessLabel" style="white-space: nowrap;">Type your guess:</label>
+    <div id="input-row" style= gap:8px;">
         <input class="tile-input" maxlength="1" inputmode="text" autocomplete="off"
                autocorrect="off" autocapitalize="characters" spellcheck="false" aria-label="Letter 1" >
         <input class="tile-input" maxlength="1" inputmode="text" autocomplete="off"
@@ -45,9 +68,7 @@
         <input class="tile-input" maxlength="1" inputmode="text" autocomplete="off"
                autocorrect="off" autocapitalize="characters" spellcheck="false" aria-label="Letter 5">
     </div>
-    <br><br>
-
-
+    </div>
 
 
     <div style="margin-top:20px">
@@ -55,14 +76,10 @@
 
     <button id="resetButton"  onclick="resetGame()" style="margin-left:24px">Reset Game</button> </div>
 
-    <h3>Response:</h3>
-    <p id="output"></p>
 
     <div></div>
     <div id="keyboard-container"></div>
 
-    <button id="userFeedbackButton" onclick="handleFeedbackClick()">Submit Game Feedback
-    </button>
 
     <script>
 
@@ -81,6 +98,15 @@
             createKeyboardUI(); // Initialize the visual keyboard
             resetGame();        // Reset the game
         };
+        function showError(msg) {
+            const modal = document.getElementById("errorModal");
+            document.getElementById("errorMessage").innerText = msg;
+            modal.style.display = "block";
+            clearTimeout(window.errorTimer);
+            window.errorTimer = setTimeout(() => {
+                modal.style.display = "none";
+            }, 3000);
+        }
 
         async function resetGame() {
             // Reset keyboard state tracking - all color feedback to gray
@@ -97,7 +123,7 @@
 
             //Clear the UI
             document.getElementById("input-row").style.display = "flex";
-            document.getElementById("output").innerText = "";
+            document.getElementById("guessLabel").style.display = "inline";
             document.getElementById("guess-row").innerHTML = "";
             document.getElementById("guessesRemaining").innerText = "6 Guesses Remaining";
             document.querySelectorAll(".tile-input").forEach(tile => {
@@ -113,7 +139,6 @@
             const value = Array.from(document.querySelectorAll(".tile-input"))
                 .map(tile => tile.value)
                 .join("");
-            document.getElementById("output").innerText = "";
             const response = await fetch("api/FDUWordle/submit-guess", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -141,22 +166,22 @@
             else
             {
                 if (data.isNotInWordList) {
-                    document.getElementById("output").innerText = "NOT IN WORD LIST.";
+                    showError("NOT IN WORD LIST.");
                 } else {
-                    document.getElementById("output").innerText = "INVALID GUESS. MUST BE EXACTLY 5 LETTERS (A-Z).";
+                    showError("INVALID GUESS. MUST BE EXACTLY 5 LETTERS (A-Z).");
                 }
                 clearInputTiles();
             }
 
-            let gameStateMessage = data.hasWon
-                ? `CORRECT! YOU GUESSED THE WORD: <b>${data.targetWord}</b>`
-                : `YOU LOST! THE CORRECT ANSWER WAS: <b>${data.targetWord}</b>`;
             //TODO: QOL update - flavor text of "x guesses remaining" is still there if user wins before using up all guesses, so could remove once user wins
             if(data.hasWon || data.guessesRemaining === 0)
             {
-                document.getElementById("output").innerHTML += " "+gameStateMessage;
+                showError(data.hasWon
+                    ? `CORRECT! YOU GUESSED THE WORD: ${data.targetWord}`
+                    : `YOU LOST! THE CORRECT ANSWER WAS: ${data.targetWord}`);
                 document.getElementById("submitButton").disabled = true;
                 document.getElementById("input-row").style.display = "none";
+                document.getElementById("guessLabel").style.display = "none";
                 document.querySelectorAll(".tile-input").forEach(tile => {
                     tile.disabled = true;
                 });
@@ -171,10 +196,11 @@
             // Set the row to use flexbox layout so that tiles inside are aligned horizontally
             row.style.display = "flex";
             row.style.flexDirection = "row";
-
-            row.style.gap = "6px";            // Set spacing between each tile
-            row.style.marginBottom = "6px";   //Add space below the row so next rows in the future will not be stick to the row
-            board.appendChild(row);           //Add row to the guess-board space
+            row.style.gap = "6px";
+            row.style.marginBottom = "6px";
+            row.style.justifyContent = "center";
+            row.style.width = "fit-content";
+            board.appendChild(row);          //Add row to the guess-board space
 
             for (let i = 0; i < guess.length; i++) {
                 const tile = document.createElement("div");  //Create tile for each letter
@@ -196,12 +222,11 @@
         const tiles = document.querySelectorAll(".tile-input");
 
         tiles.forEach((tile, index) => {
-
             tile.addEventListener("input", () => {
                 tile.value = tile.value.toUpperCase();
-
+                document.getElementById("errorModal").style.display = "none";
                 if (tile.value.length === 1 && index < tiles.length - 1) {
-                    tiles[index + 1].focus();   // move to next tile
+                    tiles[index + 1].focus();
                 }
             });
 
@@ -310,22 +335,6 @@
     </script>
 
     <div></div>
-    <div class="container">
-        <div class="dropdown-wrapper">
-        <div>
-            <button id="gameInfo" style="margin-top:20px">
-                <span>Game Info</span></button>
-            <div class="dropdown">
-                <ul>
-                    <li>
-                        <button class="modal-trigger" data-modal="howToPlayModal">How to Play</button>
-                        <button class="modal-trigger" data-modal="latestUpdatesModal">Latest Updates</button>
-                    </li>
-                </ul>
-            </div>
-        </div>
-        </div>
-    </div>
 
     <div id="howToPlayModal" class="modal">
         <div class="modal-content">
@@ -357,7 +366,7 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const gameInfoBtn = document.getElementById('gameInfo');
+            const gameInfoBtn = document.getElementById('gameInfoSide');
             const dropdown = document.querySelector('.dropdown');
             const dropdownWrapper = document.querySelector('.dropdown-wrapper');
 
@@ -413,5 +422,12 @@
         });
     </script>
 </div>
-
+<div id="errorModal" onclick="document.getElementById('errorModal').style.display='none'"
+     style="display:none; position:fixed; top:10px; left:50%; transform:translateX(-50%);
+            z-index:999; cursor:pointer; background:#ff8c00; border-radius:8px;
+            padding:0.8rem 1.5rem; box-shadow:0 4px 20px rgba(0,0,0,0.3);
+            width:fit-content; white-space:nowrap;">
+    <p id="errorMessage" style="font-size:16px; font-weight:bold; margin:0; color:white; display:inline;"></p>
+    <span style="color:white; font-size:18px; font-weight:bold; margin-left:12px;">✕</span>
+</div>
 </html>

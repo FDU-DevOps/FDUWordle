@@ -9,7 +9,29 @@ body{
     justify-content:center;
     align-items:flex-start;
     min-height:100vh;
-    padding-top:40px;
+    top:0;
+    overflow: hidden;
+}
+#game h1 {
+    margin: 4px 0 8px 0;
+    font-size: 28px;
+    white-space: nowrap;
+}
+
+#version {
+    margin: 0 0 8px 0;
+}
+
+#guessesRemaining {
+    margin: 0 0 16px 0 !important;
+}
+
+#game h3 {
+    margin: 8px 0 0 0;
+}
+
+#output {
+    margin: 8px 0 0 0;
 }
 
 /* Main container */
@@ -25,7 +47,11 @@ body{
     display:flex;
     flex-direction:column;
     align-items:center;
-    width:100%;
+    width: fit-content;
+    max-width: 265px;
+    margin-left: auto;
+    margin-right: auto;
+
 }
 
 /* Each guess row */
@@ -60,7 +86,7 @@ body{
 
 /* Input tiles */
 .tile-input{
-    width:35px;
+    width: 35px;
     height:35px;
     text-align:center;
 
@@ -79,6 +105,14 @@ body{
 }
 /* Keyboard Tiles */
 
+#submitButton{
+    background-color: green;
+    color: yellow;
+}
+#resetButton{
+    background-color: red;
+    color: yellow;
+}
  .keyboard-tile {
      width: 42px;
      height: 58px;
@@ -186,11 +220,12 @@ body{
     background: white;
     border-radius: .3em;
     position: absolute;
-    left: .1em;
+    right: 95px;
     padding: .5em;
-    width: 100%;
+    width: 140px;
     box-sizing: border-box;
-    transform: translateY(-1em);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    transform: translateX(1em);
     transition: transform .5s;
     visibility: hidden;
     z-index: 10; /* Ensure it stays above other content */
@@ -226,12 +261,20 @@ body{
 }
 
 .dropdown-wrapper {
-    display: inline-block; /* shrinks to button width */
+    display: inline-block;
+    position: relative/* shrinks to button width */
 }
-
+.dropdown-wrapper::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 60px;
+    height: 100%;
+}
 .dropdown-wrapper:hover .dropdown {
     visibility: visible;
-    transform: translateY(0);
+    transform: translateX(0);
 }
 /* Temp disable on hover effect when dropdown item is clicked */
 .dropdown-wrapper.no-hover .dropdown {
