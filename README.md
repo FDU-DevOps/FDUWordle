@@ -12,6 +12,16 @@ Then, run the command java -jar FDUWordle-1.0-VERSION.jar
 
 Finally, open a browser and go to either localhost:8081/wordle or 127.0.0.1:8081/wordle
 
+* Version 1.0-DEVOPS-619
+  * Added popup notification for invalid guesses, not in word list, win, and loss messages
+  * Added Game Info and Feedback icons fixed to the right side of the screen for quick access 
+  * Game Info icon shows a hover/click dropdown with How to Play and Latest Updates options 
+  * Aligned guess row tiles and input tiles to the same size and gap for consistent UI
+  * "Type your guess" label now hides when the game ends and reappears on reset 
+  * Error popup closes automatically when user starts typing or clicks anywhere on the screen 
+  * Game layout is non-scrollable, entire game fits within the viewport without scrolling
+
+
 **Current Open Bugs:**
 * If game is ran in same browser, it will affect how the guesses are played, allowing you to enter more than 6 guesses. This only occurs if you open the game on the same browser, but different tabs. If this is done with different browsers, or one normal tab/one private tab, this bug does not occur.
 * __DEVOPS-509__ - Manual build fails to start new build (old build continues to run on server)
