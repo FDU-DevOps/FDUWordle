@@ -55,10 +55,8 @@ class WordRepoTest {
         assertTrue(WordRepo.isInvalidGuess("HE LO"));
         assertTrue(WordRepo.isInvalidGuess("HE@LO"));
 
-        // Lowercase letters (below 'A' in ASCII won't apply, but lowercase is outside A-Z range)
         assertTrue(WordRepo.isInvalidGuess("hairy"));
 
-        // Valid cases (should return false)
         assertFalse(WordRepo.isInvalidGuess("HAIRY"));
         assertFalse(WordRepo.isInvalidGuess("TABLE"));
         assertFalse(WordRepo.isInvalidGuess("BLAZE"));
